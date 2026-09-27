@@ -15,11 +15,13 @@ context: |
   The local demo uses scripted model responses through the real LangChain tool
   loop and must label results as fixture-backed. It makes no claim about live
   provider quality or safety. Provider credentials stay in the gateway. Workers
-  receive no host credentials, Docker socket, or external network access.
+  receive no provider credentials. Docker workers receive no host mounts,
+  Docker socket, or external network access. Local process mode is trusted
+  development execution, without filesystem or network sandboxing.
 
   The host CLI is trusted orchestration: it launches one-shot workers from a
   fixed template, can revoke all grants for a run, and can stop only workers
-  labelled for that run. The v0 workflow has no dynamic child delegation. Local
+  labelled for that run in Docker mode. The v0 workflow has no dynamic child delegation. Local
   audit state uses SQLAlchemy with SQLite; the Compose target uses Postgres.
   LangGraph SQLite checkpoints live under ignored .lab/ and support a durable
   human interrupt after review. Approval or rejection applies to the exact

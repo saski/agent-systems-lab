@@ -75,6 +75,15 @@ openspec validate --all --strict
 Keep requirements focused on the current experiment. The roadmap is not a
 promise that all proposed capabilities are already implemented.
 
+With OpenSpec 1.10.0, archive from `docs/` so the CLI operates on the physical
+OpenSpec directory. Archiving through the root symlink can fail its final-move
+integrity check; validation and listing work from the repository root.
+
+```sh
+cd docs
+openspec archive CHANGE_NAME --yes
+```
+
 ## Local state
 
 `.lab/control.db` stores local operational evidence; `.lab/checkpoints.db`

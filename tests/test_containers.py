@@ -108,6 +108,20 @@ def test_revocation_blocks_calls_and_kills_only_labelled_run_containers() -> Non
         "-c",
         "import time; time.sleep(120)",
     ).strip()
+    unrelated = command(
+        "docker",
+        "run",
+        "-d",
+        "--rm",
+        "--network",
+        NETWORK,
+        "--label",
+        "systems-lab.run=unrelated-test-run",
+        IMAGE,
+        "python",
+        "-c",
+        "import time; time.sleep(120)",
+    ).strip()
     try:
         output = command(
             sys.executable,
@@ -122,6 +136,7 @@ def test_revocation_blocks_calls_and_kills_only_labelled_run_containers() -> Non
         assert json.loads(output)["status"] == "revoked"
         running = command("docker", "ps", "-q", "--no-trunc")
         assert container not in running
+        assert unrelated in running
         response = httpx.post(
             f"{URL}/tools/system.describe",
             headers={"Authorization": f"Bearer {grant['token']}"},
@@ -129,4 +144,4 @@ def test_revocation_blocks_calls_and_kills_only_labelled_run_containers() -> Non
         )
         assert response.status_code == 403
     finally:
-        subprocess.run(["docker", "stop", container], capture_output=True, timeout=15)
+        subprocess.run(["docker", "stop", container, unrelated], capture_output=True, timeout=15)
