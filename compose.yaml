@@ -1,0 +1,55 @@
+name: agent-systems-lab
+
+services:
+  gateway:
+    build: .
+    image: agent-systems-lab:local
+    env_file:
+      - path: .lab/gateway.env
+        required: false
+    environment:
+      LAB_DATABASE_URL: postgresql+psycopg://lab:local-development-only@db/lab
+    ports:
+      - "127.0.0.1:8765:8000"
+    networks: [workers, control]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 128
+    mem_limit: 512m
+    cpus: 1
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 3s
+      timeout: 2s
+      retries: 20
+
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: lab
+      POSTGRES_DB: lab
+      POSTGRES_PASSWORD: local-development-only
+    networks: [control]
+    volumes:
+      - control-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U lab -d lab"]
+      interval: 3s
+      timeout: 2s
+      retries: 20
+
+networks:
+  workers:
+    name: agent-systems-lab-workers
+    internal: true
+  control:
+    internal: true
+
+volumes:
+  control-data:

@@ -1,0 +1,32 @@
+name: check
+
+on: [push, pull_request, workflow_dispatch]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      OPENSPEC_TELEMETRY: "0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.12.6"
+          enable-cache: true
+      - name: Install locked dependencies
+        run: make setup
+      - name: Validate code and Compose
+        run: make check
+      - name: Validate specifications
+        run: npx --yes @fission-ai/openspec@1.10.0 validate --all --strict
+      - name: Start container environment
+        run: make containers-up
+      - name: Exercise isolation, revocation, and workflow
+        run: LAB_CONTAINER_TESTS=1 uv run --locked pytest tests/test_containers.py
+      - name: Stop disposable services
+        if: always()
+        run: docker compose down

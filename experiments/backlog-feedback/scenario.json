@@ -1,0 +1,12 @@
+{
+  "steps": 36,
+  "initial_backlog": 10,
+  "arrivals_per_step": 10,
+  "initial_capacity": 4,
+  "base_capacity": 10,
+  "min_capacity": 0,
+  "max_capacity": 20,
+  "target_backlog": 8,
+  "observation_delay": 4,
+  "adjustment_gain": 0.4
+}

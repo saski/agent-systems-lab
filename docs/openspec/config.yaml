@@ -1,0 +1,44 @@
+schema: spec-driven
+
+context: |
+  Agent Systems Lab is a local playground for governed multi-agent systems and
+  systems-thinking experiments. The initial vertical slice is a deterministic
+  stock-and-flow backlog experiment inspired by reading Donella Meadows'
+  Thinking in Systems; it is not a general coding agent or production system.
+
+  Runtime target: Python 3.11+, managed with uv and its committed lockfile.
+  LangGraph coordinates the macro workflow. LangChain create_agent hosts the
+  Researcher, Builder, and Reviewer specialists. A deterministic gateway owns
+  authorization and proxies every model and tool call. Specialist agent.yaml,
+  persona.md, and skills describe behavior but never grant permission.
+
+  The local demo uses scripted model responses through the real LangChain tool
+  loop and must label results as fixture-backed. It makes no claim about live
+  provider quality or safety. Provider credentials stay in the gateway. Workers
+  receive no host credentials, Docker socket, or external network access.
+
+  The host CLI is trusted orchestration: it launches one-shot workers from a
+  fixed template, can revoke all grants for a run, and can stop only workers
+  labelled for that run. The v0 workflow has no dynamic child delegation. Local
+  audit state uses SQLAlchemy with SQLite; the Compose target uses Postgres.
+  LangGraph SQLite checkpoints live under ignored .lab/ and support a durable
+  human interrupt after review. Approval or rejection applies to the exact
+  reviewed digest and never publishes externally.
+
+  Keep requirements concrete and scoped to the first slice. Distinguish local
+  fixture behavior and container targets from future live-model routing,
+  delegated grants, OTLP telemetry, stronger sandboxing, and general coding
+  workflows. Experiments state a hypothesis, boundary, variables, observations,
+  and limitations. Technical artifacts use concise English.
+
+rules:
+  proposal:
+    - State the first vertical slice and explicit non-goals.
+    - Distinguish initial acceptance scope from future roadmap.
+  specs:
+    - Use SHALL requirements and concrete GIVEN/WHEN/THEN scenarios.
+    - State fixture provenance wherever scripted model output is involved.
+  design:
+    - Identify trust boundaries, data stores, and runtime limits.
+  tasks:
+    - Keep tasks small and independently verifiable.

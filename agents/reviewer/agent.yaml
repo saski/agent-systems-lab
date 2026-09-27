@@ -1,0 +1,7 @@
+id: reviewer
+owner: saski
+runtime: langchain
+model_route: fixture
+requested_capabilities:
+  - model.call
+  - simulation.review
