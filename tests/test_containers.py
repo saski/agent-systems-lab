@@ -20,15 +20,17 @@ URL = "http://127.0.0.1:8765"
 
 
 def command(*args: str, input_text: str | None = None) -> str:
-    return subprocess.run(
+    result = subprocess.run(
         list(args),
         input=input_text,
         text=True,
         capture_output=True,
-        check=True,
+        check=False,
         timeout=180,
         cwd=ROOT,
-    ).stdout
+    )
+    assert result.returncode == 0, result.stderr[-5000:]
+    return result.stdout
 
 
 def control() -> ControlClient:

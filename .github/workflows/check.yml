@@ -27,6 +27,9 @@ jobs:
         run: make containers-up
       - name: Exercise isolation, revocation, and workflow
         run: LAB_CONTAINER_TESTS=1 uv run --locked pytest tests/test_containers.py
+      - name: Container diagnostics
+        if: failure()
+        run: docker compose logs --no-color --tail 100 gateway db
       - name: Stop disposable services
         if: always()
         run: docker compose down

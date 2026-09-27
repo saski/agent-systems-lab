@@ -11,7 +11,7 @@ services:
       LAB_DATABASE_URL: postgresql+psycopg://lab:local-development-only@db/lab
     ports:
       - "127.0.0.1:8765:8000"
-    networks: [workers, control]
+    networks: [workers, control, operator]
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
@@ -50,6 +50,7 @@ networks:
     internal: true
   control:
     internal: true
+  operator: {}
 
 volumes:
   control-data:

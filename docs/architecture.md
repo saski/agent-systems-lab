@@ -44,6 +44,11 @@ one fixed image. The workers network is internal. The database has a different
 internal network, reachable by the gateway and not by workers. Only the gateway
 API is published, bound to `127.0.0.1:8765`.
 
+The gateway also has an operator-facing bridge so Docker can publish that
+loopback port. Workers are not attached to this bridge. The gateway itself is
+trusted and can have outbound connectivity; v0 exposes no forwarding tool or
+live provider route through it.
+
 The workers share an internal network but expose no listening services and
 have no shared writable volumes. This is not hostile multi-tenant isolation.
 The host and gateway are trusted. Container escape and compromise of the host,

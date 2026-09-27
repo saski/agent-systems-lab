@@ -4,6 +4,7 @@ import argparse
 import json
 import os
 import secrets
+import shlex
 import socket
 import threading
 import time
@@ -86,16 +87,20 @@ def execute(args: argparse.Namespace, root: Path, control: ControlClient) -> Non
             graph.invoke({"run_id": run_id}, {"configurable": {"thread_id": run_id}})
         snapshot = control.request("GET", f"/runs/{run_id}")
         artifacts = export_run(root, snapshot)
+        next_command = ["uv", "run", "systems-lab"]
+        if args.gateway:
+            next_command.extend(["--gateway", args.gateway])
+        next_command.extend(["decide", run_id, "--digest", snapshot["digest"], "--approve"])
         print(
             json.dumps(
                 {
                     "run_id": run_id,
-                    "status": "awaiting_review",
+                    "status": snapshot["status"],
                     "model_mode": "fixture",
                     "executor": args.executor,
                     "digest": snapshot["digest"],
                     "artifacts": str(artifacts),
-                    "next": f"systems-lab decide {run_id} --digest {snapshot['digest']} --approve",
+                    "next": shlex.join(next_command),
                 },
                 indent=2,
             )
