@@ -248,7 +248,7 @@ class Journal:
         query = select(self.events).where(self.events.c.sequence > after)
         if run_id:
             query = query.where(self.events.c.run_id == run_id)
-        with self.engine.connect() as connection:
+        with self.engine.connect().execution_options(lab_readonly=True) as connection:
             return [
                 dict(row)
                 for row in connection.execute(
@@ -263,7 +263,7 @@ class Journal:
             checkpoint.get("checked") == 0 and checkpoint.get("head_hash") == GENESIS
         )
         valid = True
-        with self.engine.connect() as connection:
+        with self.engine.connect().execution_options(lab_readonly=True) as connection:
             head = (
                 connection.execute(
                     select(self.head).where(self.head.c.id == 1).with_for_update(read=True)
@@ -300,7 +300,7 @@ class Journal:
         }
 
     def pending(self, limit: int = 100) -> list[dict[str, Any]]:
-        with self.engine.connect() as connection:
+        with self.engine.connect().execution_options(lab_readonly=True) as connection:
             return [
                 dict(row)
                 for row in connection.execute(
@@ -325,7 +325,7 @@ class Journal:
             )
 
     def outbox_status(self) -> dict[str, Any]:
-        with self.engine.connect() as connection:
+        with self.engine.connect().execution_options(lab_readonly=True) as connection:
             pending = connection.execute(
                 select(func.count()).select_from(self.outbox).where(self.outbox.c.delivered == 0)
             ).scalar_one()
@@ -338,7 +338,7 @@ class Journal:
         return {"pending": pending, "last_error": error}
 
     def worker_started(self, run_id: str, actor: str) -> float | None:
-        with self.engine.connect() as connection:
+        with self.engine.connect().execution_options(lab_readonly=True) as connection:
             return connection.execute(
                 select(self.events.c.timestamp)
                 .where(

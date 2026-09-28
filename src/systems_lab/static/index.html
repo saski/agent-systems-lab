@@ -65,8 +65,9 @@
           <div class="main-grid">
             <section class="panel system-panel" aria-labelledby="map-title">
                 <div class="panel-heading"><div><div class="eyebrow">LIVE TOPOLOGY</div><h2 id="map-title">System map</h2></div><span id="map-state" class="subtle-label">Awaiting live state</span></div>
+                <div class="map-scroll-hint">Swipe or scroll sideways to inspect the full topology <span aria-hidden="true">→</span></div>
                 <div class="map-scroll"><div class="system-map" id="system-map" aria-label="System component topology">
-                  <svg class="wires" viewBox="0 0 900 264" role="img" aria-label="Operator connects to the orchestrator, which coordinates three agents through a policy gateway. Events are stored in the ledger and sent to OTLP.">
+                  <svg class="wires" viewBox="0 0 900 264" role="img" aria-label="The operator starts an orchestrated workflow. Specialist agents use the deterministic policy gateway, which records events in the audit ledger. The ledger outbox sends telemetry to OTLP.">
                     <defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7Z" fill="#596276"/></marker></defs>
                     <path class="wire" d="M130 130H190" marker-end="url(#arrow)"/><path class="wire" d="M318 130H373" marker-end="url(#arrow)"/>
                     <path class="wire" d="M495 130H555" marker-end="url(#arrow)"/><path class="wire" d="M684 130H734" marker-end="url(#arrow)"/>

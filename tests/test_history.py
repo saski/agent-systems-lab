@@ -156,3 +156,19 @@ def test_replacement_is_rejected_even_by_a_separate_sqlite_connection(tmp_path: 
     assert store.journal.verify()["valid"]
     outsider.dispose()
     store.close()
+
+
+def test_a_dashboard_read_snapshot_does_not_reserve_the_sqlite_writer(tmp_path: Path) -> None:
+    from sqlalchemy import select
+
+    store = Store(f"sqlite:///{tmp_path / 'readers.db'}")
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        with store.engine.connect().execution_options(lab_readonly=True) as reader:
+            reader.execute(select(store.journal.head)).all()
+            future = executor.submit(store.create_run, SCENARIO)
+            try:
+                assert future.result(timeout=2)
+            finally:
+                reader.rollback()
+    assert store.journal.verify()["valid"]
+    store.close()

@@ -46,7 +46,10 @@ services:
       retries: 20
 
   otel-collector:
-    image: otel/opentelemetry-collector-contrib:0.161.0
+    build:
+      context: .
+      dockerfile: observability/Dockerfile
+    image: agent-systems-lab-collector:local
     profiles: [observability]
     command: [--config=/etc/otelcol-contrib/config.yaml]
     volumes:

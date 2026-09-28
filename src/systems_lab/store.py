@@ -62,10 +62,16 @@ class Store:
             def sqlite_connect(dbapi_connection: Any, _record: Any) -> None:
                 dbapi_connection.isolation_level = None
                 dbapi_connection.execute("PRAGMA recursive_triggers=ON")
+                dbapi_connection.execute("PRAGMA journal_mode=WAL")
 
             @event.listens_for(self.engine, "begin")
             def sqlite_begin(connection: Any) -> None:
-                connection.exec_driver_sql("BEGIN IMMEDIATE")
+                statement = (
+                    "BEGIN"
+                    if connection.get_execution_options().get("lab_readonly")
+                    else "BEGIN IMMEDIATE"
+                )
+                connection.exec_driver_sql(statement)
 
         metadata = MetaData()
         self.runs = Table(
@@ -150,7 +156,7 @@ class Store:
         return run_id
 
     def get_run(self, run_id: str) -> dict[str, Any]:
-        with self.engine.connect() as connection:
+        with self.engine.connect().execution_options(lab_readonly=True) as connection:
             row = (
                 connection.execute(select(self.runs).where(self.runs.c.run_id == run_id))
                 .mappings()

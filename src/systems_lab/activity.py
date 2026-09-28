@@ -55,7 +55,7 @@ def summarize(run: dict[str, Any], events: list[dict[str, Any]], now: float) -> 
 
 def activity(store: Store, after: int, telemetry_enabled: bool) -> dict[str, Any]:
     integrity = store.journal.verify()
-    with store.engine.connect() as connection:
+    with store.engine.connect().execution_options(lab_readonly=True) as connection:
         runs = list(
             connection.execute(
                 select(store.runs)

@@ -120,7 +120,9 @@ OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://127.0.0.1:4318/v1/traces make dashboar
 ```
 
 Do not run the Compose gateway and a local dashboard on port 8765 simultaneously.
-The checked-in Collector configuration uses the `observability` profile. Its output file is a troubleshooting copy, not
+The checked-in Collector configuration uses the `observability` profile. A small
+image layer prepares a directory owned by the Collector user (10001). The file
+exporter appends across restarts. Its output file is a troubleshooting copy, not
 immutable storage. OTLP acceptance is not a guarantee of permanent downstream
 retention; the canonical history remains in the database.
 
@@ -130,7 +132,9 @@ The integration follows the OpenTelemetry [Python exporter documentation](https:
 [public trace SDK](https://opentelemetry-python.readthedocs.io/en/latest/sdk/trace.html)
 and [Collector resiliency guidance](https://opentelemetry.io/docs/collector/resiliency/).
 
-Full-chain verification and live projections deliberately prioritize clarity over
+SQLite uses WAL with read snapshots so dashboard scans do not reserve its writer
+slot; ledger writers still serialize sequence allocation. Full-chain verification
+and live projections deliberately prioritize clarity over
 scale in this single-operator playground. The run overview is limited to the
 latest 100 runs; historical events have stable cursors. Multi-tenant access,
 external WORM anchoring, horizontally scaled exporters, configurable retention,
