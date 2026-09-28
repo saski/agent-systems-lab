@@ -24,17 +24,22 @@ from systems_lab.store import Store
 def initialize(root: Path) -> str:
     state = root / ".lab"
     state.mkdir(mode=0o700, exist_ok=True)
-    secret_file = state / "operator.token"
-    if not secret_file.exists():
-        descriptor = os.open(secret_file, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-        with os.fdopen(descriptor, "w") as stream:
-            stream.write(secrets.token_urlsafe(32))
-    token = secret_file.read_text().strip()
+    for name in ("operator", "viewer"):
+        secret_file = state / f"{name}.token"
+        if not secret_file.exists():
+            descriptor = os.open(secret_file, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+            with os.fdopen(descriptor, "w") as stream:
+                stream.write(secrets.token_urlsafe(32))
+    token = (state / "operator.token").read_text().strip()
+    viewer = (state / "viewer.token").read_text().strip()
     env_file = state / "gateway.env"
     if not env_file.exists():
         descriptor = os.open(env_file, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
         with os.fdopen(descriptor, "w") as stream:
-            stream.write(f"LAB_OPERATOR_TOKEN={token}\n")
+            stream.write(f"LAB_OPERATOR_TOKEN={token}\nLAB_VIEWER_TOKEN={viewer}\n")
+    elif "LAB_VIEWER_TOKEN=" not in env_file.read_text():
+        with env_file.open("a") as stream:
+            stream.write(f"\nLAB_VIEWER_TOKEN={viewer}\n")
     return token
 
 
@@ -46,7 +51,7 @@ def local_control(root: Path, token: str) -> Iterator[ControlClient]:
     port = listener.getsockname()[1]
     server = uvicorn.Server(
         uvicorn.Config(
-            create_app(store, token),
+            create_app(store, token, (root / ".lab" / "viewer.token").read_text().strip()),
             log_level="error",
             access_log=False,
         )
@@ -105,6 +110,24 @@ def execute(args: argparse.Namespace, root: Path, control: ControlClient) -> Non
                 indent=2,
             )
         )
+    elif args.command == "history-checkpoint":
+        checkpoint = control.request("GET", "/history/checkpoint")
+        if not checkpoint["valid"]:
+            raise ValueError("History integrity failed; checkpoint not written")
+        destination = Path(args.output).resolve()
+        with destination.open("x") as stream:
+            stream.write(json.dumps(checkpoint, indent=2) + "\n")
+        print(json.dumps({"checkpoint": str(destination), **checkpoint}))
+    elif args.command == "history-verify":
+        checkpoint = json.loads(Path(args.checkpoint).read_text()) if args.checkpoint else None
+        result = (
+            control.request("POST", "/history/verify", checkpoint)
+            if checkpoint
+            else (control.request("GET", "/history/checkpoint"))
+        )
+        print(json.dumps(result))
+        if not result["valid"]:
+            raise SystemExit(1)
     elif args.command == "status":
         snapshot = control.request("GET", f"/runs/{args.run_id}")
         export_run(root, snapshot)
@@ -144,6 +167,14 @@ def parser() -> argparse.ArgumentParser:
     commands = result.add_subparsers(dest="command", required=True)
     commands.add_parser("init", help="Generate local operator credentials without printing them")
     commands.add_parser("gateway", help="Serve the trusted control gateway")
+    dashboard = commands.add_parser("dashboard", help="Serve the local dashboard and gateway")
+    dashboard.add_argument("--port", type=int, default=8765)
+    checkpoint = commands.add_parser("history-checkpoint", help="Export a new history anchor file")
+    checkpoint.add_argument("--output", required=True)
+    verify = commands.add_parser(
+        "history-verify", help="Verify the journal and optional external anchor"
+    )
+    verify.add_argument("--checkpoint")
     for name in ("run", "demo"):
         command = commands.add_parser(name, help="Run the fixture experiment and pause for review")
         command.add_argument("--scenario", default="experiments/backlog-feedback/scenario.json")
@@ -172,11 +203,30 @@ def main() -> None:
         database = os.environ["LAB_DATABASE_URL"]
         store = Store(database)
         try:
-            uvicorn.run(create_app(store, token), host="0.0.0.0", port=8000, access_log=False)
+            uvicorn.run(
+                create_app(store, token, os.environ.get("LAB_VIEWER_TOKEN")),
+                host="0.0.0.0",
+                port=8000,
+                access_log=False,
+            )
         finally:
             store.close()
         return
     token = initialize(root)
+    if args.command == "dashboard":
+        if args.gateway:
+            raise SystemExit("Open the external gateway's /dashboard URL directly")
+        store = Store(f"sqlite:///{root / '.lab' / 'control.db'}")
+        viewer = (root / ".lab" / "viewer.token").read_text().strip()
+        print(f"Dashboard: http://127.0.0.1:{args.port}/dashboard", flush=True)
+        print(f"Read-only viewer credential: {root / '.lab' / 'viewer.token'}", flush=True)
+        try:
+            uvicorn.run(
+                create_app(store, token, viewer), host="127.0.0.1", port=args.port, access_log=False
+            )
+        finally:
+            store.close()
+        return
     if args.command == "init":
         print("Local credentials ready in .lab/ (ignored by Git).")
         return

@@ -5,10 +5,24 @@ import json
 import secrets
 import time
 import uuid
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
 from typing import Any
 
-from sqlalchemy import JSON, Column, Float, Integer, MetaData, String, Table, create_engine, select
+from sqlalchemy import (
+    JSON,
+    Column,
+    Float,
+    Integer,
+    MetaData,
+    String,
+    Table,
+    create_engine,
+    event,
+    select,
+)
+
+from systems_lab.journal import Journal, JournalConflict
 
 CAPABILITIES = {
     "researcher": frozenset({"model.call", "system.describe"}),
@@ -37,8 +51,22 @@ class Store:
     def __init__(self, url: str, clock: Callable[[], float] = time.time) -> None:
         self.clock = clock
         self.engine = create_engine(
-            url, connect_args={"check_same_thread": False} if url.startswith("sqlite") else {}
+            url,
+            connect_args={"check_same_thread": False, "timeout": 30}
+            if url.startswith("sqlite")
+            else {},
         )
+        if url.startswith("sqlite"):
+
+            @event.listens_for(self.engine, "connect")
+            def sqlite_connect(dbapi_connection: Any, _record: Any) -> None:
+                dbapi_connection.isolation_level = None
+                dbapi_connection.execute("PRAGMA recursive_triggers=ON")
+
+            @event.listens_for(self.engine, "begin")
+            def sqlite_begin(connection: Any) -> None:
+                connection.exec_driver_sql("BEGIN IMMEDIATE")
+
         metadata = MetaData()
         self.runs = Table(
             "runs",
@@ -76,25 +104,30 @@ class Store:
             Column("model_mode", String, nullable=False),
         )
         metadata.create_all(self.engine)
+        self.journal = Journal(self.engine, clock)
+        self.journal.import_legacy(self.events)
 
     def close(self) -> None:
         self.engine.dispose()
 
     def _event(
-        self, connection: Any, run_id: str, actor: str, action: str, decision: str, detail: str = ""
+        self,
+        connection: Any,
+        run_id: str,
+        actor: str,
+        action: str,
+        decision: str,
+        detail: str = "",
+        *,
+        key: str | None = None,
+        data: dict[str, Any] | None = None,
     ) -> None:
-        connection.execute(
-            self.events.insert().values(
-                id=str(uuid.uuid4()),
-                run_id=run_id,
-                timestamp=self.clock(),
-                actor=actor,
-                action=action,
-                decision=decision,
-                detail=detail,
-                model_mode="fixture",
+        try:
+            self.journal.append(
+                connection, run_id, actor, action, decision, detail, key=key, data=data
             )
-        )
+        except JournalConflict as error:
+            raise ControlError(409, str(error)) from error
 
     def create_run(self, scenario: dict[str, Any]) -> str:
         run_id = str(uuid.uuid4())
@@ -111,7 +144,9 @@ class Store:
                     model_mode="fixture",
                 )
             )
-            self._event(connection, run_id, "operator", "run.create", "allow")
+            self._event(
+                connection, run_id, "operator", "run.create", "allow", key=f"run:{run_id}:create"
+            )
         return run_id
 
     def get_run(self, run_id: str) -> dict[str, Any]:
@@ -134,9 +169,9 @@ class Store:
             result["events"] = [
                 dict(event)
                 for event in connection.execute(
-                    select(self.events)
-                    .where(self.events.c.run_id == run_id)
-                    .order_by(self.events.c.timestamp, self.events.c.id)
+                    select(self.journal.events)
+                    .where(self.journal.events.c.run_id == run_id)
+                    .order_by(self.journal.events.c.sequence)
                 ).mappings()
             ]
             result["instances"] = [
@@ -252,7 +287,16 @@ class Store:
             )
             if updated.rowcount != 1:
                 raise ControlError(403, "Run is no longer active")
-            self._event(connection, run_id, "gateway", "artifact.record", "allow", name)
+            self._event(
+                connection,
+                run_id,
+                "gateway",
+                "artifact.record",
+                "allow",
+                name,
+                key=f"artifact:{run_id}:{name}",
+                data={"digest": digest(content)},
+            )
         return content
 
     def revoke(self, run_id: str) -> None:
@@ -261,7 +305,9 @@ class Store:
             connection.execute(
                 self.runs.update().where(self.runs.c.run_id == run_id).values(status="revoked")
             )
-            self._event(connection, run_id, "operator", "run.revoke", "allow")
+            self._event(
+                connection, run_id, "operator", "run.revoke", "allow", key=f"run:{run_id}:revoke"
+            )
 
     def ready(self, run_id: str) -> None:
         with self.engine.begin() as connection:
@@ -349,4 +395,25 @@ class Store:
                 f"worker.{outcome}",
                 "record",
                 f"role={registered}; executor={executor}",
+                key=f"worker:{instance_id}:{outcome}",
             )
+
+    @contextmanager
+    def operation(self, identity: dict[str, Any], action: str) -> Iterator[None]:
+        started = time.perf_counter()
+        decision = "allow"
+        try:
+            yield
+        except Exception:
+            decision = "error"
+            raise
+        finally:
+            with self.engine.begin() as connection:
+                self._event(
+                    connection,
+                    identity["run_id"],
+                    identity["instance_id"],
+                    f"{action}.completed",
+                    decision,
+                    data={"duration_ms": max(0, (time.perf_counter() - started) * 1000)},
+                )

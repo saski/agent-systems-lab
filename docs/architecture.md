@@ -124,3 +124,13 @@ experiment, not automatically an architectural improvement.
 
 The design applies selected reference principles. It is not a certified or
 complete implementation of Blueprint Alliance governance.
+
+## Observable activity and historical evidence
+
+The gateway commits an append-only journal and a delivery outbox with each
+operational event. The dashboard reads journal-derived activity; OpenTelemetry
+receives correlated spans from that outbox. Collector outages do not interrupt
+authorization or the workflow. Database triggers and hash verification protect
+normal append-only use; independent checkpoints detect rewriting against an
+older trusted head. This local architecture does not exclude a privileged host
+or database administrator. See [observability](observability.md) for details.

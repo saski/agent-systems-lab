@@ -9,6 +9,7 @@ services:
         required: false
     environment:
       LAB_DATABASE_URL: postgresql+psycopg://lab:local-development-only@db/lab
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: ${OTEL_EXPORTER_OTLP_TRACES_ENDPOINT:-}
     ports:
       - "127.0.0.1:8765:8000"
     networks: [workers, control, operator]
@@ -44,6 +45,17 @@ services:
       timeout: 2s
       retries: 20
 
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.161.0
+    profiles: [observability]
+    command: [--config=/etc/otelcol-contrib/config.yaml]
+    volumes:
+      - ./observability/collector.yaml:/etc/otelcol-contrib/config.yaml:ro
+      - telemetry-data:/var/lib/otelcol
+    ports:
+      - "127.0.0.1:4318:4318"
+    networks: [control, operator]
+
 networks:
   workers:
     name: agent-systems-lab-workers
@@ -54,3 +66,4 @@ networks:
 
 volumes:
   control-data:
+  telemetry-data:

@@ -12,7 +12,7 @@ acceptance criteria, costs, and limitations.
 | Runtime substitution | What changes when one specialist uses another runtime? | Same tasks, permissions and budgets; compare results and operational burden |
 | Dynamic delegation | Can children receive only a subset of parent authority? | Authenticated parent chain, scope intersection, depth limits, descendant revocation |
 | Coding solution | Can a Builder modify a disposable project safely? | Sandboxed execution, scoped files, independent tests, diff-bound approval |
-| Telemetry | Can we identify feedback loops in the agent system itself? | Correlated traces, tool latency, retries, queue growth, cost and intervention events |
+| Telemetry analysis | What feedback loops appear in agent behavior? | Build on the implemented event journal, OTLP export and activity dashboard; study retry feedback, queue growth, cost and interventions |
 | Stronger isolation | What additional boundary is required for untrusted code? | Threat model, escape tests, microVM or equivalent evaluation |
 
 Future systems-thinking topics can include reinforcing loops, buffers, competing

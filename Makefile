@@ -4,6 +4,9 @@ help:
 	@echo "setup             Install locked dependencies"
 	@echo "check             Lint, formatting, tests, and Compose validation"
 	@echo "demo              Run the fixture-backed local experiment"
+	@echo "dashboard         Serve the local activity dashboard on port 8765"
+	@echo "dashboard-demo    Run an experiment through that persistent gateway"
+	@echo "history-check     Verify canonical history integrity"
 	@echo "spec-check        Validate OpenSpec requirements"
 	@echo "containers-up     Start the container gateway and database"
 	@echo "containers-demo   Run isolated one-shot workers"
@@ -43,3 +46,23 @@ containers-demo:
 
 containers-down:
 	docker compose down
+
+.PHONY: dashboard dashboard-demo history-check
+
+dashboard:
+	uv run --locked systems-lab dashboard
+
+dashboard-demo:
+	uv run --locked systems-lab --gateway http://127.0.0.1:8765 demo
+
+history-check:
+	uv run --locked systems-lab history-verify
+
+.PHONY: telemetry-up telemetry-down
+
+telemetry-up:
+	uv run --locked systems-lab init
+	OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://otel-collector:4318/v1/traces docker compose --profile observability up --build -d --wait gateway otel-collector
+
+telemetry-down:
+	docker compose --profile observability down

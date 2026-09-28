@@ -24,12 +24,12 @@ jobs:
       - name: Validate specifications
         run: npx --yes @fission-ai/openspec@1.10.0 validate --all --strict
       - name: Start container environment
-        run: make containers-up
+        run: make telemetry-up
       - name: Exercise isolation, revocation, and workflow
-        run: LAB_CONTAINER_TESTS=1 uv run --locked pytest tests/test_containers.py
+        run: LAB_CONTAINER_TESTS=1 LAB_OTEL_TESTS=1 uv run --locked pytest tests/test_containers.py
       - name: Container diagnostics
         if: failure()
-        run: docker compose logs --no-color --tail 100 gateway db
+        run: docker compose logs --no-color --tail 100 gateway db otel-collector
       - name: Stop disposable services
         if: always()
-        run: docker compose down
+        run: make telemetry-down

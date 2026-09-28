@@ -145,3 +145,91 @@ def test_revocation_blocks_calls_and_kills_only_labelled_run_containers() -> Non
         assert response.status_code == 403
     finally:
         subprocess.run(["docker", "stop", container, unrelated], capture_output=True, timeout=15)
+
+
+def test_postgres_history_rejects_mutation_and_survives_concurrent_writes() -> None:
+    from concurrent.futures import ThreadPoolExecutor
+
+    client = control()
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        run_ids = list(
+            executor.map(
+                lambda _: client.request("POST", "/runs", {"scenario": SCENARIO})["run_id"],
+                range(8),
+            )
+        )
+    assert len(set(run_ids)) == 8
+    before = client.request("GET", "/history/checkpoint")
+    assert before["valid"]
+    for mutation in [
+        "UPDATE journal SET decision='changed'",
+        "DELETE FROM journal",
+        "TRUNCATE journal",
+    ]:
+        result = subprocess.run(
+            [
+                "docker",
+                "compose",
+                "exec",
+                "-T",
+                "db",
+                "psql",
+                "-U",
+                "lab",
+                "-d",
+                "lab",
+                "-c",
+                mutation,
+            ],
+            capture_output=True,
+            text=True,
+            timeout=15,
+            cwd=ROOT,
+        )
+        assert result.returncode != 0
+        assert "append-only history" in result.stderr
+    assert client.request("GET", "/history/checkpoint") == before
+
+
+@pytest.mark.skipif(os.environ.get("LAB_OTEL_TESTS") != "1", reason="Requires optional Collector")
+def test_real_collector_receives_journal_spans_and_readonly_dashboard(tmp_path: Path) -> None:
+    import time
+
+    client = control()
+    run_id = client.request("POST", "/runs", {"scenario": SCENARIO})["run_id"]
+    viewer = (ROOT / ".lab" / "viewer.token").read_text().strip()
+    headers = {"Authorization": f"Bearer {viewer}"}
+    deadline = time.monotonic() + 30
+    while time.monotonic() < deadline:
+        response = httpx.get(f"{URL}/api/activity", headers=headers, timeout=10)
+        response.raise_for_status()
+        snapshot = response.json()
+        if snapshot["telemetry"]["enabled"] and snapshot["telemetry"]["pending"] == 0:
+            break
+        time.sleep(0.5)
+    else:
+        raise AssertionError("Collector did not acknowledge pending spans")
+    assert snapshot["integrity"]["valid"]
+    assert httpx.get(f"{URL}/dashboard", timeout=10).status_code == 200
+    assert httpx.post(f"{URL}/runs/{run_id}/revoke", headers=headers, timeout=10).status_code == 401
+    destination = tmp_path / "traces.jsonl"
+    deadline = time.monotonic() + 15
+    while time.monotonic() < deadline:
+        copied = subprocess.run(
+            [
+                "docker",
+                "compose",
+                "cp",
+                "otel-collector:/var/lib/otelcol/traces.jsonl",
+                str(destination),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            cwd=ROOT,
+        )
+        if copied.returncode == 0 and run_id in destination.read_text():
+            break
+        time.sleep(0.5)
+    else:
+        raise AssertionError("Collector accepted spans but its file has no matching run")

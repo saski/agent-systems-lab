@@ -4,14 +4,19 @@ import hmac
 import json
 import math
 import time
+from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Annotated, Any, Literal
 
-from fastapi import Depends, FastAPI, Header
-from fastapi.responses import JSONResponse
+from fastapi import Depends, FastAPI, Header, Query, Request
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
 
+from systems_lab.activity import activity, summarize
 from systems_lab.simulation import Scenario, simulate
 from systems_lab.store import ControlError, Store
+from systems_lab.telemetry import TelemetryDelivery
 
 TOOLS = {
     "researcher": ("describe_system", "system.describe"),
@@ -107,10 +112,44 @@ def fixture_completion(body: dict[str, Any], role: str) -> dict[str, Any]:
     }
 
 
-def create_app(store: Store, operator_token: str) -> FastAPI:
+def create_app(
+    store: Store,
+    operator_token: str,
+    viewer_token: str | None = None,
+    delivery: TelemetryDelivery | None = None,
+) -> FastAPI:
     if not operator_token:
         raise ValueError("An operator credential is required")
-    app = FastAPI(title="Agent Systems Lab control gateway")
+    delivery = delivery or TelemetryDelivery.from_environment(store.journal)
+
+    @asynccontextmanager
+    async def lifespan(_app: FastAPI) -> Any:
+        delivery.start()
+        try:
+            yield
+        finally:
+            delivery.stop()
+
+    app = FastAPI(title="Agent Systems Lab control gateway", lifespan=lifespan)
+    static = Path(__file__).with_name("static")
+    app.mount("/static", StaticFiles(directory=static, check_dir=False), name="static")
+
+    @app.middleware("http")
+    async def protect_browser(request: Request, call_next: Any) -> Any:
+        response = await call_next(request)
+        response.headers["Cache-Control"] = "no-store"
+        response.headers["Referrer-Policy"] = "no-referrer"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["Content-Security-Policy"] = (
+            "default-src 'self'; script-src 'self'; style-src 'self'; "
+            "img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; "
+            "base-uri 'none'; form-action 'self'"
+        )
+        return response
+
+    @app.get("/dashboard", include_in_schema=False)
+    def dashboard() -> FileResponse:
+        return FileResponse(static / "index.html")
 
     @app.exception_handler(ControlError)
     async def control_error(_request: Any, error: ControlError) -> JSONResponse:
@@ -124,6 +163,33 @@ def create_app(store: Store, operator_token: str) -> FastAPI:
     def operator(token: str = Depends(credential)) -> None:
         if not hmac.compare_digest(token, operator_token):
             raise ControlError(401, "Operator credential required")
+
+    def viewer(token: str = Depends(credential)) -> None:
+        if not hmac.compare_digest(token, operator_token) and not (
+            viewer_token and hmac.compare_digest(token, viewer_token)
+        ):
+            raise ControlError(401, "Viewer credential required")
+
+    @app.get("/api/activity", dependencies=[Depends(viewer)])
+    def get_activity(after: int = Query(default=0, ge=0)) -> dict[str, Any]:
+        return activity(store, after, delivery.enabled)
+
+    @app.get("/api/activity/{run_id}", dependencies=[Depends(viewer)])
+    def run_activity(run_id: str) -> dict[str, Any]:
+        run = store.get_run(run_id)
+        return {
+            "run": summarize(run, run["events"], store.clock()),
+            "events": run["events"],
+            "integrity": store.journal.verify(),
+        }
+
+    @app.get("/history/checkpoint", dependencies=[Depends(viewer)])
+    def checkpoint() -> dict[str, Any]:
+        return store.journal.verify()
+
+    @app.post("/history/verify", dependencies=[Depends(viewer)])
+    def verify(checkpoint: dict[str, Any]) -> dict[str, Any]:
+        return store.journal.verify(checkpoint)
 
     @app.get("/health")
     def health() -> dict[str, str]:
@@ -170,35 +236,37 @@ def create_app(store: Store, operator_token: str) -> FastAPI:
     @app.post("/tools/{action}")
     def call_tool(action: str, token: str = Depends(credential)) -> dict[str, Any]:
         identity = store.authorize(token, action)
-        run_id = identity["run_id"]
-        run = store.get_run(run_id)
-        if action == "system.describe":
-            result = {
-                "stock": "unfinished tasks",
-                "inflow": "arrivals per time step",
-                "outflow": "completed tasks per time step",
-                "feedback": "capacity responds to observed backlog relative to a target",
-                "boundary": "single queue, homogeneous tasks, no retries or worker learning",
-                "hypothesis": "Observation delay can alter controller stability; compare runs.",
-                "provenance": "Original teaching example; not a reproduction of Meadows' book.",
-            }
-            return store.artifact(run_id, "research", result)
-        if action == "simulation.run":
-            result = simulate(Scenario.from_dict(run["scenario"]))
-            return store.artifact(run_id, "simulation", result)
-        if action == "simulation.review":
-            if "simulation" not in run["artifacts"]:
-                raise ControlError(409, "Simulation evidence is required before review")
-            return store.artifact(
-                run_id, "review", review_simulation(run["artifacts"]["simulation"])
-            )
-        raise ControlError(403, "Unknown operation")
+        with store.operation(identity, action):
+            run_id = identity["run_id"]
+            run = store.get_run(run_id)
+            if action == "system.describe":
+                result = {
+                    "stock": "unfinished tasks",
+                    "inflow": "arrivals per time step",
+                    "outflow": "completed tasks per time step",
+                    "feedback": "capacity responds to observed backlog relative to a target",
+                    "boundary": "single queue, homogeneous tasks, no retries or worker learning",
+                    "hypothesis": "Observation delay can alter controller stability; compare runs.",
+                    "provenance": "Original teaching example; not a reproduction of Meadows' book.",
+                }
+                return store.artifact(run_id, "research", result)
+            if action == "simulation.run":
+                result = simulate(Scenario.from_dict(run["scenario"]))
+                return store.artifact(run_id, "simulation", result)
+            if action == "simulation.review":
+                if "simulation" not in run["artifacts"]:
+                    raise ControlError(409, "Simulation evidence is required before review")
+                return store.artifact(
+                    run_id, "review", review_simulation(run["artifacts"]["simulation"])
+                )
+            raise ControlError(403, "Unknown operation")
 
     @app.post("/v1/chat/completions")
     def model_call(body: dict[str, Any], token: str = Depends(credential)) -> dict[str, Any]:
         if body.get("model") != "fixture" or body.get("stream"):
             store.authorize(token, "model.route.unregistered")
         identity = store.authorize(token, "model.call")
-        return fixture_completion(body, identity["role"])
+        with store.operation(identity, "model.call"):
+            return fixture_completion(body, identity["role"])
 
     return app

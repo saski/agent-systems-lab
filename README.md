@@ -39,6 +39,24 @@ uv run systems-lab decide RUN_ID --digest DIGEST --approve
 Acceptance resumes the checkpointed workflow and records your decision. It does
 not publish, merge, deploy, or modify external services.
 
+## Follow activity live
+
+```sh
+make dashboard
+# In another terminal:
+make dashboard-demo
+```
+
+Open <http://127.0.0.1:8765/dashboard> and connect with `.lab/viewer.token`.
+The read-only dashboard shows the component map, agent activity, workflow stages,
+run history, audit events, chain integrity and OpenTelemetry delivery state.
+
+History is append-only and hash chained, with stable lifecycle event identities.
+Export a checkpoint to an independent location to detect privileged history
+rewriting against that copy. OpenTelemetry uses a persistent retry outbox and is
+enabled only with an explicit OTLP endpoint. See [activity and observability](docs/observability.md)
+for commands and the boundaries of these guarantees.
+
 ## Try independent containers
 
 Requirements: Docker Engine and Docker Compose v2.24+ (including v5).

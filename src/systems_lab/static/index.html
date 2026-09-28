@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#10141d">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23171927'/%3E%3Cpath d='M18 40V24h6v16zm11 0V16h6v24zm11 0V29h6v11z' fill='%23a69bff'/%3E%3C/svg%3E">
+    <title>Systems Lab · Activity</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/app.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="/dashboard" aria-label="Systems Lab dashboard home">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span><strong>systems lab</strong><small>GOVERNED AGENT PLAYGROUND</small></span>
+        </a>
+        <div class="topbar-right">
+          <span id="connection" class="connection" data-state="offline" role="status" aria-live="polite"><i></i><span>Disconnected</span></span>
+          <button id="logout" class="button button-quiet hidden" type="button">Lock viewer</button>
+          <span class="avatar" aria-hidden="true">SL</span>
+        </div>
+      </header>
+
+      <section id="auth-gate" class="auth-gate" aria-labelledby="auth-title">
+        <div class="auth-card">
+          <div class="eyebrow"><span class="eyebrow-line"></span> PRIVATE CONTROL PLANE</div>
+          <h1 id="auth-title">Connect your workspace</h1>
+          <p class="auth-copy">Enter the local viewer token to inspect runs, agent stages, and the audit stream.</p>
+          <form id="token-form">
+            <label for="token">Viewer token</label>
+            <div class="token-row"><input id="token" name="token" type="password" autocomplete="off" spellcheck="false" required placeholder="Paste token from .lab/viewer.token"><button class="button button-primary" type="submit">Connect <span aria-hidden="true">↗</span></button></div>
+            <p id="auth-error" class="form-error" role="alert"></p>
+          </form>
+          <div class="setup-note"><span class="setup-icon" aria-hidden="true">⌘</span><div><strong>Need a token?</strong><p>From the project root, run <code>uv run systems-lab init</code>, then copy the viewer token from <code>.lab/viewer.token</code>.</p></div></div>
+          <div class="auth-foot"><span class="shield" aria-hidden="true">◆</span> Token stays in this tab’s memory and is cleared when you lock or reload.</div>
+        </div>
+        <div class="auth-orbit orbit-one" aria-hidden="true"></div><div class="auth-orbit orbit-two" aria-hidden="true"></div>
+      </section>
+
+      <div id="dashboard" class="dashboard hidden">
+        <aside class="rail" aria-label="Workspace navigation">
+          <div class="rail-label">WORKSPACE</div>
+          <div class="rail-item active"><span class="rail-icon">◫</span><span>Activity</span><span class="rail-count" id="run-count">0</span></div>
+          <div class="rail-item muted"><span class="rail-icon">⌘</span><span>System map</span></div>
+          <div class="rail-bottom"><div class="rail-label">ENVIRONMENT</div><div class="env-label"><i></i><span>Local workspace</span></div><p>Read only · live feed</p></div>
+        </aside>
+
+        <section class="content">
+          <div class="page-heading">
+            <div><div class="breadcrumb">Workspace <span>/</span> Activity</div><h1>Activity overview</h1><p>Follow governed work as it moves through the system.</p></div>
+            <div class="heading-meta"><span id="feed-badge" class="live-pill" data-state="offline"><i></i> FEED IDLE</span><span id="updated-at" class="updated-at">Waiting for first sync</span></div>
+          </div>
+
+          <div id="stale-banner" class="stale-banner hidden" role="status"><span>↻</span><div><strong>Connection interrupted</strong><small>Showing the last received snapshot. Live activity is paused until the gateway responds.</small></div></div>
+
+          <section class="metrics" aria-label="System status">
+            <article class="metric-card"><div class="metric-top"><span>ACTIVE RUNS</span><span class="metric-symbol violet">◉</span></div><div id="metric-active" class="metric-value">—</div><div id="metric-active-note" class="metric-note">Awaiting gateway data</div></article>
+            <article class="metric-card"><div class="metric-top"><span>LEDGER INTEGRITY</span><span class="metric-symbol green">⌁</span></div><div id="metric-integrity" class="metric-value metric-word">Unknown</div><div id="metric-integrity-note" class="metric-note">No verification received</div></article>
+            <article class="metric-card"><div class="metric-top"><span>OTLP DELIVERY</span><span class="metric-symbol blue">◌</span></div><div id="metric-otlp" class="metric-value metric-word">Unknown</div><div id="metric-otlp-note" class="metric-note">Waiting for telemetry state</div></article>
+            <article class="metric-card"><div class="metric-top"><span>EVENTS SEEN</span><span class="metric-symbol amber">≋</span></div><div id="metric-events" class="metric-value">—</div><div id="metric-head" class="metric-note">Ledger head unavailable</div></article>
+          </section>
+
+          <div class="main-grid">
+            <section class="panel system-panel" aria-labelledby="map-title">
+                <div class="panel-heading"><div><div class="eyebrow">LIVE TOPOLOGY</div><h2 id="map-title">System map</h2></div><span id="map-state" class="subtle-label">Awaiting live state</span></div>
+                <div class="map-scroll"><div class="system-map" id="system-map" aria-label="System component topology">
+                  <svg class="wires" viewBox="0 0 900 264" role="img" aria-label="Operator connects to the orchestrator, which coordinates three agents through a policy gateway. Events are stored in the ledger and sent to OTLP.">
+                    <defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7Z" fill="#596276"/></marker></defs>
+                    <path class="wire" d="M130 130H190" marker-end="url(#arrow)"/><path class="wire" d="M318 130H373" marker-end="url(#arrow)"/>
+                    <path class="wire" d="M495 130H555" marker-end="url(#arrow)"/><path class="wire" d="M684 130H734" marker-end="url(#arrow)"/>
+                    <path class="wire wire-branch" d="M800 158V185" marker-end="url(#arrow)"/>
+                    <text x="155" y="116">REQUEST</text><text x="334" y="116">DISPATCH</text><text x="525" y="116">SCOPED ACCESS</text><text x="706" y="116">EVENTS</text><text x="833" y="178">OUTBOX</text>
+                  </svg>
+                  <div class="map-node operator" data-component="operator"><span class="node-icon">⌘</span><strong>Operator</strong><small>human control</small></div>
+                  <div class="map-node orchestrator" data-component="orchestrator"><span class="node-icon">◈</span><strong>Orchestrator</strong><small id="orchestrator-label">workflow graph</small></div>
+                  <div class="agent-stack" aria-label="Specialist agents">
+                    <div class="map-node agent" data-agent="researcher"><span class="agent-dot"></span><strong>Researcher</strong><small>specialist</small></div>
+                    <div class="map-node agent" data-agent="builder"><span class="agent-dot"></span><strong>Builder</strong><small>specialist</small></div>
+                    <div class="map-node agent" data-agent="reviewer"><span class="agent-dot"></span><strong>Reviewer</strong><small>specialist</small></div>
+                  </div>
+                  <div class="map-node gateway" data-component="gateway"><span class="node-icon">⬡</span><strong>Policy gateway</strong><small>deterministic checks</small></div>
+                  <div class="map-node store-node ledger" data-component="ledger"><span class="node-icon">▤</span><strong>Audit ledger</strong><small>hash chained</small></div>
+                  <div class="map-node store-node otlp" data-component="otlp"><span class="node-icon">⌁</span><strong>OTLP exporter</strong><small id="otlp-label">delivery unknown</small></div>
+                  <div class="map-legend"><span><i class="legend-dot live"></i> Active</span><span><i class="legend-dot done"></i> Completed</span><span><i class="legend-dot idle"></i> Idle</span></div>
+                </div></div>
+                <div id="integrity-caption" class="integrity-caption"><span class="caption-icon">◇</span><span>Ledger verification pending. Hash-chain validation checks event linkage; it does not provide WORM storage.</span></div>
+            </section>
+
+            <div class="primary-column">
+              <section class="panel runs-panel" aria-labelledby="runs-title">
+                <div class="panel-heading"><div><div class="eyebrow">EXECUTION HISTORY</div><h2 id="runs-title">Runs <span id="runs-total" class="heading-count">0</span></h2></div><span class="subtle-label">Latest 100</span></div>
+                <div id="runs-list" class="runs-list"><div class="empty-inline">Waiting for the first run snapshot…</div></div>
+              </section>
+            </div>
+
+            <aside class="detail-column">
+              <section class="panel selected-panel" aria-labelledby="selected-title">
+                <div class="panel-heading"><div><div class="eyebrow">RUN INSPECTOR</div><h2 id="selected-title">Selected run</h2></div><span id="run-mode" class="mode-badge">NO RUN</span></div>
+                <div id="run-detail" class="run-detail"><div class="empty-detail"><span>◎</span><strong>No run selected</strong><small>New runs will appear here when activity arrives.</small></div></div>
+              </section>
+              <section class="panel timeline-panel" aria-labelledby="timeline-title">
+                <div class="panel-heading"><div><div class="eyebrow">AUDIT STREAM</div><h2 id="timeline-title">Recent events</h2></div><span id="event-count" class="subtle-label">0 events</span></div>
+                <div id="event-list" class="event-list"><div class="empty-inline">Events will appear as the ledger advances.</div></div>
+              </section>
+              <section class="telemetry-footnote"><span class="footnote-icon">i</span><p>Telemetry export and ledger verification are independent signals. Pending or failed delivery does not alter ledger integrity.</p></section>
+            </aside>
+          </div>
+          <footer class="page-footer"><span>Systems Lab <span class="footer-sep">·</span> governed execution</span><span id="footer-cursor">Cursor —</span></footer>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

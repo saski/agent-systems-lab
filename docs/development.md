@@ -9,7 +9,7 @@ make spec-check
 ```
 
 `make check` runs Ruff lint/format checks, pytest, and Compose configuration
-validation. Three container integration tests are skipped unless explicitly
+validation. Container integration tests are skipped unless explicitly
 enabled. `make spec-check` requires the OpenSpec CLI; the bootstrap used 1.10.0.
 
 `make format` applies Ruff formatting and safe lint fixes. Python dependencies
@@ -45,6 +45,10 @@ src/systems_lab/
   gateway.py            # Authenticated API, tools, scripted model route
   store.py              # Deterministic policy, grants, audit, artifacts
   simulation.py         # Pure stock-and-flow model
+  journal.py            # Append-only history, integrity and delivery outbox
+  activity.py           # Read-only activity projection
+  telemetry.py          # Stable OpenTelemetry export from durable events
+  static/               # Same-origin live browser dashboard
 experiments/            # Scenarios, hypotheses, interpretation and reading notes
 tests/                  # Numerical, authorization, workflow and container checks
 docs/openspec/          # Current requirements and reviewable changes
@@ -91,6 +95,8 @@ stores workflow checkpoints; `.lab/runs/<run-id>/` contains JSON exports.
 The Compose operational store lives in its named Postgres volume. Operator
 credentials, databases, and artifacts stay out of Git and Docker build context.
 
-V0 has no database migration framework. Schema changes require an explicit
-state migration or a new laboratory data directory; never silently delete
-existing experiment evidence to accommodate a code update.
+The observability migration is additive: it imports the previous events table
+once, retains and seals that table, and marks imported evidence explicitly.
+Stop older gateway processes before upgrading. Never delete existing experiment
+evidence to accommodate a schema change. See [observability](observability.md)
+for history verification, external checkpoints, the dashboard and OTLP delivery.
