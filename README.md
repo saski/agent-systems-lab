@@ -51,6 +51,11 @@ Open <http://127.0.0.1:8765/dashboard> and connect with `.lab/viewer.token`.
 The read-only dashboard shows the component map, agent activity, workflow stages,
 run history, audit events, chain integrity and OpenTelemetry delivery state.
 
+[![The activity dashboard showing fixture runs waiting for human review](docs/images/dashboard/overview.png)](docs/dashboard.md)
+
+The [illustrated dashboard guide](docs/dashboard.md) explains every module,
+indicator and workflow stage, with screenshots of live activity and review.
+
 History is append-only and hash chained, with stable lifecycle event identities.
 Export a checkpoint to an independent location to detect privileged history
 rewriting against that copy. OpenTelemetry uses a persistent retry outbox and is
@@ -99,6 +104,8 @@ your own experiments and reading notes.
 
 ## Extend the playground
 
+- [Illustrated dashboard guide](docs/dashboard.md)
+- [Activity, telemetry and history](docs/observability.md)
 - [Architecture and trust boundaries](docs/architecture.md)
 - [Development and validation](docs/development.md)
 - [Evolution roadmap](docs/roadmap.md)
