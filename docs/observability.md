@@ -1,5 +1,9 @@
 # Activity, telemetry and history
 
+For a screenshot-led tour of each interface module, see the
+[illustrated dashboard guide](dashboard.md). This page covers operation,
+telemetry delivery and historical integrity.
+
 ## Start the activity dashboard
 
 ```sh
