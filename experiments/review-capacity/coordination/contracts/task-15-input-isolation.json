@@ -1,0 +1,29 @@
+{
+  "contract_version": "1",
+  "mode": "free",
+  "execution_role": "worker",
+  "parent_role": "frontier",
+  "parent_run_id": "<RUN_ID>",
+  "delegation_depth": 1,
+  "task_id": "15-input-isolation-test",
+  "task_class": "bounded_code",
+  "sensitivity": "non_sensitive",
+  "working_directory": "<WORKTREE>",
+  "requirement": "Modify only test_report_input_isolation in tests/test_review_capacity.py. Read that small test body, then correct it to assert ORIGINAL result.inputs remainsbyte-equivalent aftermutating callerinput (task_count andnestedpolicyname). Currenttestcreatesunrelatedfreshresult_after anduseswrongscenario key. Do not create fresh result_after; compare originalreport aftermutation againstits capturedcanonicalJSONsnapshot. Preserve allother tests unchanged. Onefunction edit, threeiterationsmaximum. No source implementationchanges.",
+  "require_changes": true,
+  "allowed_files": [
+    "tests/test_review_capacity.py"
+  ],
+  "validation": {
+    "command": [
+      "uv",
+      "run",
+      "--locked",
+      "ruff",
+      "check",
+      "tests/test_review_capacity.py"
+    ]
+  },
+  "model": "omniroute/kiro/claude-sonnet-4.5",
+  "timeout_seconds": 180
+}

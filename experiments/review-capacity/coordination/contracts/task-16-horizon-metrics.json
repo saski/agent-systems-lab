@@ -1,0 +1,30 @@
+{
+  "contract_version": "direct-free-1",
+  "mode": "free",
+  "execution_role": "worker",
+  "parent_role": "frontier",
+  "parent_run_id": "<RUN_ID>",
+  "delegation_depth": 1,
+  "task_id": "16-complete-horizon-metrics",
+  "task_class": "public_reference_implementation",
+  "sensitivity": "non_sensitive",
+  "working_directory": "<WORKTREE>",
+  "requirement": "Modify ONLY src/systems_lab/review_capacity.py. Scheduling/admission core nowpassesreferencecases: PRESERVE it. Identity nowpasses: preservehash,taskIDs,eventnames. Readfileonce then makeALL edits promptly, You have five iterations, within 50000inputtokens/180seconds. Actually finish the edits before returning; report remainingwork truthfully. Fix common-horizonreport contract: add horizon to futureeventcandidates whenhorizon>tick, soexacthorizonsampleexists; do notrepeat it oralter serviceordering. Horizon.not_arrived counttasks arrival_tick>horizon. Horizon queue_peaks andqueue_means MUST have keys queued,awaiting_review,wip. Use traceoccupancy of correspondingfields (NOT executing or reviewing forreviewQUEUE). Existingintegrate_mean canintegrate these fields correctlyoncehorizonscheduled. reviewer_utilization andexecution_utilization mustbe DIRECT horizonkeys (currentnestedutilizationwrong); reviewer usesreviewingmean, execution usesexecutingmean/slots. All three horizon distributions latency/admission_wait/review_wait MUST use samecohort actualdecisions<=horizon; currentadmission/review samplecohortsincludeunfinishedtasksincorrectly. Drain distributions also use onlyactualdecidedtasks, soallcount0ifincomplete withzeroactualdecisions. Each wait is admission-arrival orreview_start-ready; exclude reviewservice. Keep pendingtotal-decided and oldestpending correct. Tests manual2tasksat0 exec2review3slot1 horizon6 deadline50 expectdecision1pending1notarrived0oldestage6, latency/admissionwait/reviewwait count1,waitp50=0; reviewerutil4/6,executil4/6,queuemeans queued2/6 awaiting_review1/6 wip9/6,queuepeaks queued1awaiting_review1wip2; fullmakespan8; sample6existsstrictlyincreasing. Latearrivalsinterval10horizon1deadline30 notarrived1,pending2,oldestage1. Also strict inputnon-dict ValueErrorguardbefore.keys; currenthorizonbound10000 retain; removemisleadingwall_time_measurement limitationtag,replacewithreadableEnglish logicalticksNOTwalltime/noquality/rework/errors/syntheticacceptall. Fix two unusedtidloopvariables (iteratevalues). DO NOT touchtests, renameinputs, oraddextraqueue. These are surgicalchanges; all edits shouldbeperformedasbatchafterone read, notstopafterfirstchange. Return concise result.",
+  "require_changes": true,
+  "allowed_files": [
+    "src/systems_lab/review_capacity.py"
+  ],
+  "validation": {
+    "command": [
+      "uv",
+      "run",
+      "--locked",
+      "ruff",
+      "check",
+      "tests/test_review_capacity.py"
+    ]
+  },
+  "model": "omniroute/kiro/claude-sonnet-4.5",
+  "timeout_seconds": 180,
+  "max_steps": 5
+}

@@ -1,0 +1,29 @@
+{
+  "contract_version": "1",
+  "mode": "free",
+  "execution_role": "worker",
+  "parent_role": "frontier",
+  "parent_run_id": "<RUN_ID>",
+  "delegation_depth": 1,
+  "task_id": "11-report-contract-tests",
+  "task_class": "bounded_code",
+  "sensitivity": "non_sensitive",
+  "working_directory": "<WORKTREE>",
+  "requirement": "Read ONLY tests/test_review_capacity.py then WRITE a replacement preserving ALL current8testfunctions and assertions, exceptcorrecttheoneinvalid-inputcase task_count10,arrival_interval1001 to task_count11 (lastarrival10010violates10000; prior9009wasvalid). Add full typehints to EVERY helper/test (Anyoverrides,dict[str,Any]helper,tests->None). No classes/redundantdocstrings. Add exactly3meaningfultests (testfirst): identity+snapshot checks reportscenario_sha256=SHA256 canonical fullinputjson sortedkeys compactseparators allow_nanFalse; task_id values0,1; events unique IDs, transition set exactlyarrived/admitted/ready/review_started/decided, 10events for2completedtasks; changing callerinput afterwards doesnotchange report.inputs. Horizonmetrics manuallycheck2simultaneoustasks exec2review3 slots1, horizon6 deadline50: horizon decided1pending1not_arrived0oldest_pending_age6, latency/admission_wait/review_wait allcount1 and waits0; reviewer_utilization4/6,execution_utilization4/6,queue_means queued2/6,awaiting_review1/6,wip9/6,queue_peaks queued1,awaiting_review1,wip2; sampleattick6mustexist, strictlyincreasingsamples; full drainmakespan8. Field names exactlyasstated, use pytest.approx forfractions. Latearrivals2tasksinterval10 horizon1deadline30: horizonpending2,not_arrived1,oldest_pending_age1,latencycount0; no futuretaskcountedqueued at0 (arrived1,executing1,queued0), conservationeverysample. Use existingbase_input helper. Do NOT alter model or weaken any existingbehavioralassertion. ArtifactsEnglishfullytypedline<=100; coordinatorhandlesautomatedformatting. Write thefile inyourseconditeration, concisefinalresultthird. Nootherreads/shell/delegation.",
+  "require_changes": true,
+  "allowed_files": [
+    "tests/test_review_capacity.py"
+  ],
+  "validation": {
+    "command": [
+      "uv",
+      "run",
+      "--locked",
+      "ruff",
+      "check",
+      "tests/test_review_capacity.py"
+    ]
+  },
+  "model": "omniroute/kiro/claude-sonnet-4.5",
+  "timeout_seconds": 180
+}

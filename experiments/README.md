@@ -20,6 +20,12 @@ Use `reading-notes.md` inside an experiment for personal questions, your own
 summaries, and page references from your edition. Keep confidential or raw
 operational data in ignored local storage.
 
+Keep reusable coordination contracts, prompts and selected execution evidence
+beside their experiment, as in the
+[Review Capacity coordination recipes](review-capacity/coordination/README.md).
+Expanded machine-specific contracts and complete logs belong in ignored
+`.lab/coordination/<run-id>/`; shared launchers and routing policy belong in Arnesto.
+
 The first [backlog feedback](backlog-feedback/README.md) experiment includes a
 ready scenario. To compare delays, copy its JSON to an ignored local file,
 change `observation_delay` only, and run:

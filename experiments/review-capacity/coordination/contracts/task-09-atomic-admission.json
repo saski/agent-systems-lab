@@ -1,0 +1,29 @@
+{
+  "contract_version": "1",
+  "mode": "free",
+  "execution_role": "worker",
+  "parent_role": "frontier",
+  "parent_run_id": "<RUN_ID>",
+  "delegation_depth": 1,
+  "task_id": "09-atomic-admission",
+  "task_class": "bounded_code",
+  "sensitivity": "non_sensitive",
+  "working_directory": "<WORKTREE>",
+  "requirement": "One precise fix ONLY in src/systems_lab/review_capacity.py: atomic FIFO admission must START EXECUTION immediately and therefore reserve both execution capacity and WIP before considering the nexttask. Current separate execution_queue lets all tasks become admittedat0, violatesWIP and losesqueuedstate. Read onlythe admission/start executionblock (approximatelylines250..280) and the execution_queue declaration (approximately170..185), batchreads ifneeded. Replace the two loops with ONE admission loop that starts eachadmitted task immediately under current execution slots/WIP, then stopswhenfull. Remove the nowunneeded execution_queue declaration. Keep allotherlogic/output unchanged. No third queue, no extra abstraction, no metrics or tests changes inthistask. Tests to satisfy: 2simultaneous tasks exec2review3 slots1 =>admissions0,2; WIP1 =>admissions0,5; WIP2slots3 with5arrivals at0 =>initialexecuting2queued3 andWIP2 (conservation5). Your outputmust actuallyedit thefile; do not justexplain. Do itwithin3iterations. Return concise result.",
+  "require_changes": true,
+  "allowed_files": [
+    "src/systems_lab/review_capacity.py"
+  ],
+  "validation": {
+    "command": [
+      "uv",
+      "run",
+      "--locked",
+      "ruff",
+      "check",
+      "tests/test_review_capacity.py"
+    ]
+  },
+  "model": "omniroute/kiro/claude-sonnet-4.5",
+  "timeout_seconds": 180
+}
