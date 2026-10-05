@@ -18,6 +18,7 @@ from langgraph.types import Command
 
 from systems_lab.gateway import create_app
 from systems_lab.orchestrator import ControlClient, WorkerExecutor, stop_containers, workflow
+from systems_lab.review_capacity_exports import export_attempt
 from systems_lab.store import Store
 
 
@@ -175,6 +176,10 @@ def parser() -> argparse.ArgumentParser:
         "history-verify", help="Verify the journal and optional external anchor"
     )
     verify.add_argument("--checkpoint")
+    experiment = commands.add_parser("experiment", help="Run a numerical experiment locally")
+    experiment.add_argument("experiment_type", choices=["review-capacity"])
+    experiment.add_argument("--scenario", default="experiments/review-capacity/scenario.json")
+    experiment.add_argument("--attempt-id")
     for name in ("run", "demo"):
         command = commands.add_parser(name, help="Run the fixture experiment and pause for review")
         command.add_argument("--scenario", default="experiments/backlog-feedback/scenario.json")
@@ -211,6 +216,24 @@ def main() -> None:
             )
         finally:
             store.close()
+        return
+    if args.command == "experiment":
+        if args.gateway:
+            raise SystemExit("Experiment command runs locally only; --gateway is not permitted")
+        scenario_path = Path(args.scenario)
+        if not scenario_path.is_absolute():
+            scenario_path = root / scenario_path
+        stat_result = scenario_path.stat()
+        if stat_result.st_size > 16384:
+            raise ValueError(f"Scenario file exceeds 16 KiB limit: {stat_result.st_size} bytes")
+        with scenario_path.open("rb") as f:
+            scenario_bytes = f.read(16385)
+        if len(scenario_bytes) > 16384:
+            raise ValueError("Scenario file exceeds 16 KiB limit after reading")
+        scenario = json.loads(scenario_bytes)
+        experiment_dir = root / ".lab" / "experiments" / "review-capacity"
+        manifest = export_attempt(experiment_dir, scenario, args.attempt_id)
+        print(json.dumps(manifest, indent=2))
         return
     token = initialize(root)
     if args.command == "dashboard":

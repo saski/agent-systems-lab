@@ -1,0 +1,26 @@
+{
+  "model_version": "review-capacity-v1",
+  "task_count": 24,
+  "arrival_interval": 2,
+  "execution_ticks": 8,
+  "review_ticks": 6,
+  "observation_horizon": 60,
+  "drain_deadline": 500,
+  "policies": [
+    {
+      "name": "A",
+      "execution_slots": 1,
+      "wip_limit": null
+    },
+    {
+      "name": "B",
+      "execution_slots": 4,
+      "wip_limit": null
+    },
+    {
+      "name": "C",
+      "execution_slots": 4,
+      "wip_limit": 3
+    }
+  ]
+}

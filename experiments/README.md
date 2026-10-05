@@ -37,3 +37,9 @@ uv run systems-lab run --scenario .lab/short-delay.json
 Compare the generated `simulation.json` files, including all parameters and
 time-series observations. A successful agent run is evidence about the workflow;
 it does not establish that the simulated system describes a real organization.
+
+The [review-capacity experiment](review-capacity/README.md) adds a graphical
+comparison of parallel execution, one synthetic reviewer and admitted-WIP limits.
+Read its two-queue diagram, fixed-horizon comparison and full-drain curves, then
+use the standalone learning guide to replay individual task states. This is
+numerical documentation; the integrated Experiments dashboard is still pending.

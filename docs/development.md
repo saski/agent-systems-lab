@@ -65,6 +65,44 @@ Add a real model only through an explicit gateway route change and evaluation.
 Do not inject provider keys into workers or claim fixture results establish
 model quality. Do not add an unrestricted URL proxy or shell to simplify an integration.
 
+## Refresh the numerical learning graphics
+
+The [review-capacity learning guide](../experiments/review-capacity/README.md)
+uses figures derived from an actual deterministic CLI export. Its standalone
+HTML replay is documentation, separate from the Activity dashboard.
+
+1. Run the experiment command from that guide and retain the printed attempt ID.
+2. Generate the assets from that attempt's report:
+
+```sh
+make review-capacity-figures \
+  REPORT=.lab/experiments/review-capacity/ATTEMPT_ID/report.json
+```
+
+Matplotlib is a temporary documentation tool; the application dependencies and
+lockfile remain unchanged. The generator checks the scenario, conservation,
+capacity and horizon counts before creating SVG/PNG charts, `evidence.json` and
+the self-contained `explainer.html`. `flow.svg` is the separately authored model
+boundary diagram; `explainer.template.html` contains the learning-page layout.
+
+The JSON is a **frozen documentation projection** with numerical task IDs and
+timestamps, not runtime attempt IDs or lifecycle-event identities. Raw exports
+remain ignored under `.lab/`. Keep generated assets in Git so Markdown images
+work without a running application; open HTML locally because GitHub shows its
+source. To preview it over localhost:
+
+```sh
+python -m http.server 8877 --bind 127.0.0.1 \
+  --directory docs/graphics/review-capacity
+# Open http://127.0.0.1:8877/explainer.html
+```
+
+Compare the documented numbers and hashes with the source report. Inspect figure
+labels and legends, desktop/mobile layout, policy selection, seek, playback and
+reduced motion. Verify task counts at startup, the horizon and full drain.
+The page uses embedded data and no operational requests or credentials.
+If the scenario changes, update the prose and interpretation alongside the figures.
+
 ## OpenSpec
 
 `openspec` at the root is a symlink to `docs/openspec/`. Use the shared OpenSpec

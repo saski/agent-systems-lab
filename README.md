@@ -1,7 +1,7 @@
 # Agent Systems Lab
 
 A reference playground for building agent-based solutions, comparing tooling,
-and exploring systems thinking while reading Donella Meadows's *Thinking in Systems*.
+and exploring systems thinking, including ideas from Donella Meadows's *Thinking in Systems*.
 
 The first experiment follows a backlog through **Researcher → Builder → Reviewer
 → human decision**. LangGraph coordinates the workflow; each specialist uses a
@@ -101,6 +101,14 @@ Start with the [backlog feedback experiment](experiments/backlog-feedback/README
 It includes a controlled delay comparison, numerical observations, assumptions,
 and reading prompts. Use the [experiment guide](experiments/README.md) to add
 your own experiments and reading notes.
+
+The [illustrated review-capacity experiment](experiments/review-capacity/README.md)
+compares execution slots and WIP limits across two queues. Its numerical model
+shows how waiting can move upstream while end-to-end delivery stays the same.
+It includes reproducible charts and a standalone interactive learning guide;
+integration into the Activity dashboard remains pending.
+
+[![Decisions and all pending work at tick 60](docs/graphics/review-capacity/comparison.png)](experiments/review-capacity/README.md)
 
 ## Extend the playground
 

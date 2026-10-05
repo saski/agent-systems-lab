@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1460" height="470" viewBox="0 0 1460 470" role="img" aria-labelledby="title desc">
+  <title id="title">Two queues and one WIP boundary</title>
+  <desc id="desc">Tasks enter queue one before admission, execute, wait in queue two, and receive a synthetic decision. Admitted WIP includes execution, waiting for review, and review service. A decision frees WIP capacity; execution completion frees only an execution slot. Both queues are in-memory model state.</desc>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#526170"/></marker></defs>
+  <rect width="1460" height="470" rx="16" fill="#fff"/>
+  <g font-family="Arial, sans-serif" fill="#172c3a">
+    <text x="38" y="49" font-size="29" font-weight="700">Two queues. One admission rule.</text>
+    <text x="38" y="83" font-size="17" fill="#526170">SYNTHETIC MODEL · logical ticks · both queues remain visible</text>
+    <rect x="477" y="162" width="713" height="180" rx="18" fill="#f1f7fb" stroke="#3179b7" stroke-width="2" stroke-dasharray="8 6"/>
+    <text x="496" y="188" font-size="17" font-weight="700" fill="#3179b7">ADMITTED WIP = executing + awaiting review + reviewing</text>
+    <g stroke="#526170" stroke-width="2" fill="none" marker-end="url(#arrow)">
+      <path d="M200 263H240"/><path d="M420 263H505"/><path d="M685 263H735"/>
+      <path d="M915 263H975"/><path d="M1165 263H1240"/>
+      <path d="M1330 216V125H465V249" stroke-dasharray="6 5"/>
+    </g>
+    <text x="690" y="117" font-size="15" fill="#526170">A simulated decision releases one WIP slot</text>
+    <rect x="35" y="216" width="165" height="95" rx="12" fill="#dbeafe" stroke="#3179b7"/>
+    <text x="117" y="248" text-anchor="middle" font-size="18" font-weight="700">Arrivals</text>
+    <text x="117" y="275" text-anchor="middle" font-size="15">24 tasks</text>
+    <text x="117" y="297" text-anchor="middle" font-size="14">ticks 0, 2, …, 46</text>
+    <rect x="240" y="216" width="180" height="95" rx="12" fill="#ffedd5" stroke="#dc703a"/>
+    <text x="330" y="243" text-anchor="middle" font-size="13" fill="#a44920">QUEUE 1</text>
+    <text x="330" y="270" text-anchor="middle" font-size="18" font-weight="700">Admission</text>
+    <text x="330" y="297" text-anchor="middle" font-size="14">outside admitted WIP</text>
+    <rect x="505" y="216" width="180" height="95" rx="12" fill="#dbeafe" stroke="#3179b7"/>
+    <text x="595" y="249" text-anchor="middle" font-size="18" font-weight="700">Execution slots</text>
+    <text x="595" y="277" text-anchor="middle" font-size="15">1 or 4 parallel slots</text>
+    <text x="595" y="299" text-anchor="middle" font-size="14">8 ticks / task</text>
+    <rect x="735" y="216" width="180" height="95" rx="12" fill="#ffedd5" stroke="#dc703a"/>
+    <text x="825" y="243" text-anchor="middle" font-size="13" fill="#a44920">QUEUE 2</text>
+    <text x="825" y="270" text-anchor="middle" font-size="18" font-weight="700">Awaiting review</text>
+    <text x="825" y="297" text-anchor="middle" font-size="14">inside admitted WIP</text>
+    <rect x="975" y="216" width="190" height="95" rx="12" fill="#dbeafe" stroke="#3179b7"/>
+    <text x="1070" y="248" text-anchor="middle" font-size="18" font-weight="700">Synthetic reviewer</text>
+    <text x="1070" y="277" text-anchor="middle" font-size="15">one review resource</text>
+    <text x="1070" y="299" text-anchor="middle" font-size="14">6 ticks / task</text>
+    <rect x="1240" y="216" width="180" height="95" rx="12" fill="#dcf3e8" stroke="#21866b"/>
+    <text x="1330" y="249" text-anchor="middle" font-size="18" font-weight="700">Decided tasks</text>
+    <text x="1330" y="277" text-anchor="middle" font-size="15">all outcomes accept</text>
+    <text x="1330" y="299" text-anchor="middle" font-size="14">in-memory count</text>
+    <text x="240" y="370" font-size="16" fill="#526170">Admit only when an execution slot AND WIP room are available.</text>
+    <text x="240" y="397" font-size="16" fill="#526170">Execution finishing frees its slot. It does not release the task’s WIP allocation.</text>
+    <text x="38" y="445" font-size="14" fill="#526170">Legend: blue = modeled service / arrivals · orange = queues (2) · green = completed stock · dashed boundary = admitted WIP</text>
+  </g>
+</svg>
