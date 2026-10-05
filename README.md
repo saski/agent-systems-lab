@@ -1,7 +1,7 @@
 # Agent Systems Lab
 
 A reference playground for building agent-based solutions, comparing tooling,
-and exploring systems thinking while reading Donella Meadows's *Thinking in Systems*.
+and exploring systems thinking, including ideas from Donella Meadows's *Thinking in Systems*.
 
 The first experiment follows a backlog through **Researcher → Builder → Reviewer
 → human decision**. LangGraph coordinates the workflow; each specialist uses a
@@ -51,6 +51,11 @@ Open <http://127.0.0.1:8765/dashboard> and connect with `.lab/viewer.token`.
 The read-only dashboard shows the component map, agent activity, workflow stages,
 run history, audit events, chain integrity and OpenTelemetry delivery state.
 
+[![The activity dashboard showing fixture runs waiting for human review](docs/images/dashboard/overview.png)](docs/dashboard.md)
+
+The [illustrated dashboard guide](docs/dashboard.md) explains every module,
+indicator and workflow stage, with screenshots of live activity and review.
+
 History is append-only and hash chained, with stable lifecycle event identities.
 Export a checkpoint to an independent location to detect privileged history
 rewriting against that copy. OpenTelemetry uses a persistent retry outbox and is
@@ -97,8 +102,18 @@ It includes a controlled delay comparison, numerical observations, assumptions,
 and reading prompts. Use the [experiment guide](experiments/README.md) to add
 your own experiments and reading notes.
 
+The [illustrated review-capacity experiment](experiments/review-capacity/README.md)
+compares execution slots and WIP limits across two queues. Its numerical model
+shows how waiting can move upstream while end-to-end delivery stays the same.
+It includes reproducible charts and a standalone interactive learning guide;
+integration into the Activity dashboard remains pending.
+
+[![Decisions and all pending work at tick 60](docs/graphics/review-capacity/comparison.png)](experiments/review-capacity/README.md)
+
 ## Extend the playground
 
+- [Illustrated dashboard guide](docs/dashboard.md)
+- [Activity, telemetry and history](docs/observability.md)
 - [Architecture and trust boundaries](docs/architecture.md)
 - [Development and validation](docs/development.md)
 - [Evolution roadmap](docs/roadmap.md)

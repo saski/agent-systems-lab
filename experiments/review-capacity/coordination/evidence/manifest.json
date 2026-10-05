@@ -1,0 +1,58 @@
+{
+  "capture_date": "2026-10-05",
+  "artifact_kind": "Curated, portable coordination recipes and receipts",
+  "source_worktree_revision": "61a5c31c6babf882d28f4a1fddd5933f71c8b470",
+  "artifacts": [
+    {
+      "path": "contracts/task-03-compact-tests.json",
+      "source_file": "task-03-compact-tests.json",
+      "source_sha256": "abb611f6c94babbeb263013c0476c711e54683c7a1609c8b7965d06ca5569021",
+      "published_sha256": "d98ec86fef851406ad26786384a11e923e42062576791f3b76d155bf9650d32b",
+      "transformation": "Machine paths and run identifier replaced with explicit placeholders; requirement preserved"
+    },
+    {
+      "path": "contracts/task-04-model.json",
+      "source_file": "task-04-model.json",
+      "source_sha256": "cb79894f03dff4e86df24c7405129703d5af90348ab782040f8eda0305377691",
+      "published_sha256": "5fa8dac89b6b16c36219b012a1a3bf64fe92471399420a50019ff9d2e47f8e5a",
+      "transformation": "Machine paths and run identifier replaced with explicit placeholders; requirement preserved"
+    },
+    {
+      "path": "contracts/task-09-atomic-admission.json",
+      "source_file": "task-09-atomic-admission.json",
+      "source_sha256": "f28786f5fdd68d40ca073c458140e1939218f244f75e6abef4a52bf4a97d6e68",
+      "published_sha256": "f189e40f94945c398a853ee07503745149a2c25e5537e49c19c50abf2663112f",
+      "transformation": "Machine paths and run identifier replaced with explicit placeholders; requirement preserved"
+    },
+    {
+      "path": "contracts/task-11-report-tests.json",
+      "source_file": "task-11-report-tests.json",
+      "source_sha256": "c1df96e7baf26c6995320f3f77225c739b5d03cefb38a9e7e0af519974ab6026",
+      "published_sha256": "fa9c8de9df87e84ef9d8abd26516f67994f372873504734111d34e59c05f4570",
+      "transformation": "Machine paths and run identifier replaced with explicit placeholders; requirement preserved"
+    },
+    {
+      "path": "contracts/task-15-input-isolation.json",
+      "source_file": "task-15-input-isolation.json",
+      "source_sha256": "bca5ad4179a6a61e673c610fa12b6951f73439a79e94708609cbb8b2bcca21d9",
+      "published_sha256": "ed20e4eea7a109a6cacb6ba9205a0cc8a944ce9206c3b003c3aec1e3e8180fd8",
+      "transformation": "Machine paths and run identifier replaced with explicit placeholders; requirement preserved"
+    },
+    {
+      "path": "contracts/task-16-horizon-metrics.json",
+      "source_file": "task-16-horizon-metrics.json",
+      "source_sha256": "09bb0dcd927e92ea040657ded1a47d2d2407357042bd4f1a4def91f450efa6a0",
+      "published_sha256": "5ef573a5bf17903aadf6d4bcc454b22d669803bebb909686dc1f8fd43e76359e",
+      "transformation": "Machine paths and run identifier replaced with explicit placeholders; requirement preserved"
+    },
+    {
+      "path": "prompts/worker-system.txt",
+      "source_file": "coordinate-worker.py",
+      "source_sha256": "6fef4d98f266ad4f6348b39f07d16f059c9a29a63ffa3fcf71e6b540ad3958f5",
+      "published_sha256": "c8c78b29848ee7b5b2ee0bad32728bf099778cda079549daa2964c01a4a20a84",
+      "transformation": "Extracted worker system prompt from the captured launcher"
+    }
+  ],
+  "logs": "Full JSONL streams and original host-specific contracts remain in ignored .lab/coordination/<run-id>/",
+  "reproduction": "Expand placeholders before use and separately verify model admission, provider plan, source revision and validation results. Historical receipts do not reproduce model outputs."
+}

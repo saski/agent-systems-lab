@@ -65,6 +65,44 @@ Add a real model only through an explicit gateway route change and evaluation.
 Do not inject provider keys into workers or claim fixture results establish
 model quality. Do not add an unrestricted URL proxy or shell to simplify an integration.
 
+## Refresh the numerical learning graphics
+
+The [review-capacity learning guide](../experiments/review-capacity/README.md)
+uses figures derived from an actual deterministic CLI export. Its standalone
+HTML replay is documentation, separate from the Activity dashboard.
+
+1. Run the experiment command from that guide and retain the printed attempt ID.
+2. Generate the assets from that attempt's report:
+
+```sh
+make review-capacity-figures \
+  REPORT=.lab/experiments/review-capacity/ATTEMPT_ID/report.json
+```
+
+Matplotlib is a temporary documentation tool; the application dependencies and
+lockfile remain unchanged. The generator checks the scenario, conservation,
+capacity and horizon counts before creating SVG/PNG charts, `evidence.json` and
+the self-contained `explainer.html`. `flow.svg` is the separately authored model
+boundary diagram; `explainer.template.html` contains the learning-page layout.
+
+The JSON is a **frozen documentation projection** with numerical task IDs and
+timestamps, not runtime attempt IDs or lifecycle-event identities. Raw exports
+remain ignored under `.lab/`. Keep generated assets in Git so Markdown images
+work without a running application; open HTML locally because GitHub shows its
+source. To preview it over localhost:
+
+```sh
+python -m http.server 8877 --bind 127.0.0.1 \
+  --directory docs/graphics/review-capacity
+# Open http://127.0.0.1:8877/explainer.html
+```
+
+Compare the documented numbers and hashes with the source report. Inspect figure
+labels and legends, desktop/mobile layout, policy selection, seek, playback and
+reduced motion. Verify task counts at startup, the horizon and full drain.
+The page uses embedded data and no operational requests or credentials.
+If the scenario changes, update the prose and interpretation alongside the figures.
+
 ## OpenSpec
 
 `openspec` at the root is a symlink to `docs/openspec/`. Use the shared OpenSpec
@@ -100,3 +138,43 @@ once, retains and seals that table, and marks imported evidence explicitly.
 Stop older gateway processes before upgrading. Never delete existing experiment
 evidence to accommodate a schema change. See [observability](observability.md)
 for history verification, external checkpoints, the dashboard and OTLP delivery.
+
+## Refresh the dashboard screenshots
+
+The [dashboard guide](dashboard.md) embeds real browser captures from
+`docs/images/dashboard/`; the README reuses its overview. Keep those assets in
+Git so the guide works in both a checkout and GitHub.
+
+1. Start `make dashboard`, then open `/dashboard` in a separate browser context
+   so the user's existing session is unaffected. Capture the empty connection
+   form before filling the viewer credential.
+2. Connect with `.lab/viewer.token`. Capture no credentials, headers, console
+   output or developer panels. Confirm the token input is cleared after login.
+3. Run `make dashboard-demo` against that gateway. Capture the metrics and system
+   map while a real fixture specialist is active; let the run finish at human
+   review. Do not edit the DOM or intercept API responses to invent states.
+4. Select that run and capture the overview, run list, inspector and event stream.
+   Leave the human decision pending.
+5. Put only the capture browser context offline, capture the stale banner, and
+   reconnect. The gateway and original browser should stay available.
+6. Capture the narrow layout. Check legibility, absence of page-level horizontal
+   overflow, the map's intentional sideways scroll, and every Markdown image link.
+
+The current captures use Chrome, a 1536 × 1080 desktop viewport and a 390 × 844
+mobile viewport, device scale 1, `en-GB` locale and `Europe/Madrid` time zone.
+Some PNGs capture individual panels; the overview captures the whole page and
+the mobile image captures the initial viewport. A screenshot freezes an actual
+state; it cannot demonstrate animation by itself. Record the capture date and
+fixture/executor/exporter context in the guide when updating the images.
+
+| Asset | Capture target |
+| --- | --- |
+| `connect.png` | Empty `.auth-card`, before authentication |
+| `overview.png` | Full page with a selected run waiting for review |
+| `metrics.png` | `.metrics` during a fixture run |
+| `system-map.png` | `.system-panel` while a specialist is active |
+| `runs.png` | `.runs-panel`, with the example run selected |
+| `run-inspector.png` | `.selected-panel` at human review |
+| `events.png` | `.timeline-panel` after its full-run history loads |
+| `connection-lost.png` | Top of the page showing a real client connection loss |
+| `mobile.png` | Initial viewport at 390 × 844 |

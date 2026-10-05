@@ -1,0 +1,2489 @@
+{
+  "kind": "frozen_documentation_projection",
+  "model_version": "review-capacity-v1",
+  "provenance": "synthetic_event_time_model",
+  "report_sha256": "a3a9c0396620438fa7c039f5aa9aace98a85cff968ba5004c52e5e25f473e58a",
+  "scenario_sha256": "77c8a82e574cf23eb7bd1babd76332daa1a04926309f34427f638d1f29d3fae3",
+  "inputs": {
+    "arrival_interval": 2,
+    "drain_deadline": 500,
+    "execution_ticks": 8,
+    "model_version": "review-capacity-v1",
+    "observation_horizon": 60,
+    "policies": [
+      {
+        "execution_slots": 1,
+        "name": "A",
+        "wip_limit": null
+      },
+      {
+        "execution_slots": 4,
+        "name": "B",
+        "wip_limit": null
+      },
+      {
+        "execution_slots": 4,
+        "name": "C",
+        "wip_limit": 3
+      }
+    ],
+    "review_ticks": 6,
+    "task_count": 24
+  },
+  "policies": [
+    {
+      "drain": {
+        "admission_wait": {
+          "count": 24,
+          "p50": 66,
+          "p95": 132
+        },
+        "complete": true,
+        "decided": 24,
+        "end_tick": 198,
+        "latency": {
+          "count": 24,
+          "p50": 80,
+          "p95": 146
+        },
+        "makespan": 198,
+        "pending": 0,
+        "review_wait": {
+          "count": 24,
+          "p50": 0,
+          "p95": 0
+        }
+      },
+      "execution_slots": 1,
+      "horizon": {
+        "admission_wait": {
+          "count": 6,
+          "p50": 12,
+          "p95": 30
+        },
+        "decided": 6,
+        "execution_utilization": 1.0,
+        "latency": {
+          "count": 6,
+          "p50": 26,
+          "p95": 44
+        },
+        "not_arrived": 0,
+        "oldest_pending_age": 48,
+        "pending": 18,
+        "queue_means": {
+          "awaiting_review": 0.0,
+          "queued": 10.533333333333333,
+          "wip": 1.6666666666666667
+        },
+        "queue_peaks": {
+          "awaiting_review": 0,
+          "queued": 18,
+          "wip": 2
+        },
+        "review_wait": {
+          "count": 6,
+          "p50": 0,
+          "p95": 0
+        },
+        "reviewer_utilization": 0.6666666666666666,
+        "throughput": 0.1,
+        "tick": 60
+      },
+      "name": "A",
+      "samples": [
+        {
+          "arrived": 1,
+          "awaiting_review": 0,
+          "decided": 0,
+          "executing": 1,
+          "queued": 0,
+          "reviewing": 0,
+          "tick": 0,
+          "wip": 1
+        },
+        {
+          "arrived": 2,
+          "awaiting_review": 0,
+          "decided": 0,
+          "executing": 1,
+          "queued": 1,
+          "reviewing": 0,
+          "tick": 2,
+          "wip": 1
+        },
+        {
+          "arrived": 3,
+          "awaiting_review": 0,
+          "decided": 0,
+          "executing": 1,
+          "queued": 2,
+          "reviewing": 0,
+          "tick": 4,
+          "wip": 1
+        },
+        {
+          "arrived": 4,
+          "awaiting_review": 0,
+          "decided": 0,
+          "executing": 1,
+          "queued": 3,
+          "reviewing": 0,
+          "tick": 6,
+          "wip": 1
+        },
+        {
+          "arrived": 5,
+          "awaiting_review": 0,
+          "decided": 0,
+          "executing": 1,
+          "queued": 3,
+          "reviewing": 1,
+          "tick": 8,
+          "wip": 2
+        },
+        {
+          "arrived": 6,
+          "awaiting_review": 0,
+          "decided": 0,
+          "executing": 1,
+          "queued": 4,
+          "reviewing": 1,
+          "tick": 10,
+          "wip": 2
+        },
+        {
+          "arrived": 7,
+          "awaiting_review": 0,
+          "decided": 0,
+          "executing": 1,
+          "queued": 5,
+          "reviewing": 1,
+          "tick": 12,
+          "wip": 2
+        },
+        {
+          "arrived": 8,
+          "awaiting_review": 0,
+          "decided": 1,
+          "executing": 1,
+          "queued": 6,
+          "reviewing": 0,
+          "tick": 14,
+          "wip": 1
+        },
+        {
+          "arrived": 9,
+          "awaiting_review": 0,
+          "decided": 1,
+          "executing": 1,
+          "queued": 6,
+          "reviewing": 1,
+          "tick": 16,
+          "wip": 2
+        },
+        {
+          "arrived": 10,
+          "awaiting_review": 0,
+          "decided": 1,
+          "executing": 1,
+          "queued": 7,
+          "reviewing": 1,
+          "tick": 18,
+          "wip": 2
+        },
+        {
+          "arrived": 11,
+          "awaiting_review": 0,
+          "decided": 1,
+          "executing": 1,
+          "queued": 8,
+          "reviewing": 1,
+          "tick": 20,
+          "wip": 2
+        },
+        {
+          "arrived": 12,
+          "awaiting_review": 0,
+          "decided": 2,
+          "executing": 1,
+          "queued": 9,
+          "reviewing": 0,
+          "tick": 22,
+          "wip": 1
+        },
+        {
+          "arrived": 13,
+          "awaiting_review": 0,
+          "decided": 2,
+          "executing": 1,
+          "queued": 9,
+          "reviewing": 1,
+          "tick": 24,
+          "wip": 2
+        },
+        {
+          "arrived": 14,
+          "awaiting_review": 0,
+          "decided": 2,
+          "executing": 1,
+          "queued": 10,
+          "reviewing": 1,
+          "tick": 26,
+          "wip": 2
+        },
+        {
+          "arrived": 15,
+          "awaiting_review": 0,
+          "decided": 2,
+          "executing": 1,
+          "queued": 11,
+          "reviewing": 1,
+          "tick": 28,
+          "wip": 2
+        },
+        {
+          "arrived": 16,
+          "awaiting_review": 0,
+          "decided": 3,
+          "executing": 1,
+          "queued": 12,
+          "reviewing": 0,
+          "tick": 30,
+          "wip": 1
+        },
+        {
+          "arrived": 17,
+          "awaiting_review": 0,
+          "decided": 3,
+          "executing": 1,
+          "queued": 12,
+          "reviewing": 1,
+          "tick": 32,
+          "wip": 2
+        },
+        {
+          "arrived": 18,
+          "awaiting_review": 0,
+          "decided": 3,
+          "executing": 1,
+          "queued": 13,
+          "reviewing": 1,
+          "tick": 34,
+          "wip": 2
+        },
+        {
+          "arrived": 19,
+          "awaiting_review": 0,
+          "decided": 3,
+          "executing": 1,
+          "queued": 14,
+          "reviewing": 1,
+          "tick": 36,
+          "wip": 2
+        },
+        {
+          "arrived": 20,
+          "awaiting_review": 0,
+          "decided": 4,
+          "executing": 1,
+          "queued": 15,
+          "reviewing": 0,
+          "tick": 38,
+          "wip": 1
+        },
+        {
+          "arrived": 21,
+          "awaiting_review": 0,
+          "decided": 4,
+          "executing": 1,
+          "queued": 15,
+          "reviewing": 1,
+          "tick": 40,
+          "wip": 2
+        },
+        {
+          "arrived": 22,
+          "awaiting_review": 0,
+          "decided": 4,
+          "executing": 1,
+          "queued": 16,
+          "reviewing": 1,
+          "tick": 42,
+          "wip": 2
+        },
+        {
+          "arrived": 23,
+          "awaiting_review": 0,
+          "decided": 4,
+          "executing": 1,
+          "queued": 17,
+          "reviewing": 1,
+          "tick": 44,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 5,
+          "executing": 1,
+          "queued": 18,
+          "reviewing": 0,
+          "tick": 46,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 5,
+          "executing": 1,
+          "queued": 17,
+          "reviewing": 1,
+          "tick": 48,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 6,
+          "executing": 1,
+          "queued": 17,
+          "reviewing": 0,
+          "tick": 54,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 6,
+          "executing": 1,
+          "queued": 16,
+          "reviewing": 1,
+          "tick": 56,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 6,
+          "executing": 1,
+          "queued": 16,
+          "reviewing": 1,
+          "tick": 60,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 7,
+          "executing": 1,
+          "queued": 16,
+          "reviewing": 0,
+          "tick": 62,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 7,
+          "executing": 1,
+          "queued": 15,
+          "reviewing": 1,
+          "tick": 64,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 8,
+          "executing": 1,
+          "queued": 15,
+          "reviewing": 0,
+          "tick": 70,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 8,
+          "executing": 1,
+          "queued": 14,
+          "reviewing": 1,
+          "tick": 72,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 9,
+          "executing": 1,
+          "queued": 14,
+          "reviewing": 0,
+          "tick": 78,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 9,
+          "executing": 1,
+          "queued": 13,
+          "reviewing": 1,
+          "tick": 80,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 10,
+          "executing": 1,
+          "queued": 13,
+          "reviewing": 0,
+          "tick": 86,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 10,
+          "executing": 1,
+          "queued": 12,
+          "reviewing": 1,
+          "tick": 88,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 11,
+          "executing": 1,
+          "queued": 12,
+          "reviewing": 0,
+          "tick": 94,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 11,
+          "executing": 1,
+          "queued": 11,
+          "reviewing": 1,
+          "tick": 96,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 12,
+          "executing": 1,
+          "queued": 11,
+          "reviewing": 0,
+          "tick": 102,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 12,
+          "executing": 1,
+          "queued": 10,
+          "reviewing": 1,
+          "tick": 104,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 13,
+          "executing": 1,
+          "queued": 10,
+          "reviewing": 0,
+          "tick": 110,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 13,
+          "executing": 1,
+          "queued": 9,
+          "reviewing": 1,
+          "tick": 112,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 14,
+          "executing": 1,
+          "queued": 9,
+          "reviewing": 0,
+          "tick": 118,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 14,
+          "executing": 1,
+          "queued": 8,
+          "reviewing": 1,
+          "tick": 120,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 15,
+          "executing": 1,
+          "queued": 8,
+          "reviewing": 0,
+          "tick": 126,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 15,
+          "executing": 1,
+          "queued": 7,
+          "reviewing": 1,
+          "tick": 128,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 16,
+          "executing": 1,
+          "queued": 7,
+          "reviewing": 0,
+          "tick": 134,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 16,
+          "executing": 1,
+          "queued": 6,
+          "reviewing": 1,
+          "tick": 136,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 17,
+          "executing": 1,
+          "queued": 6,
+          "reviewing": 0,
+          "tick": 142,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 17,
+          "executing": 1,
+          "queued": 5,
+          "reviewing": 1,
+          "tick": 144,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 18,
+          "executing": 1,
+          "queued": 5,
+          "reviewing": 0,
+          "tick": 150,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 18,
+          "executing": 1,
+          "queued": 4,
+          "reviewing": 1,
+          "tick": 152,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 19,
+          "executing": 1,
+          "queued": 4,
+          "reviewing": 0,
+          "tick": 158,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 19,
+          "executing": 1,
+          "queued": 3,
+          "reviewing": 1,
+          "tick": 160,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 20,
+          "executing": 1,
+          "queued": 3,
+          "reviewing": 0,
+          "tick": 166,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 20,
+          "executing": 1,
+          "queued": 2,
+          "reviewing": 1,
+          "tick": 168,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 21,
+          "executing": 1,
+          "queued": 2,
+          "reviewing": 0,
+          "tick": 174,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 21,
+          "executing": 1,
+          "queued": 1,
+          "reviewing": 1,
+          "tick": 176,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 22,
+          "executing": 1,
+          "queued": 1,
+          "reviewing": 0,
+          "tick": 182,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 22,
+          "executing": 1,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 184,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 23,
+          "executing": 1,
+          "queued": 0,
+          "reviewing": 0,
+          "tick": 190,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 23,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 192,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 24,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 0,
+          "tick": 198,
+          "wip": 0
+        }
+      ],
+      "tasks": [
+        {
+          "admission_tick": 0,
+          "arrival_tick": 0,
+          "decision_tick": 14,
+          "ready_tick": 8,
+          "review_start_tick": 8,
+          "task_id": 0
+        },
+        {
+          "admission_tick": 8,
+          "arrival_tick": 2,
+          "decision_tick": 22,
+          "ready_tick": 16,
+          "review_start_tick": 16,
+          "task_id": 1
+        },
+        {
+          "admission_tick": 16,
+          "arrival_tick": 4,
+          "decision_tick": 30,
+          "ready_tick": 24,
+          "review_start_tick": 24,
+          "task_id": 2
+        },
+        {
+          "admission_tick": 24,
+          "arrival_tick": 6,
+          "decision_tick": 38,
+          "ready_tick": 32,
+          "review_start_tick": 32,
+          "task_id": 3
+        },
+        {
+          "admission_tick": 32,
+          "arrival_tick": 8,
+          "decision_tick": 46,
+          "ready_tick": 40,
+          "review_start_tick": 40,
+          "task_id": 4
+        },
+        {
+          "admission_tick": 40,
+          "arrival_tick": 10,
+          "decision_tick": 54,
+          "ready_tick": 48,
+          "review_start_tick": 48,
+          "task_id": 5
+        },
+        {
+          "admission_tick": 48,
+          "arrival_tick": 12,
+          "decision_tick": 62,
+          "ready_tick": 56,
+          "review_start_tick": 56,
+          "task_id": 6
+        },
+        {
+          "admission_tick": 56,
+          "arrival_tick": 14,
+          "decision_tick": 70,
+          "ready_tick": 64,
+          "review_start_tick": 64,
+          "task_id": 7
+        },
+        {
+          "admission_tick": 64,
+          "arrival_tick": 16,
+          "decision_tick": 78,
+          "ready_tick": 72,
+          "review_start_tick": 72,
+          "task_id": 8
+        },
+        {
+          "admission_tick": 72,
+          "arrival_tick": 18,
+          "decision_tick": 86,
+          "ready_tick": 80,
+          "review_start_tick": 80,
+          "task_id": 9
+        },
+        {
+          "admission_tick": 80,
+          "arrival_tick": 20,
+          "decision_tick": 94,
+          "ready_tick": 88,
+          "review_start_tick": 88,
+          "task_id": 10
+        },
+        {
+          "admission_tick": 88,
+          "arrival_tick": 22,
+          "decision_tick": 102,
+          "ready_tick": 96,
+          "review_start_tick": 96,
+          "task_id": 11
+        },
+        {
+          "admission_tick": 96,
+          "arrival_tick": 24,
+          "decision_tick": 110,
+          "ready_tick": 104,
+          "review_start_tick": 104,
+          "task_id": 12
+        },
+        {
+          "admission_tick": 104,
+          "arrival_tick": 26,
+          "decision_tick": 118,
+          "ready_tick": 112,
+          "review_start_tick": 112,
+          "task_id": 13
+        },
+        {
+          "admission_tick": 112,
+          "arrival_tick": 28,
+          "decision_tick": 126,
+          "ready_tick": 120,
+          "review_start_tick": 120,
+          "task_id": 14
+        },
+        {
+          "admission_tick": 120,
+          "arrival_tick": 30,
+          "decision_tick": 134,
+          "ready_tick": 128,
+          "review_start_tick": 128,
+          "task_id": 15
+        },
+        {
+          "admission_tick": 128,
+          "arrival_tick": 32,
+          "decision_tick": 142,
+          "ready_tick": 136,
+          "review_start_tick": 136,
+          "task_id": 16
+        },
+        {
+          "admission_tick": 136,
+          "arrival_tick": 34,
+          "decision_tick": 150,
+          "ready_tick": 144,
+          "review_start_tick": 144,
+          "task_id": 17
+        },
+        {
+          "admission_tick": 144,
+          "arrival_tick": 36,
+          "decision_tick": 158,
+          "ready_tick": 152,
+          "review_start_tick": 152,
+          "task_id": 18
+        },
+        {
+          "admission_tick": 152,
+          "arrival_tick": 38,
+          "decision_tick": 166,
+          "ready_tick": 160,
+          "review_start_tick": 160,
+          "task_id": 19
+        },
+        {
+          "admission_tick": 160,
+          "arrival_tick": 40,
+          "decision_tick": 174,
+          "ready_tick": 168,
+          "review_start_tick": 168,
+          "task_id": 20
+        },
+        {
+          "admission_tick": 168,
+          "arrival_tick": 42,
+          "decision_tick": 182,
+          "ready_tick": 176,
+          "review_start_tick": 176,
+          "task_id": 21
+        },
+        {
+          "admission_tick": 176,
+          "arrival_tick": 44,
+          "decision_tick": 190,
+          "ready_tick": 184,
+          "review_start_tick": 184,
+          "task_id": 22
+        },
+        {
+          "admission_tick": 184,
+          "arrival_tick": 46,
+          "decision_tick": 198,
+          "ready_tick": 192,
+          "review_start_tick": 192,
+          "task_id": 23
+        }
+      ],
+      "wip_limit": null
+    },
+    {
+      "drain": {
+        "admission_wait": {
+          "count": 24,
+          "p50": 0,
+          "p95": 0
+        },
+        "complete": true,
+        "decided": 24,
+        "end_tick": 152,
+        "latency": {
+          "count": 24,
+          "p50": 58,
+          "p95": 102
+        },
+        "makespan": 152,
+        "pending": 0,
+        "review_wait": {
+          "count": 24,
+          "p50": 44,
+          "p95": 88
+        }
+      },
+      "execution_slots": 4,
+      "horizon": {
+        "admission_wait": {
+          "count": 8,
+          "p50": 0,
+          "p95": 0
+        },
+        "decided": 8,
+        "execution_utilization": 0.8,
+        "latency": {
+          "count": 8,
+          "p50": 26,
+          "p95": 42
+        },
+        "not_arrived": 0,
+        "oldest_pending_age": 44,
+        "pending": 16,
+        "queue_means": {
+          "awaiting_review": 7.4,
+          "queued": 0.0,
+          "wip": 11.466666666666667
+        },
+        "queue_peaks": {
+          "awaiting_review": 16,
+          "queued": 0,
+          "wip": 18
+        },
+        "review_wait": {
+          "count": 8,
+          "p50": 12,
+          "p95": 28
+        },
+        "reviewer_utilization": 0.8666666666666667,
+        "throughput": 0.13333333333333333,
+        "tick": 60
+      },
+      "name": "B",
+      "samples": [
+        {
+          "arrived": 1,
+          "awaiting_review": 0,
+          "decided": 0,
+          "executing": 1,
+          "queued": 0,
+          "reviewing": 0,
+          "tick": 0,
+          "wip": 1
+        },
+        {
+          "arrived": 2,
+          "awaiting_review": 0,
+          "decided": 0,
+          "executing": 2,
+          "queued": 0,
+          "reviewing": 0,
+          "tick": 2,
+          "wip": 2
+        },
+        {
+          "arrived": 3,
+          "awaiting_review": 0,
+          "decided": 0,
+          "executing": 3,
+          "queued": 0,
+          "reviewing": 0,
+          "tick": 4,
+          "wip": 3
+        },
+        {
+          "arrived": 4,
+          "awaiting_review": 0,
+          "decided": 0,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 0,
+          "tick": 6,
+          "wip": 4
+        },
+        {
+          "arrived": 5,
+          "awaiting_review": 0,
+          "decided": 0,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 8,
+          "wip": 5
+        },
+        {
+          "arrived": 6,
+          "awaiting_review": 1,
+          "decided": 0,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 10,
+          "wip": 6
+        },
+        {
+          "arrived": 7,
+          "awaiting_review": 2,
+          "decided": 0,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 12,
+          "wip": 7
+        },
+        {
+          "arrived": 8,
+          "awaiting_review": 2,
+          "decided": 1,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 14,
+          "wip": 7
+        },
+        {
+          "arrived": 9,
+          "awaiting_review": 3,
+          "decided": 1,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 16,
+          "wip": 8
+        },
+        {
+          "arrived": 10,
+          "awaiting_review": 4,
+          "decided": 1,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 18,
+          "wip": 9
+        },
+        {
+          "arrived": 11,
+          "awaiting_review": 4,
+          "decided": 2,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 20,
+          "wip": 9
+        },
+        {
+          "arrived": 12,
+          "awaiting_review": 5,
+          "decided": 2,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 22,
+          "wip": 10
+        },
+        {
+          "arrived": 13,
+          "awaiting_review": 6,
+          "decided": 2,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 24,
+          "wip": 11
+        },
+        {
+          "arrived": 14,
+          "awaiting_review": 6,
+          "decided": 3,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 26,
+          "wip": 11
+        },
+        {
+          "arrived": 15,
+          "awaiting_review": 7,
+          "decided": 3,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 28,
+          "wip": 12
+        },
+        {
+          "arrived": 16,
+          "awaiting_review": 8,
+          "decided": 3,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 30,
+          "wip": 13
+        },
+        {
+          "arrived": 17,
+          "awaiting_review": 8,
+          "decided": 4,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 32,
+          "wip": 13
+        },
+        {
+          "arrived": 18,
+          "awaiting_review": 9,
+          "decided": 4,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 34,
+          "wip": 14
+        },
+        {
+          "arrived": 19,
+          "awaiting_review": 10,
+          "decided": 4,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 36,
+          "wip": 15
+        },
+        {
+          "arrived": 20,
+          "awaiting_review": 10,
+          "decided": 5,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 38,
+          "wip": 15
+        },
+        {
+          "arrived": 21,
+          "awaiting_review": 11,
+          "decided": 5,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 40,
+          "wip": 16
+        },
+        {
+          "arrived": 22,
+          "awaiting_review": 12,
+          "decided": 5,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 42,
+          "wip": 17
+        },
+        {
+          "arrived": 23,
+          "awaiting_review": 12,
+          "decided": 6,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 44,
+          "wip": 17
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 13,
+          "decided": 6,
+          "executing": 4,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 46,
+          "wip": 18
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 14,
+          "decided": 6,
+          "executing": 3,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 48,
+          "wip": 18
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 14,
+          "decided": 7,
+          "executing": 2,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 50,
+          "wip": 17
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 15,
+          "decided": 7,
+          "executing": 1,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 52,
+          "wip": 17
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 16,
+          "decided": 7,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 54,
+          "wip": 17
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 15,
+          "decided": 8,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 56,
+          "wip": 16
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 15,
+          "decided": 8,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 60,
+          "wip": 16
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 14,
+          "decided": 9,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 62,
+          "wip": 15
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 13,
+          "decided": 10,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 68,
+          "wip": 14
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 12,
+          "decided": 11,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 74,
+          "wip": 13
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 11,
+          "decided": 12,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 80,
+          "wip": 12
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 10,
+          "decided": 13,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 86,
+          "wip": 11
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 9,
+          "decided": 14,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 92,
+          "wip": 10
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 8,
+          "decided": 15,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 98,
+          "wip": 9
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 7,
+          "decided": 16,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 104,
+          "wip": 8
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 6,
+          "decided": 17,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 110,
+          "wip": 7
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 5,
+          "decided": 18,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 116,
+          "wip": 6
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 4,
+          "decided": 19,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 122,
+          "wip": 5
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 3,
+          "decided": 20,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 128,
+          "wip": 4
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 2,
+          "decided": 21,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 134,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 1,
+          "decided": 22,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 140,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 23,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 146,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 24,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 0,
+          "tick": 152,
+          "wip": 0
+        }
+      ],
+      "tasks": [
+        {
+          "admission_tick": 0,
+          "arrival_tick": 0,
+          "decision_tick": 14,
+          "ready_tick": 8,
+          "review_start_tick": 8,
+          "task_id": 0
+        },
+        {
+          "admission_tick": 2,
+          "arrival_tick": 2,
+          "decision_tick": 20,
+          "ready_tick": 10,
+          "review_start_tick": 14,
+          "task_id": 1
+        },
+        {
+          "admission_tick": 4,
+          "arrival_tick": 4,
+          "decision_tick": 26,
+          "ready_tick": 12,
+          "review_start_tick": 20,
+          "task_id": 2
+        },
+        {
+          "admission_tick": 6,
+          "arrival_tick": 6,
+          "decision_tick": 32,
+          "ready_tick": 14,
+          "review_start_tick": 26,
+          "task_id": 3
+        },
+        {
+          "admission_tick": 8,
+          "arrival_tick": 8,
+          "decision_tick": 38,
+          "ready_tick": 16,
+          "review_start_tick": 32,
+          "task_id": 4
+        },
+        {
+          "admission_tick": 10,
+          "arrival_tick": 10,
+          "decision_tick": 44,
+          "ready_tick": 18,
+          "review_start_tick": 38,
+          "task_id": 5
+        },
+        {
+          "admission_tick": 12,
+          "arrival_tick": 12,
+          "decision_tick": 50,
+          "ready_tick": 20,
+          "review_start_tick": 44,
+          "task_id": 6
+        },
+        {
+          "admission_tick": 14,
+          "arrival_tick": 14,
+          "decision_tick": 56,
+          "ready_tick": 22,
+          "review_start_tick": 50,
+          "task_id": 7
+        },
+        {
+          "admission_tick": 16,
+          "arrival_tick": 16,
+          "decision_tick": 62,
+          "ready_tick": 24,
+          "review_start_tick": 56,
+          "task_id": 8
+        },
+        {
+          "admission_tick": 18,
+          "arrival_tick": 18,
+          "decision_tick": 68,
+          "ready_tick": 26,
+          "review_start_tick": 62,
+          "task_id": 9
+        },
+        {
+          "admission_tick": 20,
+          "arrival_tick": 20,
+          "decision_tick": 74,
+          "ready_tick": 28,
+          "review_start_tick": 68,
+          "task_id": 10
+        },
+        {
+          "admission_tick": 22,
+          "arrival_tick": 22,
+          "decision_tick": 80,
+          "ready_tick": 30,
+          "review_start_tick": 74,
+          "task_id": 11
+        },
+        {
+          "admission_tick": 24,
+          "arrival_tick": 24,
+          "decision_tick": 86,
+          "ready_tick": 32,
+          "review_start_tick": 80,
+          "task_id": 12
+        },
+        {
+          "admission_tick": 26,
+          "arrival_tick": 26,
+          "decision_tick": 92,
+          "ready_tick": 34,
+          "review_start_tick": 86,
+          "task_id": 13
+        },
+        {
+          "admission_tick": 28,
+          "arrival_tick": 28,
+          "decision_tick": 98,
+          "ready_tick": 36,
+          "review_start_tick": 92,
+          "task_id": 14
+        },
+        {
+          "admission_tick": 30,
+          "arrival_tick": 30,
+          "decision_tick": 104,
+          "ready_tick": 38,
+          "review_start_tick": 98,
+          "task_id": 15
+        },
+        {
+          "admission_tick": 32,
+          "arrival_tick": 32,
+          "decision_tick": 110,
+          "ready_tick": 40,
+          "review_start_tick": 104,
+          "task_id": 16
+        },
+        {
+          "admission_tick": 34,
+          "arrival_tick": 34,
+          "decision_tick": 116,
+          "ready_tick": 42,
+          "review_start_tick": 110,
+          "task_id": 17
+        },
+        {
+          "admission_tick": 36,
+          "arrival_tick": 36,
+          "decision_tick": 122,
+          "ready_tick": 44,
+          "review_start_tick": 116,
+          "task_id": 18
+        },
+        {
+          "admission_tick": 38,
+          "arrival_tick": 38,
+          "decision_tick": 128,
+          "ready_tick": 46,
+          "review_start_tick": 122,
+          "task_id": 19
+        },
+        {
+          "admission_tick": 40,
+          "arrival_tick": 40,
+          "decision_tick": 134,
+          "ready_tick": 48,
+          "review_start_tick": 128,
+          "task_id": 20
+        },
+        {
+          "admission_tick": 42,
+          "arrival_tick": 42,
+          "decision_tick": 140,
+          "ready_tick": 50,
+          "review_start_tick": 134,
+          "task_id": 21
+        },
+        {
+          "admission_tick": 44,
+          "arrival_tick": 44,
+          "decision_tick": 146,
+          "ready_tick": 52,
+          "review_start_tick": 140,
+          "task_id": 22
+        },
+        {
+          "admission_tick": 46,
+          "arrival_tick": 46,
+          "decision_tick": 152,
+          "ready_tick": 54,
+          "review_start_tick": 146,
+          "task_id": 23
+        }
+      ],
+      "wip_limit": null
+    },
+    {
+      "drain": {
+        "admission_wait": {
+          "count": 24,
+          "p50": 40,
+          "p95": 84
+        },
+        "complete": true,
+        "decided": 24,
+        "end_tick": 152,
+        "latency": {
+          "count": 24,
+          "p50": 58,
+          "p95": 102
+        },
+        "makespan": 152,
+        "pending": 0,
+        "review_wait": {
+          "count": 24,
+          "p50": 4,
+          "p95": 4
+        }
+      },
+      "execution_slots": 4,
+      "horizon": {
+        "admission_wait": {
+          "count": 8,
+          "p50": 8,
+          "p95": 24
+        },
+        "decided": 8,
+        "execution_utilization": 0.35,
+        "latency": {
+          "count": 8,
+          "p50": 26,
+          "p95": 42
+        },
+        "not_arrived": 0,
+        "oldest_pending_age": 44,
+        "pending": 16,
+        "queue_means": {
+          "awaiting_review": 0.6333333333333333,
+          "queued": 8.566666666666666,
+          "wip": 2.9
+        },
+        "queue_peaks": {
+          "awaiting_review": 2,
+          "queued": 15,
+          "wip": 3
+        },
+        "review_wait": {
+          "count": 8,
+          "p50": 4,
+          "p95": 8
+        },
+        "reviewer_utilization": 0.8666666666666667,
+        "throughput": 0.13333333333333333,
+        "tick": 60
+      },
+      "name": "C",
+      "samples": [
+        {
+          "arrived": 1,
+          "awaiting_review": 0,
+          "decided": 0,
+          "executing": 1,
+          "queued": 0,
+          "reviewing": 0,
+          "tick": 0,
+          "wip": 1
+        },
+        {
+          "arrived": 2,
+          "awaiting_review": 0,
+          "decided": 0,
+          "executing": 2,
+          "queued": 0,
+          "reviewing": 0,
+          "tick": 2,
+          "wip": 2
+        },
+        {
+          "arrived": 3,
+          "awaiting_review": 0,
+          "decided": 0,
+          "executing": 3,
+          "queued": 0,
+          "reviewing": 0,
+          "tick": 4,
+          "wip": 3
+        },
+        {
+          "arrived": 4,
+          "awaiting_review": 0,
+          "decided": 0,
+          "executing": 3,
+          "queued": 1,
+          "reviewing": 0,
+          "tick": 6,
+          "wip": 3
+        },
+        {
+          "arrived": 5,
+          "awaiting_review": 0,
+          "decided": 0,
+          "executing": 2,
+          "queued": 2,
+          "reviewing": 1,
+          "tick": 8,
+          "wip": 3
+        },
+        {
+          "arrived": 6,
+          "awaiting_review": 1,
+          "decided": 0,
+          "executing": 1,
+          "queued": 3,
+          "reviewing": 1,
+          "tick": 10,
+          "wip": 3
+        },
+        {
+          "arrived": 7,
+          "awaiting_review": 2,
+          "decided": 0,
+          "executing": 0,
+          "queued": 4,
+          "reviewing": 1,
+          "tick": 12,
+          "wip": 3
+        },
+        {
+          "arrived": 8,
+          "awaiting_review": 1,
+          "decided": 1,
+          "executing": 1,
+          "queued": 4,
+          "reviewing": 1,
+          "tick": 14,
+          "wip": 3
+        },
+        {
+          "arrived": 9,
+          "awaiting_review": 1,
+          "decided": 1,
+          "executing": 1,
+          "queued": 5,
+          "reviewing": 1,
+          "tick": 16,
+          "wip": 3
+        },
+        {
+          "arrived": 10,
+          "awaiting_review": 1,
+          "decided": 1,
+          "executing": 1,
+          "queued": 6,
+          "reviewing": 1,
+          "tick": 18,
+          "wip": 3
+        },
+        {
+          "arrived": 11,
+          "awaiting_review": 0,
+          "decided": 2,
+          "executing": 2,
+          "queued": 6,
+          "reviewing": 1,
+          "tick": 20,
+          "wip": 3
+        },
+        {
+          "arrived": 12,
+          "awaiting_review": 1,
+          "decided": 2,
+          "executing": 1,
+          "queued": 7,
+          "reviewing": 1,
+          "tick": 22,
+          "wip": 3
+        },
+        {
+          "arrived": 13,
+          "awaiting_review": 1,
+          "decided": 2,
+          "executing": 1,
+          "queued": 8,
+          "reviewing": 1,
+          "tick": 24,
+          "wip": 3
+        },
+        {
+          "arrived": 14,
+          "awaiting_review": 0,
+          "decided": 3,
+          "executing": 2,
+          "queued": 8,
+          "reviewing": 1,
+          "tick": 26,
+          "wip": 3
+        },
+        {
+          "arrived": 15,
+          "awaiting_review": 1,
+          "decided": 3,
+          "executing": 1,
+          "queued": 9,
+          "reviewing": 1,
+          "tick": 28,
+          "wip": 3
+        },
+        {
+          "arrived": 16,
+          "awaiting_review": 1,
+          "decided": 3,
+          "executing": 1,
+          "queued": 10,
+          "reviewing": 1,
+          "tick": 30,
+          "wip": 3
+        },
+        {
+          "arrived": 17,
+          "awaiting_review": 0,
+          "decided": 4,
+          "executing": 2,
+          "queued": 10,
+          "reviewing": 1,
+          "tick": 32,
+          "wip": 3
+        },
+        {
+          "arrived": 18,
+          "awaiting_review": 1,
+          "decided": 4,
+          "executing": 1,
+          "queued": 11,
+          "reviewing": 1,
+          "tick": 34,
+          "wip": 3
+        },
+        {
+          "arrived": 19,
+          "awaiting_review": 1,
+          "decided": 4,
+          "executing": 1,
+          "queued": 12,
+          "reviewing": 1,
+          "tick": 36,
+          "wip": 3
+        },
+        {
+          "arrived": 20,
+          "awaiting_review": 0,
+          "decided": 5,
+          "executing": 2,
+          "queued": 12,
+          "reviewing": 1,
+          "tick": 38,
+          "wip": 3
+        },
+        {
+          "arrived": 21,
+          "awaiting_review": 1,
+          "decided": 5,
+          "executing": 1,
+          "queued": 13,
+          "reviewing": 1,
+          "tick": 40,
+          "wip": 3
+        },
+        {
+          "arrived": 22,
+          "awaiting_review": 1,
+          "decided": 5,
+          "executing": 1,
+          "queued": 14,
+          "reviewing": 1,
+          "tick": 42,
+          "wip": 3
+        },
+        {
+          "arrived": 23,
+          "awaiting_review": 0,
+          "decided": 6,
+          "executing": 2,
+          "queued": 14,
+          "reviewing": 1,
+          "tick": 44,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 1,
+          "decided": 6,
+          "executing": 1,
+          "queued": 15,
+          "reviewing": 1,
+          "tick": 46,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 7,
+          "executing": 2,
+          "queued": 14,
+          "reviewing": 1,
+          "tick": 50,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 1,
+          "decided": 7,
+          "executing": 1,
+          "queued": 14,
+          "reviewing": 1,
+          "tick": 52,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 8,
+          "executing": 2,
+          "queued": 13,
+          "reviewing": 1,
+          "tick": 56,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 1,
+          "decided": 8,
+          "executing": 1,
+          "queued": 13,
+          "reviewing": 1,
+          "tick": 58,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 1,
+          "decided": 8,
+          "executing": 1,
+          "queued": 13,
+          "reviewing": 1,
+          "tick": 60,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 9,
+          "executing": 2,
+          "queued": 12,
+          "reviewing": 1,
+          "tick": 62,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 1,
+          "decided": 9,
+          "executing": 1,
+          "queued": 12,
+          "reviewing": 1,
+          "tick": 64,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 10,
+          "executing": 2,
+          "queued": 11,
+          "reviewing": 1,
+          "tick": 68,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 1,
+          "decided": 10,
+          "executing": 1,
+          "queued": 11,
+          "reviewing": 1,
+          "tick": 70,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 11,
+          "executing": 2,
+          "queued": 10,
+          "reviewing": 1,
+          "tick": 74,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 1,
+          "decided": 11,
+          "executing": 1,
+          "queued": 10,
+          "reviewing": 1,
+          "tick": 76,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 12,
+          "executing": 2,
+          "queued": 9,
+          "reviewing": 1,
+          "tick": 80,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 1,
+          "decided": 12,
+          "executing": 1,
+          "queued": 9,
+          "reviewing": 1,
+          "tick": 82,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 13,
+          "executing": 2,
+          "queued": 8,
+          "reviewing": 1,
+          "tick": 86,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 1,
+          "decided": 13,
+          "executing": 1,
+          "queued": 8,
+          "reviewing": 1,
+          "tick": 88,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 14,
+          "executing": 2,
+          "queued": 7,
+          "reviewing": 1,
+          "tick": 92,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 1,
+          "decided": 14,
+          "executing": 1,
+          "queued": 7,
+          "reviewing": 1,
+          "tick": 94,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 15,
+          "executing": 2,
+          "queued": 6,
+          "reviewing": 1,
+          "tick": 98,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 1,
+          "decided": 15,
+          "executing": 1,
+          "queued": 6,
+          "reviewing": 1,
+          "tick": 100,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 16,
+          "executing": 2,
+          "queued": 5,
+          "reviewing": 1,
+          "tick": 104,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 1,
+          "decided": 16,
+          "executing": 1,
+          "queued": 5,
+          "reviewing": 1,
+          "tick": 106,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 17,
+          "executing": 2,
+          "queued": 4,
+          "reviewing": 1,
+          "tick": 110,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 1,
+          "decided": 17,
+          "executing": 1,
+          "queued": 4,
+          "reviewing": 1,
+          "tick": 112,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 18,
+          "executing": 2,
+          "queued": 3,
+          "reviewing": 1,
+          "tick": 116,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 1,
+          "decided": 18,
+          "executing": 1,
+          "queued": 3,
+          "reviewing": 1,
+          "tick": 118,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 19,
+          "executing": 2,
+          "queued": 2,
+          "reviewing": 1,
+          "tick": 122,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 1,
+          "decided": 19,
+          "executing": 1,
+          "queued": 2,
+          "reviewing": 1,
+          "tick": 124,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 20,
+          "executing": 2,
+          "queued": 1,
+          "reviewing": 1,
+          "tick": 128,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 1,
+          "decided": 20,
+          "executing": 1,
+          "queued": 1,
+          "reviewing": 1,
+          "tick": 130,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 21,
+          "executing": 2,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 134,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 1,
+          "decided": 21,
+          "executing": 1,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 136,
+          "wip": 3
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 22,
+          "executing": 1,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 140,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 1,
+          "decided": 22,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 142,
+          "wip": 2
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 23,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 1,
+          "tick": 146,
+          "wip": 1
+        },
+        {
+          "arrived": 24,
+          "awaiting_review": 0,
+          "decided": 24,
+          "executing": 0,
+          "queued": 0,
+          "reviewing": 0,
+          "tick": 152,
+          "wip": 0
+        }
+      ],
+      "tasks": [
+        {
+          "admission_tick": 0,
+          "arrival_tick": 0,
+          "decision_tick": 14,
+          "ready_tick": 8,
+          "review_start_tick": 8,
+          "task_id": 0
+        },
+        {
+          "admission_tick": 2,
+          "arrival_tick": 2,
+          "decision_tick": 20,
+          "ready_tick": 10,
+          "review_start_tick": 14,
+          "task_id": 1
+        },
+        {
+          "admission_tick": 4,
+          "arrival_tick": 4,
+          "decision_tick": 26,
+          "ready_tick": 12,
+          "review_start_tick": 20,
+          "task_id": 2
+        },
+        {
+          "admission_tick": 14,
+          "arrival_tick": 6,
+          "decision_tick": 32,
+          "ready_tick": 22,
+          "review_start_tick": 26,
+          "task_id": 3
+        },
+        {
+          "admission_tick": 20,
+          "arrival_tick": 8,
+          "decision_tick": 38,
+          "ready_tick": 28,
+          "review_start_tick": 32,
+          "task_id": 4
+        },
+        {
+          "admission_tick": 26,
+          "arrival_tick": 10,
+          "decision_tick": 44,
+          "ready_tick": 34,
+          "review_start_tick": 38,
+          "task_id": 5
+        },
+        {
+          "admission_tick": 32,
+          "arrival_tick": 12,
+          "decision_tick": 50,
+          "ready_tick": 40,
+          "review_start_tick": 44,
+          "task_id": 6
+        },
+        {
+          "admission_tick": 38,
+          "arrival_tick": 14,
+          "decision_tick": 56,
+          "ready_tick": 46,
+          "review_start_tick": 50,
+          "task_id": 7
+        },
+        {
+          "admission_tick": 44,
+          "arrival_tick": 16,
+          "decision_tick": 62,
+          "ready_tick": 52,
+          "review_start_tick": 56,
+          "task_id": 8
+        },
+        {
+          "admission_tick": 50,
+          "arrival_tick": 18,
+          "decision_tick": 68,
+          "ready_tick": 58,
+          "review_start_tick": 62,
+          "task_id": 9
+        },
+        {
+          "admission_tick": 56,
+          "arrival_tick": 20,
+          "decision_tick": 74,
+          "ready_tick": 64,
+          "review_start_tick": 68,
+          "task_id": 10
+        },
+        {
+          "admission_tick": 62,
+          "arrival_tick": 22,
+          "decision_tick": 80,
+          "ready_tick": 70,
+          "review_start_tick": 74,
+          "task_id": 11
+        },
+        {
+          "admission_tick": 68,
+          "arrival_tick": 24,
+          "decision_tick": 86,
+          "ready_tick": 76,
+          "review_start_tick": 80,
+          "task_id": 12
+        },
+        {
+          "admission_tick": 74,
+          "arrival_tick": 26,
+          "decision_tick": 92,
+          "ready_tick": 82,
+          "review_start_tick": 86,
+          "task_id": 13
+        },
+        {
+          "admission_tick": 80,
+          "arrival_tick": 28,
+          "decision_tick": 98,
+          "ready_tick": 88,
+          "review_start_tick": 92,
+          "task_id": 14
+        },
+        {
+          "admission_tick": 86,
+          "arrival_tick": 30,
+          "decision_tick": 104,
+          "ready_tick": 94,
+          "review_start_tick": 98,
+          "task_id": 15
+        },
+        {
+          "admission_tick": 92,
+          "arrival_tick": 32,
+          "decision_tick": 110,
+          "ready_tick": 100,
+          "review_start_tick": 104,
+          "task_id": 16
+        },
+        {
+          "admission_tick": 98,
+          "arrival_tick": 34,
+          "decision_tick": 116,
+          "ready_tick": 106,
+          "review_start_tick": 110,
+          "task_id": 17
+        },
+        {
+          "admission_tick": 104,
+          "arrival_tick": 36,
+          "decision_tick": 122,
+          "ready_tick": 112,
+          "review_start_tick": 116,
+          "task_id": 18
+        },
+        {
+          "admission_tick": 110,
+          "arrival_tick": 38,
+          "decision_tick": 128,
+          "ready_tick": 118,
+          "review_start_tick": 122,
+          "task_id": 19
+        },
+        {
+          "admission_tick": 116,
+          "arrival_tick": 40,
+          "decision_tick": 134,
+          "ready_tick": 124,
+          "review_start_tick": 128,
+          "task_id": 20
+        },
+        {
+          "admission_tick": 122,
+          "arrival_tick": 42,
+          "decision_tick": 140,
+          "ready_tick": 130,
+          "review_start_tick": 134,
+          "task_id": 21
+        },
+        {
+          "admission_tick": 128,
+          "arrival_tick": 44,
+          "decision_tick": 146,
+          "ready_tick": 136,
+          "review_start_tick": 140,
+          "task_id": 22
+        },
+        {
+          "admission_tick": 134,
+          "arrival_tick": 46,
+          "decision_tick": 152,
+          "ready_tick": 142,
+          "review_start_tick": 146,
+          "task_id": 23
+        }
+      ],
+      "wip_limit": 3
+    }
+  ]
+}

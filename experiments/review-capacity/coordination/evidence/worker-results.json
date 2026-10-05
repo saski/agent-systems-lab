@@ -1,0 +1,295 @@
+{
+  "capture_date": "2026-10-05",
+  "scope": "Coordinator receipts available at capture; implementation remains in progress",
+  "worker_results": [
+    {
+      "source_file": "02-revise-model-tests-result.json",
+      "source_sha256": "27193bf76e67ce1e1437a9641e66fa3ce73dc13ece67d70c0a8a275108683c0e",
+      "task_id": "02-revise-model-tests",
+      "model": "omniroute/kiro/claude-haiku-4.5",
+      "exit_code": 0,
+      "termination_reason": "completed",
+      "status": "returned_for_review",
+      "scope_valid": true,
+      "input_tokens": 22491,
+      "changed_files": [
+        "tests/test_review_capacity.py"
+      ]
+    },
+    {
+      "source_file": "03-compact-correct-tests-result.json",
+      "source_sha256": "0af8cc28bfefc936d69b1c1b4c7d93ed5b8a4b11e70260a51f20aae00e50c8c8",
+      "task_id": "03-compact-correct-tests",
+      "model": "omniroute/kiro/claude-haiku-4.5",
+      "exit_code": 0,
+      "termination_reason": "completed",
+      "status": "returned_for_review",
+      "scope_valid": true,
+      "input_tokens": 22676,
+      "changed_files": [
+        "tests/test_review_capacity.py"
+      ]
+    },
+    {
+      "source_file": "04-pure-event-time-model-result.json",
+      "source_sha256": "fd4819bcd6d40500b64030497b721b98e6d0ce1b875d5418c59a28f06e577d68",
+      "task_id": "04-pure-event-time-model",
+      "model": "omniroute/kiro/claude-haiku-4.5",
+      "exit_code": 0,
+      "termination_reason": "completed",
+      "status": "returned_for_review",
+      "scope_valid": true,
+      "input_tokens": 30038,
+      "changed_files": [
+        "src/systems_lab/review_capacity.py"
+      ]
+    },
+    {
+      "source_file": "05-fix-pure-model-result.json",
+      "source_sha256": "b0f6b65eb5cc78c8ed86288eb23e31acf423050219f317f87b43bfd6ab55442a",
+      "task_id": "05-fix-pure-model",
+      "model": "omniroute/kiro/claude-haiku-4.5",
+      "exit_code": 0,
+      "termination_reason": "completed",
+      "status": "rejected_no_changes",
+      "scope_valid": true,
+      "input_tokens": 32372,
+      "changed_files": []
+    },
+    {
+      "source_file": "07-sonnet-correct-model-result.json",
+      "source_sha256": "7b67d93b8f9cd7c2e3f40588bf3e99c21695de995e4dc40192f34a2852f1dd87",
+      "task_id": "07-sonnet-correct-model",
+      "model": "omniroute/kiro/claude-sonnet-4.5",
+      "exit_code": 0,
+      "termination_reason": "completed",
+      "status": "returned_for_review",
+      "scope_valid": true,
+      "input_tokens": 24532,
+      "changed_files": [
+        "src/systems_lab/review_capacity.py"
+      ]
+    },
+    {
+      "source_file": "08-correct-admission-metrics-result.json",
+      "source_sha256": "8e28b341cececac0af205fcf7fdd3a05dc246f5f4c76a36219e437a963f92bdb",
+      "task_id": "08-correct-admission-metrics",
+      "model": "omniroute/kiro/claude-sonnet-4.5",
+      "exit_code": 0,
+      "termination_reason": "completed",
+      "status": "returned_for_review",
+      "scope_valid": true,
+      "input_tokens": 23329,
+      "changed_files": [
+        "src/systems_lab/review_capacity.py"
+      ]
+    },
+    {
+      "source_file": "09-atomic-admission-result.json",
+      "source_sha256": "c9c6ef8073dca00ee23fcf525d4fe259cd3abf97208ee3258d8784a579c12970",
+      "task_id": "09-atomic-admission",
+      "model": "omniroute/kiro/claude-sonnet-4.5",
+      "exit_code": 0,
+      "termination_reason": "completed",
+      "status": "returned_for_review",
+      "scope_valid": true,
+      "input_tokens": 15123,
+      "changed_files": [
+        "src/systems_lab/review_capacity.py"
+      ]
+    },
+    {
+      "source_file": "10-fix-admission-block-result.json",
+      "source_sha256": "1888d0e9b9b0c89dd025ce005cca2af9348e59fc5e65deb3d4568dde36baba08",
+      "task_id": "10-fix-admission-block",
+      "model": "omniroute/kiro/claude-sonnet-4.5",
+      "exit_code": 0,
+      "termination_reason": "completed",
+      "status": "returned_for_review",
+      "scope_valid": true,
+      "input_tokens": 14407,
+      "changed_files": [
+        "src/systems_lab/review_capacity.py"
+      ]
+    },
+    {
+      "source_file": "11-report-contract-tests-result.json",
+      "source_sha256": "321e0569d664c85eacf30e9f9ab3628cdd0606cc5c20b9bc3ae6af2ed702a5c7",
+      "task_id": "11-report-contract-tests",
+      "model": "omniroute/kiro/claude-sonnet-4.5",
+      "exit_code": 0,
+      "termination_reason": "completed",
+      "status": "returned_for_review",
+      "scope_valid": true,
+      "input_tokens": 19815,
+      "changed_files": [
+        "tests/test_review_capacity.py"
+      ]
+    },
+    {
+      "source_file": "12-correct-test-input-key-result.json",
+      "source_sha256": "37aac11d0b180978a1602edafede867f684b36258a640b33ea8a36bbc2084ed9",
+      "task_id": "12-correct-test-input-key",
+      "model": "omniroute/kiro/claude-sonnet-4.5",
+      "exit_code": 0,
+      "termination_reason": "completed",
+      "status": "returned_for_review",
+      "scope_valid": true,
+      "input_tokens": 28093,
+      "changed_files": [
+        "tests/test_review_capacity.py"
+      ]
+    },
+    {
+      "source_file": "13-report-identity-result.json",
+      "source_sha256": "dc387539611473e63755e20a23a98d0b7e966685b8d2e75a3bde048bdaad2525",
+      "task_id": "13-report-identity",
+      "model": "omniroute/kiro/claude-sonnet-4.5",
+      "exit_code": 0,
+      "termination_reason": "completed",
+      "status": "returned_for_review",
+      "scope_valid": true,
+      "input_tokens": 20282,
+      "changed_files": [
+        "src/systems_lab/review_capacity.py"
+      ]
+    },
+    {
+      "source_file": "14-common-horizon-metrics-result.json",
+      "source_sha256": "53e1b56bdcf2dbb1d25a49c8754f96c6afb6b4038cf7855dcbe806d514c44693",
+      "task_id": "14-common-horizon-metrics",
+      "model": "omniroute/kiro/claude-sonnet-4.5",
+      "exit_code": 0,
+      "termination_reason": "completed",
+      "status": "returned_for_review",
+      "scope_valid": true,
+      "input_tokens": 20065,
+      "changed_files": [
+        "src/systems_lab/review_capacity.py"
+      ]
+    },
+    {
+      "source_file": "15-input-isolation-test-result.json",
+      "source_sha256": "ab82128e7e842158aecccd41bd4bdcdee78199d4c99c0a901f025177c0730955",
+      "task_id": "15-input-isolation-test",
+      "model": "omniroute/kiro/claude-sonnet-4.5",
+      "exit_code": 0,
+      "termination_reason": "completed",
+      "status": "returned_for_review",
+      "scope_valid": true,
+      "input_tokens": 28652,
+      "changed_files": [
+        "tests/test_review_capacity.py"
+      ]
+    },
+    {
+      "source_file": "16-complete-horizon-metrics-result.json",
+      "source_sha256": "c43d58fd38f9c928913769afa3626829cc6288032c4b2ce9699feec2a9a2fbf8",
+      "task_id": "16-complete-horizon-metrics",
+      "model": "omniroute/kiro/claude-sonnet-4.5",
+      "exit_code": 0,
+      "termination_reason": "input_limit",
+      "status": "failed",
+      "scope_valid": true,
+      "input_tokens": 60453,
+      "changed_files": [
+        "src/systems_lab/review_capacity.py"
+      ]
+    },
+    {
+      "source_file": "17-sample-horizon-result.json",
+      "source_sha256": "bc7eb18d57ce8dac72b1e3990e83134e98512f099450c65cf9ceb61bcef0711d",
+      "task_id": "17-sample-horizon",
+      "model": "omniroute/kiro/claude-sonnet-4.5",
+      "exit_code": 0,
+      "termination_reason": "completed",
+      "status": "returned_for_review",
+      "scope_valid": true,
+      "input_tokens": 22088,
+      "changed_files": [
+        "src/systems_lab/review_capacity.py"
+      ]
+    },
+    {
+      "source_file": "task-01-big-pickle-result.json",
+      "source_sha256": "14d7a6a226f13aa79a48d167a02a6478b85142a9d3c15370a7c72bdc81f1a74e",
+      "model": "omniroute/oc/big-pickle",
+      "termination_reason": "process_error",
+      "status": "failed",
+      "changed_files": [],
+      "validation": {
+        "command": [
+          "uv",
+          "run",
+          "--locked",
+          "ruff",
+          "check",
+          "tests/test_review_capacity.py"
+        ],
+        "status": "failed"
+      },
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "diagnostic": "OpenCode exited with status 1"
+    },
+    {
+      "source_file": "task-01-result.json",
+      "source_sha256": "e83863815425f9fdaf4e0880dbe7273c751ddad25dee4954ac4fbeed7a90da20",
+      "model": "omniroute/oc/deepseek-v4-flash-free",
+      "termination_reason": "process_error",
+      "status": "failed",
+      "changed_files": [],
+      "validation": {
+        "command": [
+          "uv",
+          "run",
+          "--locked",
+          "ruff",
+          "check",
+          "tests/test_review_capacity.py"
+        ],
+        "status": "failed"
+      },
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "diagnostic": "OpenCode exited with status 1"
+    }
+  ],
+  "early_hermes_attempts": [
+    {
+      "source_file": "task-01-hermes-result.jsonl",
+      "source_sha256": "9aed10d41298c957a2d40f57ca8852773872c0206b8dd0bc0c2340c2bba7b689",
+      "exit_code": 1,
+      "tokens": {
+        "input": 33938,
+        "output": 82,
+        "total": 34020,
+        "cache_read": 0,
+        "cache_write": 0
+      },
+      "duration_ms": 18869,
+      "outcome": "iteration_limit_before_file_write",
+      "independent_model_validation": "not_recorded_in_this_artifact"
+    },
+    {
+      "source_file": "task-01-hermes-result-02.jsonl",
+      "source_sha256": "22d6cd51b68752b22ed755895bd53709d7a7676b4b04d914f914786ec281d3db",
+      "exit_code": 1,
+      "tokens": {
+        "input": 39621,
+        "output": 49,
+        "total": 39670,
+        "cache_read": 0,
+        "cache_write": 0
+      },
+      "duration_ms": 46305,
+      "outcome": "iteration_limit_before_file_write",
+      "independent_model_validation": "not_recorded_in_this_artifact"
+    }
+  ],
+  "interpretation": "returned_for_review means a worker returned within its recorded scope; it is not a test pass or final acceptance. A failed receipt can still record changed files."
+}

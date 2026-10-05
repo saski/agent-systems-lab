@@ -1,0 +1,65 @@
+{
+  "kind": "coordinator_publication_receipt",
+  "date": "2026-10-05",
+  "model_free_basis": "Operator confirmed Kiro Free on this account; no paid fallback was introduced.",
+  "workers": [
+    {
+      "task_id": "publication-41-review-and-lint",
+      "model": "omniroute/kiro/claude-haiku-4.5",
+      "exit_code": 0,
+      "termination_reason": "completed",
+      "input_tokens": 26645,
+      "changed_files": [
+        "src/systems_lab/review_capacity_metrics.py"
+      ],
+      "scope_valid": true,
+      "status": "returned_for_review",
+      "coordinator_review": "accepted_after_mechanical_formatting"
+    },
+    {
+      "task_id": "publication-42-release-note",
+      "model": "omniroute/kiro/claude-haiku-4.5",
+      "exit_code": 0,
+      "termination_reason": "completed",
+      "input_tokens": 14476,
+      "changed_files": [
+        "experiments/review-capacity/coordination/publication-review.md"
+      ],
+      "scope_valid": true,
+      "status": "returned_for_review",
+      "coordinator_review": "superseded_by_corrected_note"
+    },
+    {
+      "task_id": "publication-43-verified-release-note",
+      "model": "omniroute/kiro/claude-haiku-4.5",
+      "exit_code": 0,
+      "termination_reason": "completed",
+      "input_tokens": 14586,
+      "changed_files": [
+        "experiments/review-capacity/coordination/publication-review.md"
+      ],
+      "scope_valid": true,
+      "status": "returned_for_review",
+      "coordinator_review": "accepted_after_editorial_clarification_of_wip_and_pending_bound"
+    }
+  ],
+  "validation": {
+    "make_check": {
+      "status": "passed",
+      "tests_passed": 83,
+      "tests_skipped": 5,
+      "skip_reason": "Container suite is opt-in",
+      "lint": "passed",
+      "format": "passed",
+      "compose_configuration": "passed"
+    },
+    "make_spec_check": {
+      "status": "passed",
+      "items_passed": 4
+    },
+    "learning_guide": "Previously inspected on desktop and mobile; published assets byte-identical to that inspected copy",
+    "scenario_report_hash": "a3a9c0396620438fa7c039f5aa9aace98a85cff968ba5004c52e5e25f473e58a"
+  },
+  "scope": "Numerical learning slice only; integrated dashboard, demo target and horizon-bound alignment remain pending",
+  "raw_artifacts": "Ignored project .lab/coordination/<run-id>/"
+}

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Review capacity · Systems Lab learning guide</title>
+<style>
+:root{color-scheme:light;--ink:#172c3a;--muted:#526170;--line:#dce3e7;--blue:#3179b7;--green:#21866b;--orange:#de703a}*{box-sizing:border-box}body{margin:0;background:#f6f8f8;color:var(--ink);font:16px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1160px;margin:auto;padding:32px 28px 64px}header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:20px;border-bottom:1px solid var(--line)}.brand{font-weight:750;letter-spacing:-.4px}.badge{display:inline-block;background:#fff0e6;border:1px solid #ecc4a9;border-radius:30px;padding:6px 12px;color:#8f431b;font-size:11px;letter-spacing:1px;font-weight:750}.eyebrow{font-size:12px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase}.hero{padding:44px 0 18px}h1{font-size:clamp(36px,5.6vw,62px);line-height:1.08;letter-spacing:-2px;margin:14px 0 22px}h2{font-size:29px;line-height:1.2;letter-spacing:-.7px;margin:8px 0 18px}h3{font-size:16px;margin:0 0 10px}.lead{max-width:770px;color:var(--muted);font-size:20px}p{margin:0 0 15px}.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0 42px}.fact,.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px}.fact strong{display:block;font-size:31px;letter-spacing:-1px}.fact small,.small{font-size:14px;color:var(--muted)}section{margin:38px 0}.intro{max-width:830px}figure{margin:22px 0}figure img{display:block;width:100%;height:auto}figcaption{font-size:14px;color:var(--muted);padding-top:13px}.callout{background:#eaf5ef;border-left:4px solid var(--green);padding:18px 22px;border-radius:0 10px 10px 0;margin:22px 0}.warning{background:#fff0e6;border-color:var(--orange)}.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;border-bottom:1px solid var(--line);padding:12px 10px;white-space:nowrap}th{font-size:12px;color:var(--muted)}caption{text-align:left;font-size:14px;padding:0 10px 12px;color:var(--muted)}.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:16px 0}button,select{font:inherit;border:1px solid #bdcbd3;border-radius:8px;padding:8px 13px;background:white;color:var(--ink);cursor:pointer}button:hover{background:#eef4f7}button:disabled{opacity:.5;cursor:default}button[aria-pressed=true]{color:white;background:var(--blue);border-color:var(--blue)}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #83b8d8;outline-offset:3px}.tick-line{display:flex;align-items:center;gap:16px;margin:20px 0}input[type=range]{accent-color:var(--blue);flex:1;min-width:0}output{font-weight:750;font-variant-numeric:tabular-nums}.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:22px 0}.stage{border:1px solid #abc9e4;border-radius:10px;padding:14px;background:#edf5fd;min-height:170px}.stage.queue{background:#fff3e7;border-color:#e6bf98}.stage.done{background:#eaf5ef;border-color:#a6d1ba}.stage h3{font-size:14px;line-height:1.35;min-height:38px}.count{font-size:25px;line-height:1.2;font-weight:750}.stage small{display:block;font-size:11px;line-height:1.45;color:var(--muted);min-height:32px;margin:8px 0 12px}.tokens{display:flex;gap:4px;flex-wrap:wrap}.task,.slot{display:grid;place-items:center;font-size:10px;font-variant-numeric:tabular-nums;border-radius:4px;min-width:28px;min-height:24px;padding:3px;background:white;border:1px solid #d5dee5}.slot{border-color:#80abd0}.slot.idle{border-style:dashed;color:#7a8d9a}.replay-meta{display:flex;flex-wrap:wrap;gap:16px;border-top:1px solid var(--line);padding-top:14px;font-size:13px;color:var(--muted)}.replay-meta strong{color:var(--ink)}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}details{padding:16px 0}summary{cursor:pointer;font-weight:650}code,.hash{font-family:monospace;font-size:12px;overflow-wrap:anywhere}pre{overflow-x:auto;background:#172c3a;color:#e5f0f5;padding:18px;border-radius:10px;font-size:12px}footer{margin-top:40px;border-top:1px solid var(--line);padding-top:20px;font-size:13px;color:var(--muted)}.hidden{display:none}.error{padding:16px;background:#fff0e6;border:1px solid #cc733f;border-radius:10px}
+@media(max-width:800px){.flow{grid-template-columns:repeat(2,1fr)}.stage.done{grid-column:1/-1}.two-col{grid-template-columns:1fr}.fact{padding:16px}.fact strong{font-size:26px}}
+@media(max-width:500px){main{padding:18px 16px 42px}header{align-items:flex-start}.brand{font-size:14px}.badge{font-size:9px;padding:6px 9px}.hero{padding-top:30px}h1{letter-spacing:-1.2px}.lead{font-size:17px}.facts{grid-template-columns:1fr;gap:10px}.fact{display:flex;align-items:center;gap:14px}.fact strong{min-width:95px}.card{padding:17px}h2{font-size:25px}.controls button{font-size:13px}.tick-line{gap:9px}.stage{padding:12px}}
+@media print{body{background:white}main{padding:0}.controls,.tick-line{display:none}.card,figure,.fact{break-inside:avoid}.hero{padding:14px 0}h1{font-size:34px}section{margin:24px 0}}
+.image-window{overflow-x:auto}.figure-hint{display:none}@media(max-width:800px){.image-window img{min-width:900px}.figure-hint{display:block}}
+</style>
+</head>
+<body><main>
+<header><span class="brand">systems lab <span class="small">/ learning guide</span></span><span class="badge">SYNTHETIC MODEL · LOGICAL TICKS</span></header>
+<div class="hero"><div class="eyebrow">Review capacity · model v1</div><h1>More execution.<br>Where does the waiting go?</h1><p class="lead">24 tasks, one reviewer, three admission policies. Follow the whole system to see why faster execution and less review waiting do not mean the same thing.</p></div>
+<div class="facts" aria-label="Key observations"><div class="fact"><strong>4× → 1.33×</strong><small>Execution slots versus decisions completed by tick 60.</small></div><div class="fact"><strong>8 = 8</strong><small>B and C deliver the same number of decisions at the common horizon.</small></div><div class="fact"><strong>15 → 1</strong><small>Review queue under WIP 3. Admission waiting rises from 0 to 13.</small></div></div>
+<section><div class="intro"><div class="eyebrow">01 / Define the boundary</div><h2>Count both queues.</h2><p class="small figure-hint">Scroll figures sideways to inspect their labels on a narrow screen.</p><p>Admitted work in progress includes execution, waiting for review, and review service. Admission waiting sits outside this limit, but stays inside the system we measure.</p></div><figure class="card"><div class="image-window"><img src="__FLOW_IMAGE__" alt="Two queues: admission waiting outside WIP, then execution, review waiting and one synthetic reviewer inside WIP. Decisions release WIP."></div><figcaption>Two in-memory queues. Eight execution ticks abstract a workflow; they do not time actual agents. The synthetic reviewer is separate from the playground's Reviewer agent.</figcaption></figure></section>
+<section><div class="intro"><div class="eyebrow">02 / Compare a common horizon</div><h2>Four slots help. Review becomes the constraint.</h2><p>Keep arrivals and service demand fixed. A has one execution slot, B has four, and C adds an admitted-WIP cap of three. Compare decisions and every unfinished task at tick 60.</p></div><figure class="card"><div class="image-window"><img src="__COMPARISON_IMAGE__" alt="A completes 6 tasks with 18 pending. B and C complete 8 with 16 pending. B has 15 waiting for review; C has 1 waiting for review and 13 waiting for admission."></div><figcaption>All 24 tasks have arrived by tick 46. Four slots are a capacity ceiling, not a promise that all four stay busy.</figcaption></figure><div class="card scroll"><table><caption>Inclusive horizon: tick 60. Full drain: the same 24-task cohort.</caption><thead><tr><th>Policy</th><th>Slots / WIP</th><th>Decided / pending</th><th>Admission queue</th><th>Review queue</th><th>Full drain</th></tr></thead><tbody id="comparison-table"></tbody></table></div><div class="callout"><strong>The cap contains admitted work; it does not remove demand.</strong><br>B and C both have 16 unfinished tasks at tick 60. A smaller downstream queue is evidence about work placement, not proof of lower total waiting.</div></section>
+<section id="replay-section" class="card"><div class="intro"><div class="eyebrow">03 / Inspect the saved trace</div><h2>Move through logical time.</h2><p>Select a policy and seek to a tick. Each tile is a task from the saved model trace. These controls change this documentation view only.</p></div><span class="badge">DOCUMENTATION REPLAY · NO LIVE AGENTS</span><div id="replay-error" class="error hidden" role="alert"></div><div class="controls" aria-label="Policy selection"><button type="button" data-policy="A" aria-pressed="false">A · 1 slot</button><button type="button" data-policy="B" aria-pressed="false">B · 4 slots</button><button type="button" data-policy="C" aria-pressed="true">C · 4 slots / WIP 3</button></div><div class="tick-line"><label for="tick" class="small">Logical tick</label><input id="tick" type="range" min="0" max="198" step="1" value="60"><output id="tick-value" for="tick">60</output></div><div class="controls"><button id="play" type="button">Play</button><button id="start" type="button">Start · 0</button><button id="horizon" type="button">Horizon · 60</button><button id="drain" type="button">Full drain</button><label for="speed" class="small">Playback</label><select id="speed"><option value="2">2 ticks / s</option><option value="8" selected>8 ticks / s</option><option value="24">24 ticks / s</option></select></div><p id="motion-note" class="small"></p><div class="flow" aria-label="Task states"><div class="stage queue" data-stage="queued"><h3>1 · Admission queue</h3><div class="count"></div><small>Outside admitted WIP</small><div class="tokens"></div></div><div class="stage" data-stage="executing"><h3>Execution slots</h3><div class="count"></div><small id="execution-note"></small><div class="tokens"></div></div><div class="stage queue" data-stage="awaiting_review"><h3>2 · Review queue</h3><div class="count"></div><small>Inside admitted WIP</small><div class="tokens"></div></div><div class="stage" data-stage="reviewing"><h3>Synthetic reviewer</h3><div class="count"></div><small>One resource · accepts all</small><div class="tokens"></div></div><div class="stage done" data-stage="decided"><h3>Decided tasks</h3><div class="count"></div><small>Modeled decisions only</small><div class="tokens"></div></div></div><div class="replay-meta"><span>Admitted WIP: <strong id="wip"></strong></span><span>Not yet arrived: <strong id="not-arrived"></strong></span><span>Total unfinished: <strong id="pending"></strong></span><span id="conservation"></span></div></section>
+<section><div class="intro"><div class="eyebrow">04 / Follow the full workload</div><h2>The work leaves at the review rate.</h2><p>With four execution slots, the reviewer stays supplied after startup. WIP 3 also keeps it supplied here, while holding most waiting upstream. B and C have identical per-task decision ticks.</p></div><figure class="card"><div class="image-window"><img src="__TRAJECTORIES_IMAGE__" alt="Step charts show decisions, both queues and WIP. B and C have identical decisions and finish by tick 152. A finishes at tick 198."></div><figcaption>Post-transition states hold until the next event. The dotted line marks tick 60; curves continue through full drain. WIP 3 is sufficient for this scenario, not a universal optimum.</figcaption></figure></section>
+<section class="two-col"><article class="card"><div class="eyebrow">05 / Read the wait correctly</div><h2>Same end-to-end time. Different queue.</h2><p>Across all 24 tasks, B and C both have median end-to-end time <strong>58 ticks</strong> and p95 <strong>102 ticks</strong>.</p><p>Median review-queue wait changes from <strong>44 to 4 ticks</strong>; median admission wait changes from <strong>0 to 40 ticks</strong>.</p><p class="small">These are full-cohort percentiles. Do not add component percentiles as a general rule, or treat fast completions as the whole workload.</p></article><article class="card"><div class="eyebrow">06 / Connect to systems thinking</div><h2>A boundary changes what you see.</h2><p>Queues are stocks; arrivals, admission and review are flows. A WIP cap balances admission: occupied capacity blocks intake until a decision releases room.</p><p>Observe only the review queue and C looks much faster. Include admission waiting and decisions, and the tradeoff becomes visible.</p><p class="small">An interpretation of this teaching model, not an experiment copied from <em>Thinking in Systems</em> or a measurement of a real team.</p></article></section>
+<section class="card"><div class="eyebrow">07 / Challenge the explanation</div><h2>Choose the next question.</h2><p><strong>1.</strong> Change only C's WIP cap from 3 to 2. Does the reviewer become starved, and does full-drain time increase?</p><p><strong>2.</strong> Change review service from 6 to 3 ticks for every policy. Does the limiting stage move toward execution?</p><p><strong>3.</strong> Before applying this to actual agents, define quality, rework, failures and permission-release semantics.</p><p class="small">Questions 1 and 2 use existing scenario fields. Question 3 requires a separately designed runtime experiment. This page replays one fixed scenario; it does not run interventions.</p></section>
+<section class="callout warning"><strong>Limits of the evidence</strong><p>Every review accepts. Arrivals are finite and scheduled; service demand is uniform. There is no output quality, rework, fatigue, priority, failure, live model, real human approval or measured agent execution time.</p><p>No cost reduction or quality improvement was measured.</p></section>
+<details><summary>Reproduce and inspect the evidence</summary><p>A frozen documentation projection of a saved deterministic report. Original attempts remain in ignored <code>.lab/</code>; this page is separate from Activity, the audit journal and OpenTelemetry workflow spans.</p><pre>uv run --locked systems-lab experiment review-capacity \
+  --scenario experiments/review-capacity/scenario.json</pre><p class="small">For identical input, attempt ID and manifest time change; report bytes and SHA-256 do not. A privileged owner can rewrite local files and hashes. This is not WORM storage.</p><p>Scenario SHA-256</p><p id="scenario-hash" class="hash"></p><p>Report SHA-256</p><p id="report-hash" class="hash"></p></details>
+<footer>Agent Systems Lab · frozen numerical learning artifact · the integrated Experiments dashboard remains pending.</footer>
+</main><script type="application/json" id="evidence">__EVIDENCE_JSON__</script>
+<script>
+(() => {
+  "use strict";
+  const data = JSON.parse(document.getElementById("evidence").textContent);
+  const $ = id => document.getElementById(id);
+  const fields = ["queued", "executing", "awaiting_review", "reviewing", "decided", "not_arrived"];
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+  let selected = "C", timer = null;
+  const policy = () => data.policies.find(item => item.name === selected);
+  const at = (item, tick) => [...item.samples].reverse().find(sample => sample.tick <= tick);
+  function stageOf(task, tick) {
+    if (tick < task.arrival_tick) return "not_arrived";
+    if (task.decision_tick !== null && tick >= task.decision_tick) return "decided";
+    if (task.review_start_tick !== null && tick >= task.review_start_tick) return "reviewing";
+    if (task.ready_tick !== null && tick >= task.ready_tick) return "awaiting_review";
+    if (task.admission_tick !== null && tick >= task.admission_tick) return "executing";
+    return "queued";
+  }
+  function pause() { clearInterval(timer); timer = null; $("play").textContent = "Play"; }
+  function render() {
+    const tick = Number($("tick").value), current = policy();
+    const groups = Object.fromEntries(fields.map(field => [field, []]));
+    current.tasks.forEach(task => groups[stageOf(task, tick)].push(task));
+    const sample = at(current, tick);
+    const valid = fields.filter(field => field !== "not_arrived").every(field => groups[field].length === sample[field]);
+    if (!valid) { pause(); $("replay-error").classList.remove("hidden"); $("replay-error").textContent = "Trace reconciliation failed. Replay stopped."; return; }
+    $("tick-value").textContent = tick;
+    document.querySelectorAll("[data-stage]").forEach(box => {
+      const field = box.dataset.stage, tasks = groups[field];
+      box.querySelector(".count").textContent = tasks.length;
+      const tokens = box.querySelector(".tokens"); tokens.replaceChildren();
+      const count = field === "executing" ? current.execution_slots : field === "reviewing" ? 1 : tasks.length;
+      for (let index = 0; index < count; index++) {
+        const tile = document.createElement("span"), task = tasks[index];
+        tile.className = field === "executing" || field === "reviewing" ? "slot" : "task";
+        if (!task) tile.classList.add("idle");
+        tile.textContent = task ? `T${String(task.task_id + 1).padStart(2,"0")}` : "idle";
+        tokens.append(tile);
+      }
+    });
+    const wip = groups.executing.length + groups.awaiting_review.length + groups.reviewing.length;
+    $("wip").textContent = `${wip} / ${current.wip_limit ?? "uncapped"}`;
+    $("not-arrived").textContent = groups.not_arrived.length;
+    $("pending").textContent = current.tasks.length - groups.decided.length;
+    $("execution-note").textContent = `${groups.executing.length} / ${current.execution_slots} slots busy · 8 ticks / task`;
+    $("conservation").textContent = `${current.tasks.length} = all task states combined`;
+    document.querySelectorAll("[data-policy]").forEach(button => button.setAttribute("aria-pressed", button.dataset.policy === selected));
+  }
+  function seek(tick) { pause(); $("tick").value = tick; render(); }
+  function play() {
+    if (reduced.matches) return;
+    if (timer) { pause(); return; }
+    if (Number($("tick").value) >= Number($("tick").max)) $("tick").value = 0;
+    $("play").textContent = "Pause";
+    timer = setInterval(() => {
+      const next = Number($("tick").value) + 1;
+      $("tick").value = Math.min(next, Number($("tick").max)); render();
+      if (next >= Number($("tick").max)) pause();
+    }, 1000 / Number($("speed").value));
+  }
+  function motion() {
+    if (reduced.matches) pause();
+    $("play").disabled = reduced.matches;
+    $("motion-note").textContent = reduced.matches ? "Reduced motion enabled: use the slider or milestone buttons. Animated playback is disabled." : "Playback speed controls screen time only. Model ticks have no wall-clock unit.";
+  }
+  $("tick").max = Math.max(...data.policies.map(item => item.drain.end_tick));
+  $("tick").addEventListener("input", () => { pause(); render(); });
+  document.querySelectorAll("[data-policy]").forEach(button => button.addEventListener("click", () => { pause(); selected = button.dataset.policy; render(); }));
+  $("play").addEventListener("click", play);
+  $("speed").addEventListener("change", () => { if (timer) { pause(); play(); } });
+  $("start").addEventListener("click", () => seek(0));
+  $("horizon").addEventListener("click", () => seek(data.inputs.observation_horizon));
+  $("drain").addEventListener("click", () => seek(policy().drain.end_tick));
+  document.addEventListener("visibilitychange", () => { if (document.hidden) pause(); });
+  reduced.addEventListener("change", motion);
+  data.policies.forEach(item => {
+    const row = document.createElement("tr"), state = at(item, data.inputs.observation_horizon);
+    [item.name, `${item.execution_slots} / ${item.wip_limit ?? "uncapped"}`, `${item.horizon.decided} / ${item.horizon.pending}`, state.queued, state.awaiting_review, `${item.drain.makespan} ticks`].forEach(value => { const cell = document.createElement("td"); cell.textContent = value; row.append(cell); });
+    $("comparison-table").append(row);
+  });
+  $("scenario-hash").textContent = data.scenario_sha256;
+  $("report-hash").textContent = data.report_sha256;
+  motion(); render();
+})();
+</script></body></html>

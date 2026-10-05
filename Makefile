@@ -8,6 +8,7 @@ help:
 	@echo "dashboard-demo    Run an experiment through that persistent gateway"
 	@echo "history-check     Verify canonical history integrity"
 	@echo "spec-check        Validate OpenSpec requirements"
+	@echo "review-capacity-figures  Refresh learning graphics from REPORT=path/to/report.json"
 	@echo "containers-up     Start the container gateway and database"
 	@echo "containers-demo   Run isolated one-shot workers"
 	@echo "containers-down   Stop services and retain database volumes"
@@ -57,6 +58,12 @@ dashboard-demo:
 
 history-check:
 	uv run --locked systems-lab history-verify
+
+.PHONY: review-capacity-figures
+
+review-capacity-figures:
+	@test -n "$(REPORT)" || (echo "Usage: make review-capacity-figures REPORT=path/to/report.json" >&2; exit 2)
+	uv run --no-project --with matplotlib==3.11.2 python docs/graphics/render_review_capacity.py "$(REPORT)"
 
 .PHONY: telemetry-up telemetry-down
 

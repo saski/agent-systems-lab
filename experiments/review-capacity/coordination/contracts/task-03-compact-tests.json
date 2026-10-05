@@ -1,0 +1,29 @@
+{
+  "contract_version": "1",
+  "mode": "free",
+  "execution_role": "worker",
+  "parent_role": "frontier",
+  "parent_run_id": "<RUN_ID>",
+  "delegation_depth": 1,
+  "task_id": "03-compact-correct-tests",
+  "task_class": "bounded_code",
+  "sensitivity": "non_sensitive",
+  "working_directory": "<WORKTREE>",
+  "requirement": "Read ONLY tests/test_review_capacity.py then replace it completely with a compact suite of AT MOST 180 lines, eight plain test functions maximum (plus a base_input helper). No classes, no shape-only tests, no repeated docstrings. The previous generated tests contain mistakes and must not be preserved. Public API simulate(inputdict)->report dict; result['policies'] is a list of policy reports; each has tasks,samples,horizon,drain. Task timestamps arrival_tick,admission_tick,ready_tick,review_start_tick,decision_tick; unknown/unreached timestamps are None. ready_tick MEANS execution finishes (2 and4 in the two-task baseline), NOT admission (0 and2). Samples contain tick,arrived,queued,executing,awaiting_review,reviewing,decided,wip. Horizon contains decided,pending,not_arrived,oldest_pending_age,latency {count,p50,p95}. Drain contains complete BOOLEAN,decided COUNT,pending,makespan,latency {count,p50,p95}. Do not assert drain.complete equals24; assert it IS True and decided==24. Test values: default model_version review-capacity-v1,task_count2,arrival_interval0,execution_ticks2,review_ticks3,observation_horizon20,drain_deadline50,one policy name fifo slots1 wip null. ALL scenario fields required. Inputs integers only, reject bool/floats/NaN/inf; task count1..100, durations1..100, slots1..8, wip positive int<=100 or null, horizon0..10000, deadline>=horizon and <=50000; last arrival<=10000. Unknown scenario or policy fields, missing fields, duplicate/empty policy names rejected with ValueError. Eight tests: 1 two tasks baseline admission0,2 ready2,4 reviewstart2,5 decisions5,8; 2 WIP1 second admission5 and finaldecision10; 3 invariants every sample arrived=queued+executing+awaiting_review+reviewing+decided and wip=executing+awaiting_review+reviewing capacities (test 5tasks,execslots3,wip2) and horizon tick included; 4 fixed24tasks arrivalinterval2 exec8 review6 horizon60 deadline500 policies A(1,null),B(4,null),C(4,3) gives horizon decisions6,8,8 pending18,16,16, full decided24 makespans198,152,152 and completeTrue; 5 horizon0 yields count0 nullpercentiles but full draincomplete; 6 horizon1 deadline1 incomplete: completeFalse,decided0,pending2,all decisionticksNone,latencycount0/nullp50p95; 7 canonical JSON repeated equality plus nearest-rank full drain two tasks count2 p50=5 p95=8; 8 parametrized invalid inputs including unknown policy and missing required keys. Never allow horizon100 deadline20. Do not require a sample at deadline after an already complete drain; model stops at max(horizon,lastdecision) or deadline if incomplete. Imports must be sorted as repository Ruff expects: import json, blank line import pytest, then directly from systems_lab.review_capacity import simulate (no extra blank separating pytest and systems_lab). Use <=100 character lines. No implementation or edits elsewhere. Return a short result.",
+  "require_changes": true,
+  "allowed_files": [
+    "tests/test_review_capacity.py"
+  ],
+  "validation": {
+    "command": [
+      "uv",
+      "run",
+      "--locked",
+      "ruff",
+      "check",
+      "tests/test_review_capacity.py"
+    ]
+  },
+  "model": "omniroute/kiro/claude-haiku-4.5",
+  "timeout_seconds": 180
+}
