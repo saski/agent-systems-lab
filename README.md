@@ -3,6 +3,10 @@
 A reference playground for building agent-based solutions, comparing tooling,
 and exploring systems thinking, including ideas from Donella Meadows's *Thinking in Systems*.
 
+Read [when human review becomes the bottleneck](https://www.saski.com/notes/agent-systems-lab/)
+for the review-capacity experiment, its reproducible results and their limits.
+More writing lives in [Notes on saski.com](https://www.saski.com/notes/).
+
 The first experiment follows a backlog through **Researcher → Builder → Reviewer
 → human decision**. LangGraph coordinates the workflow; each specialist uses a
 real LangChain agent loop. A separate deterministic gateway authorizes every
