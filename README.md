@@ -121,6 +121,7 @@ integration into the Activity dashboard remains pending.
 - [Architecture and trust boundaries](docs/architecture.md)
 - [Development and validation](docs/development.md)
 - [Evolution roadmap](docs/roadmap.md)
+- [Grafana Frontend learning alignment proposal](docs/plans/2026-10-07-grafana-frontend-learning-alignment.md)
 - [OpenSpec requirements](docs/openspec/)
 
 The first slice deliberately limits tools to describing, simulating, and
