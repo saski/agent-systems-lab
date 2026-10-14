@@ -7,6 +7,8 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23171927'/%3E%3Cpath d='M18 40V24h6v16zm11 0V16h6v24zm11 0V29h6v11z' fill='%23a69bff'/%3E%3C/svg%3E">
     <title>Systems Lab · Activity</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/checkpoint.js" defer></script>
+    <script src="/static/learning.js" defer></script>
     <script src="/static/app.js" defer></script>
   </head>
   <body>
@@ -34,7 +36,7 @@
             <p id="auth-error" class="form-error" role="alert"></p>
           </form>
           <div class="setup-note"><span class="setup-icon" aria-hidden="true">⌘</span><div><strong>Need a token?</strong><p>From the project root, run <code>uv run systems-lab init</code>, then copy the viewer token from <code>.lab/viewer.token</code>.</p></div></div>
-          <div class="auth-foot"><span class="shield" aria-hidden="true">◆</span> Token stays in this tab’s memory and is cleared when you lock or reload.</div>
+          <div class="auth-foot"><span class="shield" aria-hidden="true">◆</span> Token stays in this tab's memory and is cleared when you lock or reload.</div>
         </div>
         <div class="auth-orbit orbit-one" aria-hidden="true"></div><div class="auth-orbit orbit-two" aria-hidden="true"></div>
       </section>
@@ -57,9 +59,21 @@
 
           <section class="metrics" aria-label="System status">
             <article class="metric-card"><div class="metric-top"><span>ACTIVE RUNS</span><span class="metric-symbol violet">◉</span></div><div id="metric-active" class="metric-value">—</div><div id="metric-active-note" class="metric-note">Awaiting gateway data</div></article>
-            <article class="metric-card"><div class="metric-top"><span>LEDGER INTEGRITY</span><span class="metric-symbol green">⌁</span></div><div id="metric-integrity" class="metric-value metric-word">Unknown</div><div id="metric-integrity-note" class="metric-note">No verification received</div></article>
-            <article class="metric-card"><div class="metric-top"><span>OTLP DELIVERY</span><span class="metric-symbol blue">◌</span></div><div id="metric-otlp" class="metric-value metric-word">Unknown</div><div id="metric-otlp-note" class="metric-note">Waiting for telemetry state</div></article>
-            <article class="metric-card"><div class="metric-top"><span>EVENTS SEEN</span><span class="metric-symbol amber">≋</span></div><div id="metric-events" class="metric-value">—</div><div id="metric-head" class="metric-note">Ledger head unavailable</div></article>
+            <article class="metric-card"><div class="metric-top"><span>HISTORY INTEGRITY</span><span class="metric-symbol green">⌁</span></div><div id="metric-integrity" class="metric-value metric-word">Unknown</div><div id="metric-integrity-note" class="metric-note">No verification received</div></article>
+            <article class="metric-card"><div class="metric-top"><span>OBSERVATION DELIVERY</span><span class="metric-symbol blue">◌</span></div><div id="metric-otlp" class="metric-value metric-word">Unknown</div><div id="metric-otlp-note" class="metric-note">Waiting for telemetry state</div></article>
+            <article class="metric-card"><div class="metric-top"><span>RECORDED EVENTS</span><span class="metric-symbol amber">≋</span></div><div id="metric-events" class="metric-value">—</div><div id="metric-head" class="metric-note">Ledger head unavailable</div></article>
+          </section>
+
+          <section class="panel learning-panel" aria-labelledby="learning-flow-title">
+            <div class="panel-heading"><h2 id="learning-flow-title">Work and observation delivery</h2></div>
+            <div id="learning-flow" class="learning-flow-content">
+              <p>See what agents do, what they recorded, and where you can intervene.</p>
+            </div>
+          </section>
+
+          <section class="panel learning-panel" aria-labelledby="learning-history-title">
+            <div class="panel-heading"><h2 id="learning-history-title">Changes while you watch</h2></div>
+            <div id="learning-history" class="learning-history-content"></div>
           </section>
 
           <div class="main-grid">
@@ -86,7 +100,7 @@
                   <div class="map-node store-node otlp" data-component="otlp"><span class="node-icon">⌁</span><strong>OTLP exporter</strong><small id="otlp-label">delivery unknown</small></div>
                   <div class="map-legend"><span><i class="legend-dot live"></i> Active</span><span><i class="legend-dot done"></i> Completed</span><span><i class="legend-dot idle"></i> Idle</span></div>
                 </div></div>
-                <div id="integrity-caption" class="integrity-caption"><span class="caption-icon">◇</span><span>Ledger verification pending. Hash-chain validation checks event linkage; it does not provide WORM storage.</span></div>
+                <div id="integrity-caption" class="integrity-caption"><span class="caption-icon">◇</span><span>Hash-chain verification checks linked event fingerprints. Compare a separately kept checkpoint to detect earlier rewriting. A database owner can still rewrite this history.</span></div>
             </section>
 
             <div class="primary-column">
@@ -100,6 +114,14 @@
               <section class="panel selected-panel" aria-labelledby="selected-title">
                 <div class="panel-heading"><div><div class="eyebrow">RUN INSPECTOR</div><h2 id="selected-title">Selected run</h2></div><span id="run-mode" class="mode-badge">NO RUN</span></div>
                 <div id="run-detail" class="run-detail"><div class="empty-detail"><span>◎</span><strong>No run selected</strong><small>New runs will appear here when activity arrives.</small></div></div>
+              </section>
+              <section class="panel learning-panel" aria-labelledby="learning-control-title">
+                <div class="panel-heading"><h2 id="learning-control-title">What you can do</h2></div>
+                <div id="learning-control" class="learning-control-content"></div>
+              </section>
+              <section class="panel learning-panel" aria-labelledby="learning-checkpoint-title">
+                <div class="panel-heading"><h2 id="learning-checkpoint-title">Check a saved history checkpoint</h2></div>
+                <div id="learning-checkpoint" class="learning-checkpoint-content"></div>
               </section>
               <section class="panel timeline-panel" aria-labelledby="timeline-title">
                 <div class="panel-heading"><div><div class="eyebrow">AUDIT STREAM</div><h2 id="timeline-title">Recent events</h2></div><span id="event-count" class="subtle-label">0 events</span></div>

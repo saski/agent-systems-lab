@@ -24,6 +24,13 @@ make dashboard-demo
 The dashboard shows the real fixture workflow, its specialists and current stage,
 an event timeline, chain verification and telemetry delivery backlog. It also
 shows older local runs. It does not launch workers or make operator decisions.
+Task-state counts cover all recorded runs; the selectable list shows the latest
+100. Workflow age starts at run creation; review wait starts at `run.ready`.
+Telemetry pending count and oldest pending age describe a separate delivery
+queue. Missing or invalid ages remain unknown. The two session charts keep up
+to 120 readings in browser memory, preserve gaps after failed reads, and reset
+on reload or a new viewer session. They are not persistent historical charts
+or the Review Capacity simulation.
 Polling resumes from a sequence cursor; repeated batches are deduplicated. A
 failed connection is displayed as stale and stops live animation. A worker that
 has no terminal event after 120 seconds is unknown, not assumed healthy. Revocation
@@ -76,6 +83,15 @@ or rewriting before the checkpoint is detectable against that trusted copy.
 A local unprotected copy alone does not prevent a privileged attacker replacing
 both the database and the checkpoint. External anchoring is an operator step,
 not an already configured cloud service.
+
+The dashboard accepts a saved checkpoint JSON file, up to 16 KB, for a read-only
+comparison through `/history/verify`. It checks the current chain and the saved
+sequence/hash; an older checkpoint can match after new events. Invalid files,
+mismatches and unavailable comparisons are separate states. A reload, lock or
+new file clears the earlier comparison. The interface does not create an
+independent trusted copy for you. SHA-256 hashes do not encrypt events, and this
+implementation does not sign events or automatically anchor them outside the
+database.
 
 For Compose, add `--gateway http://127.0.0.1:8765` before the history command to
 inspect the Postgres history rather than the local SQLite history.

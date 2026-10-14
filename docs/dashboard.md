@@ -1,208 +1,255 @@
-# Activity dashboard
+# Read agent activity
 
-The dashboard is a read-only view of activity recorded by the gateway. It helps
-you follow runs, inspect their workflow stages and audit events, and compare
-ledger integrity with OpenTelemetry delivery. It does not start workers or make
-human review decisions.
+The dashboard helps you answer four questions: **Where is the work? What can
+each agent use? What happened? How can I intervene?** It reads records from the
+gateway. It does not start agents or make decisions for you.
 
-The screenshots were captured on **28 September 2026**, using interface revision
-`32a65e8`, the local process executor, fixture models, and OTLP export disabled.
-They show actual recorded workflow activity. The overview contains four runs
-awaiting review; the map and metric close-ups capture the newest run while its
-Researcher is active. Still images freeze these states; open the dashboard to
-see the animation.
+| Term | Meaning in this playground |
+| --- | --- |
+| **Run** | One attempt to complete a task, with its own ID and history. |
+| **Agent** | A worker with a specific role, such as Researcher or Builder. |
+| **Tool** | An operation an agent can request, such as running a simulation. |
+| **Gateway** | The service that checks access before allowing a model or tool call. |
+| **Event** | A record of an action, outcome or reported worker state. |
+| **History checkpoint** | An event count and a hash saved for a later comparison. It differs from a workflow checkpoint used to resume work. |
 
 ## Start and connect
 
-From the repository root, start the persistent local gateway and dashboard:
+From the repository root:
 
 ```sh
 make dashboard
-```
-
-In a second terminal, create a real fixture run through that gateway:
-
-```sh
+# In a second terminal:
 make dashboard-demo
 ```
 
-Open <http://127.0.0.1:8765/dashboard> and enter the contents of
-`.lab/viewer.token` in the Viewer token field. The token is a credential: keep
-its value private and do not include it in screenshots or messages. The browser
-keeps it in the current tab's memory; **Lock viewer** or a page reload clears it
-and requires you to connect again. If the file is missing, initialize the local
-workspace with `uv run systems-lab init` from the project root.
+Open <http://127.0.0.1:8765/dashboard> on the same computer. Enter the contents
+of `.lab/viewer.token`, then connect. A reload or **Lock viewer** clears the token
+from browser memory. The viewer cannot start runs, grant access, approve results
+or revoke permissions.
 
-The demo uses `model_mode: fixture`: it runs the real workflow and tool loop
-with scripted model responses, without calling a model provider. Its activity
-demonstrates the system flow, not the quality or safety of live model reasoning.
-The local dashboard and demo must use the same persistent gateway so the browser
-can observe the run.
+![Empty viewer connection form](images/dashboard/connect.jpg)
 
-![Empty viewer token field and Connect button](images/dashboard/connect.png)
+*Connect with the viewer token for the gateway you started. Keep real credentials
+out of screenshots and messages.*
 
-*The connection form before entering the viewer credential.*
+`127.0.0.1` means the device you are using. On a phone it refers to the phone,
+not your computer. Remote access is outside this local setup.
 
-## Read the overview
+## 1. Get your bearings
 
-![Activity overview with four runs awaiting human review](images/dashboard/overview.png)
+![Current desktop overview with separate task and observation queues](images/dashboard/overview.jpg)
 
-*The newest run is selected at Human review; its automated stages have finished.*
+*The example has two runs in workflow, two waiting for review and one with access
+revoked. Export is disabled and 35 recorded events await delivery.*
 
-The top bar reports the gateway connection, the **Lock viewer** control, and
-the most recent successful poll time. The feed badge says **LIVE FEED** while
-polling succeeds, **STALE FEED** after a poll fails, and **FEED IDLE** before
-connecting. When stale, the dashboard keeps the last received snapshot visible
-and pauses live activity animation while it retries.
-**Connected** confirms the browser can reach the gateway; it does not confirm
-that workers or the telemetry receiver are healthy.
+**Connected** means this browser can read the gateway. It does not establish
+that a worker or telemetry receiver is healthy. The last successful update time
+helps you judge how recent the displayed information is.
 
-The left rail contains **Activity** and **System map** labels. Activity's count
-is the number of runs currently reported as `running`. **System map** names the
-topology panel on this page; it is not a separate clickable page.
+### Read the four status cards
 
-### Status cards
+![Four independent status cards](images/dashboard/metrics.jpg)
 
-![One active run, verified ledger, disabled OTLP delivery and event count](images/dashboard/metrics.png)
+| Card | What it tells you | What it does not establish |
+| --- | --- | --- |
+| **Active runs** | All recorded runs whose state is `running`. | Whether their processes are alive. The run list is separately limited to the latest 100. |
+| **History integrity** | Whether the gateway's current event chain verifies. | Protection against an administrator rewriting the database and its hashes. Compare a separately kept checkpoint too. |
+| **Observation delivery** | Whether export is disabled, enabled, pending or failing. | Permanent storage at the receiver, or the state of a task. |
+| **Recorded events** | How many events the history verifier checked. | How many rows are visible in the timeline. |
 
-*The four independent signals while the fixture run is executing.*
+Missing data stays unknown. After a failed read, **Last verified** describes the
+last received check; it is not a fresh verification.
 
-The four cards report different signals:
+## 2. Find where work is waiting
 
-| Card | Meaning |
+![Annotated task states, wait ages and observation delivery](images/dashboard/work-and-delivery-annotated.svg)
+
+*The numbered notes separate work waiting to finish from records waiting to be sent.*
+
+| Note | Read it as | Example learning |
+| --- | --- | --- |
+| **1 — Work states** | In-workflow runs and runs awaiting a human decision are separate counts. | Adding workers does not remove a human-review wait. |
+| **2 — Waiting time** | Review wait starts when that run became ready for review. Workflow age starts at run creation. | A small queue can contain a task that has waited a long time. |
+| **3 — Observation delivery** | Pending records and their age describe the delivery queue, even when export is disabled. | A collector problem and a task problem need different interventions. |
+| **4 — Access revoked** | The gateway has removed a run's authority. | Revoking access and stopping a process are separate actions. |
+
+**Finished** separates accepted and rejected runs. It does not treat a rejected
+result as accepted work. Task counts include all runs; the selectable list shows
+only the latest 100.
+
+The useful distinction is between *how much is waiting* and *how long it has
+waited*. This view reads gateway records. It does not run the Review Capacity
+numerical experiment inside the dashboard.
+
+## 3. Watch what changes
+
+![Task counts and pending observations plotted separately](images/dashboard/session-trends.jpg)
+
+*One chart follows work; the other follows observation delivery. The dashed
+review line stays distinguishable when two task counts overlap.*
+
+The charts keep up to 120 readings in this browser session. They begin when you
+connect; they do not invent earlier readings or persist across reloads. Missing
+readings create gaps rather than suggesting that nothing changed. Event notes,
+when present, come from recorded review, revocation or failure events in the
+displayed time window.
+
+If task counts stay unchanged while the delivery queue grows, the visible change
+is in observation delivery. Read the events to investigate why. The chart is a
+short view of recent readings; the event journal is the recorded history.
+Neither records the model's private reasoning.
+
+## 4. Understand the components
+
+![Configured system map and current history check](images/dashboard/system-map.jpg)
+
+*The map explains the configured path. The captured older runs do not provide
+fresh worker activity, so their nodes are not shown as live.*
+
+The **Operator** starts work and records decisions. The **Orchestrator** passes
+work through Researcher, Builder and Reviewer. Those agents request tools through
+the **Policy gateway**, which checks permissions and records outcomes. The
+**Audit ledger** stores the history. The **OTLP exporter** sends observations to
+a configured receiver.
+
+OTLP is the protocol used to send OpenTelemetry data. Here, each exported
+observation is a span derived from a gateway event. Export is disabled unless
+you configure a receiver explicitly.
+
+The map is configured, not a service-discovery or process-health view. Activity
+indicators summarize qualifying recent runs, including runs other than the one
+selected. Still images cannot demonstrate animation.
+
+## 5. Select a run and inspect its evidence
+
+![Latest run list with an example waiting for human review](images/dashboard/runs.jpg)
+
+*Select a row, or focus it and press Enter or Space, to inspect that run.*
+
+![Run inspector at the Human review stage](images/dashboard/run-inspector.jpg)
+
+The inspector shows the run ID, reported state, model mode, current stage and
+activity times. The stages are **Researcher → Builder → Reviewer → Validate →
+Human review → Completed**. Validation checks the required artifacts. Human
+review waits for a decision; reaching Completed alone does not mean acceptance.
+
+| Inspector label | How to read it |
 | --- | --- |
-| **Active runs** | Runs whose reported status is `running`, among the latest 100 runs in view. |
-| **Ledger integrity** | The gateway's hash-chain verification result: **Verified**, **Mismatch**, or **Unknown**. The note gives the checked event count. Verification checks linkage; it does not provide WORM storage. |
-| **OTLP delivery** | Whether the exporter is disabled or enabled, and whether spans are pending or the latest delivery failed. With delivery clear, **Enabled** means no delivery is pending; it does not mean that a downstream system guarantees permanent retention. |
-| **Events seen** | The event count reported by ledger verification. The note shows the ledger head hash when available. This is not the number of events currently visible in the timeline. |
+| **LIVE** | Running, connected and recently active. This is a recorded observation, not a health check. |
+| **WAITING** | Awaiting a human review decision. |
+| **STALE SNAPSHOT** | The connection failed; the displayed state may be out of date. |
+| **UNKNOWN** | There is not enough recent information to call the run live. |
+| **HISTORY** | No longer reported running or awaiting review. |
+| **NO RUN** | No run is available or selected. |
 
-The footer's cursor is the dashboard's event polling position; **head** is the
-gateway-reported ledger head sequence. A gap between them can mean the dashboard
-still has more events to fetch. Ledger integrity and OTLP delivery are
-independent: pending or failed telemetry does not change the chain check.
+### Read what happened, and how
 
-## Follow the system map
+![Recorded events with expandable evidence and IDs](images/dashboard/events.jpg)
 
-![System map highlighting the orchestrator, Researcher and policy gateway](images/dashboard/system-map.png)
+Each event shows an action, time, actor and recorded outcome. Open **Evidence
+and IDs** for the detail, trace/span IDs and event hashes. A trace ID connects
+events from one run with its exported OpenTelemetry spans.
 
-*Researcher is active; the remaining specialists have not started.*
+The timeline displays the latest 45 entries. Selecting a run loads its full event
+history; the count can therefore be larger than the visible rows.
 
-The map summarizes the configured architecture, rather than discovering services
-automatically. In the current experiment, its components have these roles:
+An **Allow** outcome means the gateway allowed an action. It is not human
+approval and does not prove the action finished. **Simulation access checked**
+records the access check; **Simulation completed** records the operation's
+completion. Read both the events and the final run state.
 
-| Component | Role in the displayed flow |
-| --- | --- |
-| Operator | Starts work and records human decisions through the CLI. |
-| Orchestrator | Coordinates the LangGraph workflow and dispatches specialist work. |
-| Researcher | Describes the system through `system.describe`. |
-| Builder | Runs the backlog experiment through `simulation.run`. |
-| Reviewer | Evaluates the simulation through `simulation.review`. |
-| Policy gateway | Applies deterministic access checks and records activity. |
-| Audit ledger | Stores the ordered, hash-chained event history. |
-| OTLP exporter | Sends spans from the ledger outbox to an explicitly configured receiver. |
+## 6. Know how to intervene
 
-The map's activity indicators summarize **all qualifying active runs**, not
-only the run selected in the inspector. The orchestrator and gateway animate
-when at least one recently created or recently active run is running; specialist
-nodes show reported running, completed, failed, or timed-out states for those
-runs. The ledger indicator reflects the gateway's integrity result, and the
-exporter indicator reflects telemetry state. A stale connection pauses live
-animation. These are gateway observations, not process health checks. The
-legend's **Active**, **Completed**, and **Idle** states explain the node styling.
+![Operator commands and recorded agent lifecycle information](images/dashboard/operator-controls.jpg)
 
-On a narrow screen, swipe or scroll sideways inside the map to reach every node.
-The page follows the browser's reduced-motion preference, which suppresses
-animation and smooth scrolling.
+*The viewer offers commands to copy. The operator runs them in a terminal.*
 
-## Select a run and inspect it
+**What you can do** explains the next step for the selected run. It shows status
+and revocation commands, plus the tools available to each role. A role's tool
+list is an upper limit; the gateway checks access on every call.
 
-![Run history with the newest fixture run selected](images/dashboard/runs.png)
+The agent section shows the latest recorded instance, start and completion times,
+and measured duration when available. These are elapsed clock times, not the
+logical ticks in the Review Capacity experiment. Missing times remain unknown.
+No worker lifecycle record means the UI has no such evidence to show.
 
-*Each row shows a run identifier, current stage, status and age of its last activity.*
+Use the operator terminal to inspect artifacts and record a decision. The digest
+identifies the exact artifacts you reviewed:
 
-The **Runs** panel lists up to the latest 100 runs, newest first. Select a row,
-or focus it and press Enter or Space, to inspect that run. The dashboard loads
-that run's full event history for the timeline. The list has no search or filter
-controls.
+```sh
+uv run systems-lab --gateway http://127.0.0.1:8765 status RUN_ID
+uv run systems-lab --gateway http://127.0.0.1:8765 decide RUN_ID --digest DIGEST --approve
+# Or use --reject instead of --approve.
+uv run systems-lab --gateway http://127.0.0.1:8765 revoke RUN_ID
+```
 
-![Selected run inspector showing Human review and WAITING](images/dashboard/run-inspector.png)
+Revocation blocks later authorized calls. For Docker workers, add
+`--stop-containers` to request stopping the containers too. Revocation alone is
+not proof that an operating-system process has stopped.
 
-*Green stages have finished; Human review is the current decision point.*
+## 7. Check whether saved history still matches
 
-The inspector shows the run ID, reported status, model mode, current stage,
-creation time, time since last activity, and trace ID. Its six-stage chain is
-**Researcher → Builder → Reviewer → Validate → Human review → Completed**.
-The chain visualizes reported workflow progress; it is not a second source of
-execution state.
-**Validate** checks the required artifacts before review. **Human review** waits
-for the operator's decision. Read the status badge for the outcome: reaching
-**Completed** does not by itself mean that the result was accepted.
+![Annotated comparison with a separately kept history checkpoint](images/dashboard/checkpoint-annotated.svg)
 
-The inspector mode label describes how to read that snapshot:
+*A checkpoint from event 34 still matches after event 35 was added.*
 
-| Label | Meaning |
-| --- | --- |
-| **LIVE** | The run is reported running, the gateway is connected, and its last activity is within 120 seconds. |
-| **WAITING** | The run is awaiting human review. The workflow has reached a decision point; the dashboard provides no approve or reject control. |
-| **STALE SNAPSHOT** | The gateway connection is interrupted, so the displayed run may be out of date. |
-| **UNKNOWN** | The run is reported running, but its activity is not recent enough to call live, or the feed is not connected. This does not prove the worker is healthy or stopped. |
-| **HISTORY** | The run is not currently reported as running or awaiting review. |
-| **NO RUN** | No run is selected or available to inspect. |
+Each event has a SHA-256 fingerprint linked to the previous event. This detects
+broken links or changed content when the chain is checked. It does not encrypt
+the records or stop an administrator rebuilding the whole chain.
 
-For example, a fixture run at **Human review** with **WAITING** and a
-**Run ready** (`run.ready`) event has completed its automated stages and is paused for
-a human decision. Review the run artifacts and use the CLI decision flow in the
-[README](../README.md) if you want to continue it. The dashboard is read-only;
-it cannot approve, reject, grant access, revoke a run, or start another run.
+Save a history checkpoint and keep a copy outside this database:
 
-## Read the event timeline
+```sh
+uv run systems-lab --gateway http://127.0.0.1:8765 history-checkpoint --output /path/to/new-checkpoint.json
+```
 
-![Recent events showing Run ready, Agent completed and Model Call Completed](images/dashboard/events.png)
+Choose that JSON file under **Check a saved history checkpoint**, then select
+**Compare saved checkpoint**. This is read-only; it does not change history or
+grant permissions. The file must be a valid checkpoint, up to 16 KB.
 
-*Events from the selected run, with actor, decision and correlation details.*
+![Mismatch from a deliberately altered test checkpoint](images/dashboard/checkpoint-mismatch.jpg)
 
-The timeline renders at most the **newest 45 events**, newest first, inside a
-scrollable panel. When a run is selected, it loads that run's full event history;
-the count refers to all loaded events and can exceed the 45 rendered rows. Each entry
-shows a readable action, timestamp, actor, run ID, and decision when present.
-Available detail, trace and span IDs, previous hash, and event hash are rendered
-inline in the event row. They are always visible when present; rows do not expand
-or collapse. The trace ID can be used to correlate events with exported spans
-when OTLP has been configured.
+*This demonstration changed the test checkpoint's hash, not the database.*
 
-An **Allow** decision records a gateway authorization, not human approval or
-proof that a worker completed successfully. Use completion events and the run's
-reported status to follow the result. For example, **Model call** records
-admission, while **Model Call Completed** records completion of that call.
+A mismatch can mean the checkpoint belongs to another history, that the file
+changed, or that the recorded history no longer matches. Investigate before
+trusting it. The comparison checks the entire current chain and the saved
+sequence/hash; later legitimate events are allowed.
 
-## Diagnose common states
+A separately kept trusted copy can reveal rewriting or truncation before its
+saved point. This setup still has **no event signatures, automatic external
+anchoring or WORM storage**. WORM means storage where records cannot be overwritten
+or deleted. See [history guarantees](observability.md#what-history-guarantees).
 
-![Reconnecting status and Connection interrupted banner above cached metrics](images/dashboard/connection-lost.png)
+## When the connection fails
 
-*The capture browser was temporarily taken offline; the gateway kept running.*
+![Connection interrupted and last verified history state](images/dashboard/connection-lost.jpg)
 
-- **Authentication required** or a rejected token: check that you copied the
-  viewer token from this workspace's `.lab/viewer.token`. Run
-  `uv run systems-lab init` if the workspace has not been initialized. Never
-  share the token value.
-- **STALE FEED** or **STALE SNAPSHOT**: the last snapshot remains visible while
-  polling retries. Treat its state as potentially out of date until the gateway
-  responds and the updated time advances.
-- **UNKNOWN** for a running run: its last activity is missing or older than
-  120 seconds. This label does not establish whether its worker process is
-  healthy. A connection interruption takes precedence as **STALE SNAPSHOT**.
-- **Mismatch** for ledger integrity: hash-chain verification failed. The card
-  and map reflect the gateway's check; use the history verification and
-  checkpoint guidance in [Activity, telemetry and history](observability.md) to
-  investigate.
-- **Disabled** for OTLP delivery: this is the expected default without an
-  explicit OTLP traces endpoint. Configure a trusted receiver only when you
-  intend to export spans. Exporter failure or pending delivery is separate from
-  ledger integrity.
+*The capture used a controlled activity-read failure. It did not stop a worker
+or disable access checks.*
 
-![Mobile dashboard with two-column metrics and a horizontally scrollable map](images/dashboard/mobile.png)
+The dashboard keeps the last received snapshot, labels it stale and pauses live
+animation. Charts preserve a gap. A successful read resumes updates. Do not
+interpret stale values as fresh measurements or missing values as zero.
 
-*At 390 pixels wide, the rail is hidden and the map scrolls inside its panel.*
+If your token is rejected, check that it belongs to the gateway at the URL you
+opened. The normal local setup uses `.lab/viewer.token`. Tokens from another
+workspace or a temporary test preview will not authenticate that gateway.
 
-For gateway commands, history guarantees, checkpoints, exporter setup, and the
-limits of these signals, see [Activity, telemetry and history](observability.md).
+## Capture context and limits
+
+These desktop captures were taken on **15 October 2026**, from the current
+working tree based on `4078a22`. An isolated test gateway on port 8766 supplied
+fixture records through the real activity and verification APIs. Tool operations
+and journal checks are real; worker lifecycle records were seeded as test data.
+They do not demonstrate real worker-process health or live-model quality.
+OTLP export was disabled. No real workspace credentials or database were used.
+
+The annotated SVGs place numbered notes around unchanged browser captures.
+[Capture evidence](images/dashboard/captures.json) records source-file and image
+hashes. Screenshots show recorded states, not a performance benchmark or
+production security validation. Mobile screenshots are outside this update.
+
+For operation and delivery details, continue with
+[Activity, telemetry and history](observability.md).

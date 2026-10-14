@@ -14,7 +14,7 @@
     selectedRunEvents: null, selectedRunEventsFor: null, runRequest: 0,
     integrity: null, telemetry: null, connected: false, stale: false, stopped: false,
     firstSnapshot: true, lastPoll: null, generation: 0, pollTimer: null,
-    pollController: null, runController: null
+    pollController: null, runController: null, flow: null
   };
   const $ = (selector, root = document) => root.querySelector(selector);
 
@@ -82,6 +82,7 @@
     $("#stale-banner").classList.toggle("hidden", kind !== "stale");
     state.connected = kind === "connected";
     state.stale = kind === "stale";
+    if (kind === "stale") globalThis.LabLearning?.markStale();
     updateTopology();
   }
 
@@ -110,6 +111,8 @@
     state.integrity = null;
     state.telemetry = null;
     state.firstSnapshot = true;
+    state.flow = null;
+    globalThis.LabLearning?.reset();
     $("#auth-gate").classList.add("hidden");
     $("#dashboard").classList.remove("hidden");
     $("#logout").classList.remove("hidden");
@@ -139,6 +142,8 @@
     state.runRequest += 1;
     state.integrity = null;
     state.telemetry = null;
+    state.flow = null;
+    globalThis.LabLearning?.reset();
     $("#token").value = "";
     $("#dashboard").classList.add("hidden");
     $("#logout").classList.add("hidden");
@@ -174,6 +179,7 @@
     } catch (error) {
       if (generation !== state.generation || state.stopped || error.name === "AbortError") return;
       console.warn("Activity feed unavailable", error);
+      globalThis.LabLearning?.markStale();
       setConnection("stale", "Reconnecting");
       render();
     } finally {
@@ -204,6 +210,7 @@
     state.runs = payload.runs.slice(0, 100);
     state.integrity = payload.integrity || null;
     state.telemetry = payload.telemetry || null;
+    state.flow = payload.flow ?? null;
     if (!state.selectedRunId || !state.runs.some(run => run.run_id === state.selectedRunId)) {
       state.selectedRunId = state.runs[0]?.run_id || null;
       state.selectedRunEvents = null;
@@ -222,31 +229,48 @@
   }
 
   function renderMetrics() {
-    const active = state.runs.filter(run => run.status === "running").length;
-    setText("#metric-active", state.runs.length ? active : "0");
-    setText("#metric-active-note", state.runs.length ? `${state.runs.length} recent run${state.runs.length === 1 ? "" : "s"} in view` : "No runs reported");
-    setText("#run-count", active);
+    const flowActive = state.flow?.counts?.running;
+    const active = typeof flowActive === "number" && Number.isFinite(flowActive) && flowActive >= 0 ? flowActive : null;
+    const activeDisplay = active !== null ? active : "—";
+    setText("#metric-active", activeDisplay);
+    const activeKnown = active !== null;
+    setText("#metric-active-note", activeKnown ? "All recorded runs" : "Waiting for gateway count");
+    setText("#run-count", activeDisplay);
     setText("#runs-total", state.runs.length);
 
     const integrity = state.integrity;
     const integrityValue = $("#metric-integrity");
-    integrityValue.textContent = integrity && typeof integrity.valid === "boolean" ? (integrity.valid ? "Verified" : "Mismatch") : "Unknown";
-    tone(integrityValue, !integrity || typeof integrity.valid !== "boolean" ? "tone-unknown" : integrity.valid ? "tone-good" : "tone-bad");
-    setText("#metric-integrity-note", integrity ? `${Number(integrity.checked) || 0} events checked · chain check only` : "No verification received");
+    const isFresh = !state.stale;
+    const validState = integrity && typeof integrity.valid === "boolean"
+      ? (integrity.valid ? (isFresh ? "verified" : "verified-stale") : "mismatch")
+      : "unknown";
+    integrityValue.textContent = validState === "verified" ? "Verified" : validState === "verified-stale" ? "Last verified" : validState === "mismatch" ? "Mismatch" : "Unknown";
+    tone(integrityValue, validState === "unknown" ? "tone-unknown" : validState === "verified" ? "tone-good" : validState === "verified-stale" ? "tone-warn" : "tone-bad");
+    const checkedCount = Number(integrity?.checked) || 0;
+    const integrityNote = validState === "verified"
+      ? `${checkedCount} event${checkedCount === 1 ? "" : "s"}`
+      : validState === "verified-stale"
+        ? `${checkedCount} event${checkedCount === 1 ? "" : "s"}`
+        : validState === "mismatch"
+          ? `${checkedCount} event${checkedCount === 1 ? "" : "s"} checked`
+          : "No verification received";
+    setText("#metric-integrity-note", integrityNote);
     setText("#integrity-caption", "");
     const caption = $("#integrity-caption");
     const captionIcon = node("span", "caption-icon", integrity?.valid === true ? "✓" : integrity?.valid === false ? "!" : "◇");
-    const captionText = node("span", "", integrity?.valid === true
-      ? `Hash chain verified across ${Number(integrity.checked) || 0} events. Verification does not provide WORM storage.`
-      : integrity?.valid === false
-        ? `Ledger integrity mismatch after ${Number(integrity.checked) || 0} checked events. Hash-chain verification does not provide WORM storage.`
-        : "Ledger verification pending. Hash-chain validation checks event linkage; it does not provide WORM storage.");
+    const captionText = node("span", "", integrity?.valid === true && isFresh
+      ? "Event fingerprints match the current chain. Compare a separately kept checkpoint to detect earlier changes. A database owner can rewrite this history."
+      : integrity?.valid === true && !isFresh
+        ? "Showing the last received verification. Reconnect to check the current history."
+        : integrity?.valid === false
+          ? "The event chain does not match. Investigate before trusting this history."
+          : "Waiting for a history verification.");
     caption.replaceChildren(captionIcon, captionText);
     captionIcon.classList.toggle("tone-bad", integrity?.valid === false);
 
     const telemetry = state.telemetry;
     const otlpValue = $("#metric-otlp");
-    const pending = telemetry && Number.isFinite(Number(telemetry.pending)) ? Number(telemetry.pending) : null;
+    const pending = telemetry && typeof telemetry.pending === "number" && Number.isFinite(telemetry.pending) && telemetry.pending >= 0 ? telemetry.pending : null;
     if (!telemetry || typeof telemetry.enabled !== "boolean") {
       otlpValue.textContent = "Unknown"; tone(otlpValue, "tone-unknown");
       setText("#metric-otlp-note", "Waiting for telemetry state");
@@ -257,21 +281,25 @@
       setText("#otlp-label", "export disabled");
     } else if (telemetry.last_error) {
       otlpValue.textContent = "Delivery error"; tone(otlpValue, "tone-bad");
-      setText("#metric-otlp-note", pending === null ? String(telemetry.last_error) : `${pending} pending · latest delivery failed`);
+      setText("#metric-otlp-note", pending !== null ? `${pending} pending` : "Latest delivery failed");
       setText("#otlp-label", "delivery error");
+    } else if (pending === null) {
+      otlpValue.textContent = "Unknown"; tone(otlpValue, "tone-unknown");
+      setText("#metric-otlp-note", "Pending count unavailable");
+      setText("#otlp-label", "delivery unknown");
     } else if (pending > 0) {
       otlpValue.textContent = "Pending"; tone(otlpValue, "tone-warn");
       setText("#metric-otlp-note", `${pending} event${pending === 1 ? "" : "s"} awaiting delivery`);
       setText("#otlp-label", `${pending} pending`);
     } else {
       otlpValue.textContent = "Enabled"; tone(otlpValue, "tone-good");
-      setText("#metric-otlp-note", telemetry.last_error ? "Latest delivery failed" : "No delivery pending");
+      setText("#metric-otlp-note", "No events awaiting delivery");
       setText("#otlp-label", "delivery clear");
     }
     setText("#metric-events", integrity && Number.isFinite(Number(integrity.checked)) ? Number(integrity.checked).toLocaleString() : "—");
     setText("#metric-head", integrity?.head_hash ? `Head ${compactId(integrity.head_hash, 18)}` : "Ledger head unavailable");
     setText("#footer-cursor", `Cursor ${state.cursor.toLocaleString()} · head ${state.head === null ? "—" : state.head.toLocaleString()}`);
-    if (state.runs.length || integrity || telemetry) setText("#map-state", `${active} active run${active === 1 ? "" : "s"} · gateway reported`);
+    if (state.runs.length || integrity || telemetry) setText("#map-state", `${activeDisplay} active run${active === 1 ? "" : "s"} · gateway reported`);
   }
 
   function normalizedStatus(status) {
@@ -378,20 +406,28 @@
     const action = String(event.action || "activity").replaceAll(".", "_").replaceAll("-", "_");
     const names = {
       run_create: "Run created", run_created: "Run created", run_started: "Run started", run_completed: "Run completed",
-      run_failed: "Run failed", run_revoke: "Run revoked", run_revoked: "Run revoked", run_ready: "Run ready",
+      run_failed: "Run failed", run_revoke: "Run revoked", run_revoked: "Run revoked", run_ready: "Waiting for your review",
       run_decision: "Review decision recorded", grant_issue: "Scoped access issued", worker_started: "Agent started",
       worker_completed: "Agent completed", worker_failed: "Agent failed", worker_timed_out: "Agent timed out",
       agent_completed: "Agent completed", agent_failed: "Agent failed", tool_call: "Tool call",
       tool_result: "Tool result", access_granted: "Access granted", access_denied: "Access denied",
       decision_requested: "Human review requested", decision_accepted: "Review accepted",
       decision_rejected: "Review rejected", artifact_record: "Artifact recorded", artifact_written: "Artifact recorded",
-      simulation_run: "Simulation executed", simulation_review: "Simulation reviewed", system_describe: "System described",
-      model_call: "Model call", validate: "Validation"
+      simulation_run: "Simulation access checked", simulation_review: "Review access checked", system_describe: "System access checked",
+      model_call: "Model access checked", validate: "Validation",
+      simulation_run_completed: "Simulation completed", simulation_run_failed: "Simulation failed",
+      simulation_review_completed: "Review completed", simulation_review_failed: "Review failed",
+      system_describe_completed: "System description completed", system_describe_failed: "System description failed",
+      model_call_completed: "Model call completed", model_call_failed: "Model call failed"
     };
     return names[action] || titleCase(action);
   }
 
   function outcomeFor(event) {
+    const detail = String(event.detail || "");
+    if (detail.startsWith("accepted:") || detail.startsWith("rejected:")) {
+      return detail.startsWith("accepted:") ? "accepted" : "rejected";
+    }
     const value = normalizedStatus(event.decision);
     return ["deny", "denied", "rejected", "failed", "revoked", "error", "timed_out"].includes(value) ? value
       : ["allow", "allowed", "approved", "accepted", "completed"].includes(value) ? value : "neutral";
@@ -420,11 +456,26 @@
       top.append(node("span", "event-title", readableAction(event)), node("time", "event-time", formatTime(event.timestamp)));
       body.append(top);
       const actor = event.actor ? titleCase(event.actor) : "System";
-      const decision = event.decision ? ` · ${titleCase(event.decision)}` : "";
-      body.append(node("div", "event-summary", `${actor}${event.run_id ? ` · ${compactId(event.run_id, 18)}` : ""}${decision}`));
-      if (event.detail || event.hash || event.trace_id || event.span_id) {
-        const extra = node("div", "event-extra");
+      const detail = String(event.detail || "");
+      let decisionLabel = "";
+      if (detail.startsWith("accepted:")) {
+        decisionLabel = " · Permission allowed";
+      } else if (detail.startsWith("rejected:")) {
+        decisionLabel = ` · ${detail.slice(9).trim() || "Rejected"}`;
+      } else if (event.decision) {
+        decisionLabel = ` · ${titleCase(event.decision)}`;
+      }
+      body.append(node("div", "event-summary", `${actor}${event.run_id ? ` · ${compactId(event.run_id, 18)}` : ""}${decisionLabel}`));
+      if (event.detail || event.hash || event.trace_id || event.span_id || (event.data && typeof event.data.duration_ms === "number" && Number.isFinite(event.data.duration_ms) && event.data.duration_ms >= 0)) {
+        const extra = node("details", "event-extra");
+        const summary = node("summary", "", "Evidence and IDs");
+        extra.append(summary);
         if (event.detail) extra.append(node("div", "", String(event.detail)));
+        if (event.data && typeof event.data.duration_ms === "number" && Number.isFinite(event.data.duration_ms) && event.data.duration_ms >= 0) {
+          const durationLine = node("div");
+          durationLine.append(node("span", "", "measured "), node("code", "", `${event.data.duration_ms}ms`));
+          extra.append(durationLine);
+        }
         const codes = [];
         if (event.trace_id) codes.push(["trace", event.trace_id]);
         if (event.span_id) codes.push(["span", event.span_id]);
@@ -448,10 +499,7 @@
     state.runController = null;
     state.selectedRunEvents = null;
     state.selectedRunEventsFor = null;
-    renderRuns();
-    renderSelectedRun();
-    renderEvents();
-    updateTopology();
+    render(state);
     loadRunEvents(runId);
   }
 
@@ -459,6 +507,7 @@
     const bySequence = new Map((state.selectedRunEvents || []).map(event => [event.sequence, event]));
     for (const event of events) if (typeof event.sequence === "number") bySequence.set(event.sequence, event);
     state.selectedRunEvents = Array.from(bySequence.values()).sort((a, b) => a.sequence - b.sequence);
+    globalThis.LabLearning?.render(state);
   }
 
   async function loadRunEvents(runId) {
@@ -484,6 +533,7 @@
       state.selectedRunEventsFor = runId;
       mergeRunEvents(state.events.filter(event => event.run_id === runId));
       renderEvents();
+      globalThis.LabLearning?.render(state);
     } catch (error) {
       if (generation !== state.generation || error.name === "AbortError") return;
       console.warn("Run activity unavailable", error);
@@ -504,6 +554,8 @@
     state.token = "";
     state.selectedRunEvents = null;
     state.selectedRunEventsFor = null;
+    state.flow = null;
+    globalThis.LabLearning?.reset();
     $("#token").value = "";
     $("#dashboard").classList.add("hidden");
     $("#logout").classList.add("hidden");
@@ -557,12 +609,13 @@
     document.querySelectorAll(".map-node").forEach(item => item.dataset.state = state.stale ? "stale" : state.connected ? "fresh" : "offline");
   }
 
-  function render() {
+  function render(stateSnapshot) {
     renderMetrics();
     renderRuns();
     renderSelectedRun();
     renderEvents();
     updateTopology();
+    globalThis.LabLearning?.render(stateSnapshot || state);
   }
 
   $("#token-form").addEventListener("submit", event => {

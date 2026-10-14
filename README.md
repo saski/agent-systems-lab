@@ -52,13 +52,15 @@ make dashboard-demo
 ```
 
 Open <http://127.0.0.1:8765/dashboard> and connect with `.lab/viewer.token`.
-The read-only dashboard shows the component map, agent activity, workflow stages,
-run history, audit events, chain integrity and OpenTelemetry delivery state.
+The read-only dashboard shows where work is waiting, how long it has waited,
+which tools each agent can use, and the events it recorded. Task queues and
+OpenTelemetry delivery queues have separate counts and charts. Operator commands
+and saved-history checkpoint comparisons help you inspect and control the work.
 
-[![The activity dashboard showing fixture runs waiting for human review](docs/images/dashboard/overview.png)](docs/dashboard.md)
+[![The activity dashboard separating task states from observation delivery](docs/images/dashboard/overview.jpg)](docs/dashboard.md)
 
-The [illustrated dashboard guide](docs/dashboard.md) explains every module,
-indicator and workflow stage, with screenshots of live activity and review.
+The [illustrated dashboard guide](docs/dashboard.md) explains each module with
+annotated screenshots, examples and the limits of what its data establishes.
 
 History is append-only and hash chained, with stable lifecycle event identities.
 Export a checkpoint to an independent location to detect privileged history

@@ -1,0 +1,187 @@
+{
+  "capture_date": "2026-10-15",
+  "timezone": "Europe/Madrid",
+  "base_commit": "4078a2216864f0f94c692489149c69f3b9af445b",
+  "source_state": "uncommitted implementation over base commit; source hashes identify captured revision",
+  "browser": "Chrome",
+  "context": {
+    "gateway": "isolated local fixture gateway on port 8766",
+    "worker_lifecycle": "seeded test records, not evidence of real process execution",
+    "tool_operations": "deterministic operations through real gateway APIs",
+    "exporter": "disabled",
+    "checkpoint_match": {
+      "saved_events": 34,
+      "current_events": 35
+    },
+    "checkpoint_mismatch": "deliberately changed test file hash; canonical history unchanged",
+    "connection_failure": "controlled HTTP 503 for activity reads; then restored",
+    "mobile": "excluded from this documentation update"
+  },
+  "source_sha256": {
+    "src/systems_lab/activity.py": "26ff3dff0317d5483ed7b6bac2f87edf931c5e5f2d4dda487de97c379648bb8a",
+    "src/systems_lab/static/app.js": "1c33052a53e306eedafd36a93f715fafbc5eba6e76a343e116b10609a2ecb072",
+    "src/systems_lab/static/index.html": "c9659d2be60247895b0fbe88777a550daf749dcfaf788b932779e1a06c04c17a",
+    "src/systems_lab/static/style.css": "e47d3d42edcfb5aab761db2b35c8cb606b8d4885c04d0980332643e1263aa970",
+    "src/systems_lab/static/checkpoint.js": "5e12adeed3bbd10b6a6de8922e1bffe517f122ccc5817a24ee85716c54e81bd9",
+    "src/systems_lab/static/learning.js": "ed9f9b7a7c78b254fb600d0dc2343029eedc5fbf831186315e209c6e5ce45595"
+  },
+  "assets": [
+    {
+      "file": "metrics.jpg",
+      "description": "All-run task count, current chain check, delivery status, journal event count",
+      "css_bounds": {
+        "height": 113.64346313476562,
+        "width": 1405.2840576171875,
+        "x": 255.9943084716797,
+        "y": 196.6761474609375
+      },
+      "zoom": 1.100000023841858,
+      "sha256": "707965ee5c72f069f261f8570a3a29f4b34cba54a30e7aac1a6356a3b9ff46b8"
+    },
+    {
+      "file": "work-and-delivery.jpg",
+      "description": "Task states and wait ages are separate from observation delivery",
+      "css_bounds": {
+        "height": 364.6590881347656,
+        "width": 1405.2840576171875,
+        "x": 255.9943084716797,
+        "y": 326.31390380859375
+      },
+      "zoom": 1.100000023841858,
+      "sha256": "5a9d250b8ffb0e72615afa73427547c7aee2a612d276650c847b589cc982e616"
+    },
+    {
+      "file": "session-trends.jpg",
+      "description": "Observed task and delivery counts during this browser session",
+      "css_bounds": {
+        "height": 493.6363525390625,
+        "width": 1405.2840576171875,
+        "x": 255.9943084716797,
+        "y": 690.9730224609375
+      },
+      "zoom": 1.100000023841858,
+      "sha256": "d9f5867d86414c4a45834e2e66840e5101e48d34d4c4ae22a59eb26f69878137"
+    },
+    {
+      "file": "system-map.jpg",
+      "description": "Configured topology, with no fresh worker activity inferred",
+      "css_bounds": {
+        "height": 369.8011169433594,
+        "width": 1405.2840576171875,
+        "x": 255.9943084716797,
+        "y": 1184.6093559265137
+      },
+      "zoom": 1.100000023841858,
+      "sha256": "f3de94a85423c0951e9c33a36fe2d2f2073230de103543ec289aa78c07ef9236"
+    },
+    {
+      "file": "runs.jpg",
+      "description": "Latest 100 runs; selected example awaiting human review",
+      "css_bounds": {
+        "height": 341.89630126953125,
+        "width": 843.671875,
+        "x": 255.9943084716797,
+        "y": 1569.4104919433594
+      },
+      "zoom": 1.100000023841858,
+      "sha256": "4b4222beaff0cfb894748bfd07027da00bee0ce96b26150f9b4d7a544d8b1e73"
+    },
+    {
+      "file": "run-inspector.jpg",
+      "description": "Reported workflow stage and human-review pause",
+      "css_bounds": {
+        "height": 332.25140380859375,
+        "width": 546.6121826171875,
+        "x": 1114.6661376953125,
+        "y": 1569.4104919433594
+      },
+      "zoom": 1.100000023841858,
+      "sha256": "f15d08ecae865070eb50a3130b05fc1fda3f47c95182937e069ff2390ffd98f2"
+    },
+    {
+      "file": "operator-controls.jpg",
+      "description": "Operator commands and role tools, recorded lifecycle times",
+      "css_bounds": {
+        "height": 1199.5950927734375,
+        "width": 546.6121826171875,
+        "x": 1114.6661376953125,
+        "y": 1916.661865234375
+      },
+      "zoom": 1.100000023841858,
+      "sha256": "04c351cb07172ebaed585460b768c7b49fc1f85f4186988496ec97550ebe691c"
+    },
+    {
+      "file": "events.jpg",
+      "description": "Recorded actions distinguish access checks from completion",
+      "css_bounds": {
+        "height": 409.6022644042969,
+        "width": 546.6121826171875,
+        "x": 1114.6661376953125,
+        "y": 3434.985595703125
+      },
+      "zoom": 1.100000023841858,
+      "sha256": "2d54afc42e96f323d60dac6ed62aa35d2f1de01ddfc5baa78a9e2ead653c5fe0"
+    },
+    {
+      "file": "checkpoint-match.jpg",
+      "description": "An earlier saved checkpoint still matches after later events",
+      "css_bounds": {
+        "height": 381.71875,
+        "width": 546.6121826171875,
+        "x": 1114.6661376953125,
+        "y": 3131.2570190429688
+      },
+      "zoom": 1.100000023841858,
+      "sha256": "db734247b94b9676226ae9340627cdba23aa3a65e7657fb23bbcf29d8c35050e"
+    },
+    {
+      "file": "checkpoint-mismatch.jpg",
+      "description": "Deliberately altered test checkpoint produces a mismatch",
+      "css_bounds": {
+        "height": 362.87640380859375,
+        "width": 546.6121826171875,
+        "x": 1114.6661376953125,
+        "y": 3131.2569274902344
+      },
+      "zoom": 1.100000023841858,
+      "sha256": "43f2f0d0ba98336a7ddb708a054c307f7ff71468a8438bfcea6c6d62c46da8a4"
+    },
+    {
+      "file": "overview.jpg",
+      "description": "Desktop overview: task and observation counts, session readings, configured map",
+      "sha256": "8f9c89b2dcd3256150d24fee36b363e6ed15d268759834fdc0e402951aebb684"
+    },
+    {
+      "file": "connection-lost.jpg",
+      "description": "Controlled /api/activity failure with cached Last verified state",
+      "sha256": "924eb6c536ad90e49d268a72f9474a6acb1d9726209593dd39e36079a82b0b35"
+    },
+    {
+      "file": "connect.jpg",
+      "description": "Empty viewer token field before authentication",
+      "css_bounds": {
+        "height": 466.2215881347656,
+        "width": 499.9999694824219,
+        "x": 603.6363525390625,
+        "y": 385.788330078125
+      },
+      "zoom": 1.100000023841858,
+      "sha256": "e304d73c83edd62eea34e0ee2c61d4c1cef56acca1d18bbe527c7a02b311991d"
+    },
+    {
+      "file": "work-and-delivery-annotated.svg",
+      "original": "work-and-delivery.jpg",
+      "sha256": "1d91df49bafc74b8d7ea77f6985621cdb7297d6ab5b576a8006331c9a3c8cb83",
+      "annotation_only": true
+    },
+    {
+      "file": "checkpoint-annotated.svg",
+      "original": "checkpoint-match.jpg",
+      "sha256": "ff8e7a174b151a487b2a917db64e800e62741946b378b039aec8f159f1469a74",
+      "annotation_only": true
+    }
+  ],
+  "post_capture_changes": [
+    "Removed trailing spaces from one blank line in static/learning.js before commit; no behaviour or rendered-content change."
+  ]
+}

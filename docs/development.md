@@ -141,40 +141,49 @@ for history verification, external checkpoints, the dashboard and OTLP delivery.
 
 ## Refresh the dashboard screenshots
 
-The [dashboard guide](dashboard.md) embeds real browser captures from
-`docs/images/dashboard/`; the README reuses its overview. Keep those assets in
-Git so the guide works in both a checkout and GitHub.
+The [dashboard guide](dashboard.md) embeds browser captures and two annotated
+SVGs from `docs/images/dashboard/`. The README reuses `overview.jpg`.
+Current JPG captures replace the older PNG tour in the guide; the earlier PNG
+files remain historical assets.
 
-1. Start `make dashboard`, then open `/dashboard` in a separate browser context
-   so the user's existing session is unaffected. Capture the empty connection
-   form before filling the viewer credential.
-2. Connect with `.lab/viewer.token`. Capture no credentials, headers, console
-   output or developer panels. Confirm the token input is cleared after login.
-3. Run `make dashboard-demo` against that gateway. Capture the metrics and system
-   map while a real fixture specialist is active; let the run finish at human
-   review. Do not edit the DOM or intercept API responses to invent states.
-4. Select that run and capture the overview, run list, inspector and event stream.
-   Leave the human decision pending.
-5. Put only the capture browser context offline, capture the stale banner, and
-   reconnect. The gateway and original browser should stay available.
-6. Capture the narrow layout. Check legibility, absence of page-level horizontal
-   overflow, the map's intentional sideways scroll, and every Markdown image link.
+1. Use a separate local capture session. Either observe `make dashboard-demo`
+   through its gateway, or use an isolated gateway with clearly labelled test
+   fixtures. Record which method supplied the events. Do not change the normal
+   workspace's credentials, evidence or permissions to obtain a screenshot.
+2. Capture the empty connection form before entering a credential. Connect using
+   the correct viewer token for that gateway. Confirm the input is cleared.
+3. Select a run waiting for review. Capture the overview and each module below.
+   Do not edit DOM values, paint fake states or treat seeded lifecycle events as
+   proof of real worker execution.
+4. Compare a saved test checkpoint through the read-only verifier. Capture a
+   match, then a deliberately altered test checkpoint's mismatch. Change the
+   test file, not canonical history. Keep raw checkpoint files ignored.
+5. In the isolated capture environment, provoke an activity-read failure and
+   capture the stale state. Record the failure method, restore successful reads
+   and leave the normal gateway unaffected.
+6. Add numbered SVG notes around the unchanged captures. Check that the notes
+   match the visible values and do not imply stronger guarantees than the UI.
+7. Inspect the graphics in a browser, verify every local Markdown link and record
+   capture time, context, source hashes and image hashes in `captures.json`.
 
-The current captures use Chrome, a 1536 × 1080 desktop viewport and a 390 × 844
-mobile viewport, device scale 1, `en-GB` locale and `Europe/Madrid` time zone.
-Some PNGs capture individual panels; the overview captures the whole page and
-the mobile image captures the initial viewport. A screenshot freezes an actual
-state; it cannot demonstrate animation by itself. Record the capture date and
-fixture/executor/exporter context in the guide when updating the images.
+The October update uses desktop captures only. The guide records the isolated
+fixture gateway, disabled exporter and seeded worker lifecycle records. The
+browser's screenshot API returns JPEG. Capture geometry and zoom are recorded
+with the evidence; do not claim that a screenshot proves animation or process
+health. No credentials, headers, private traces or developer panels belong in
+public images.
 
 | Asset | Capture target |
 | --- | --- |
-| `connect.png` | Empty `.auth-card`, before authentication |
-| `overview.png` | Full page with a selected run waiting for review |
-| `metrics.png` | `.metrics` during a fixture run |
-| `system-map.png` | `.system-panel` while a specialist is active |
-| `runs.png` | `.runs-panel`, with the example run selected |
-| `run-inspector.png` | `.selected-panel` at human review |
-| `events.png` | `.timeline-panel` after its full-run history loads |
-| `connection-lost.png` | Top of the page showing a real client connection loss |
-| `mobile.png` | Initial viewport at 390 × 844 |
+| `connect.jpg` | Empty connection form |
+| `overview.jpg` | Work states, delivery queue, session charts and configured map |
+| `metrics.jpg` | Four independent status cards |
+| `work-and-delivery.jpg` / `work-and-delivery-annotated.svg` | Task counts, oldest waits and delivery count |
+| `session-trends.jpg` | Two separate charts of browser-session readings |
+| `system-map.jpg` | Configured components and the history-check caption |
+| `runs.jpg` / `run-inspector.jpg` | Selected run and reported workflow stage |
+| `operator-controls.jpg` | CLI commands, role tools and recorded lifecycle times |
+| `events.jpg` | Actions with expandable evidence and IDs |
+| `checkpoint-match.jpg` / `checkpoint-annotated.svg` | Matching earlier checkpoint after a later event |
+| `checkpoint-mismatch.jpg` | Deliberately altered test checkpoint |
+| `connection-lost.jpg` | Failed activity read and cached last verification |
