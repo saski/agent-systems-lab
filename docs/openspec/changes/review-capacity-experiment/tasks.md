@@ -1,17 +1,19 @@
 # Implementation tasks
 
-Partial delivery on 5 October 2026: the numerical model, CLI and exclusive
-exports are implemented in this working branch. Their 50 tests pass. The
-illustrated learning guide is standalone documentation; integrated dashboard
-delivery and full-change acceptance remain pending.
+Slice 1 closure on 19 October 2026: the numerical model, CLI, exclusive exports,
+fixed scenario and Make demo target are implemented. The observation horizon is
+bounded to 0..10000 ticks; the drain deadline remains bounded to 50000 ticks.
+Slice 2 dashboard work, full-change acceptance and archival remain pending.
+The model/export test files passed 51 tests and the fixed demo completed with
+the reference report hash. Full validation results are recorded below.
 
 ## Slice 1: reproducible numerical comparison
 
 - [x] Add a behavior test with manually checkable arrivals/service that proves
       task conservation, FIFO order, service timing and exact decision times.
-- [ ] Implement the pure event-time model and strict bounded scenario validation.
-      The model exists; its observation-horizon maximum is currently 50000,
-      whereas the design selects 10000. Align that bound before full acceptance.
+- [x] Implement the pure event-time model and strict bounded scenario validation,
+      including the 0..10000 observation-horizon bound and drain deadline of at
+      most 50000 ticks.
 - [x] Add the 24-task A/B/C scenario, version, boundary, hypothesis and units.
 - [x] Test that total WIP includes review service and awaiting-review work;
       finishing execution must not release its WIP slot.
@@ -19,9 +21,9 @@ delivery and full-change acceptance remain pending.
       tied events, exhausted drain bound and invalid inputs.
 - [x] Derive queue/occupancy/wait/throughput metrics from trace and reconcile
       summaries independently; document percentile and time-weighting methods.
-- [ ] Add the proposed experiment CLI and Make demo target; exclusively export
-      complete attempts with deterministic report hashes and synthetic provenance.
-      CLI/export behavior is verified; the Make target remains pending.
+- [x] Add the experiment CLI and Make demo target; exclusively export complete
+      attempts with deterministic report hashes and synthetic provenance. The
+      demo target runs the locked CLI with the fixed scenario.
 - [x] Test repeated input equality, new-attempt creation and overwrite rejection;
       verify no gateway journal, worker, approval or provider action is invoked.
 
@@ -50,8 +52,9 @@ delivery and full-change acceptance remain pending.
       Standalone learning figures and a guide screenshot are available; the
       integrated dashboard remains part of pending Slice 2.
 - [x] Run `make check`, `make spec-check` and `git diff --check`; report unavailable
-      checks accurately. The publication package passes 83 tests with 5 container
-      tests skipped by default, Ruff/Compose checks and all 4 OpenSpec items.
+      checks accurately. On 19 October 2026, `make check` passed Ruff, 101 tests
+      and Compose configuration validation; 5 opt-in container tests were
+      skipped. `make spec-check` passed all 5 items and `git diff --check` passed.
 - [ ] Sync/archive only after required work is complete.
 
 ## Follow-on boundary

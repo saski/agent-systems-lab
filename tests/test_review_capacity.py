@@ -291,6 +291,15 @@ def test_conservation_no_future_tasks_at_zero() -> None:
         assert queued + executing + awaiting_review + reviewing + decided == arrived
 
 
+def test_observation_horizon_is_bounded_independently_of_drain_deadline() -> None:
+    result = simulate(base_input(observation_horizon=10000, drain_deadline=50000))
+    assert result["inputs"]["observation_horizon"] == 10000
+    assert result["inputs"]["drain_deadline"] == 50000
+
+    with pytest.raises(ValueError, match="observation_horizon"):
+        simulate(base_input(observation_horizon=10001, drain_deadline=50000))
+
+
 def test_invalid_inputs() -> None:
     with pytest.raises(ValueError):
         simulate({"task_count": 5})

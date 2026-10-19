@@ -78,7 +78,7 @@ def _validate_inputs(inputs: dict[str, Any]) -> dict[str, Any]:
     _check_int(rt, "review_ticks", 1, 100)
 
     oh = inputs["observation_horizon"]
-    _check_int(oh, "observation_horizon", 0, 50000)
+    _check_int(oh, "observation_horizon", 0, 10000)
 
     dd = inputs["drain_deadline"]
     _check_int(dd, "drain_deadline", 0, 50000)

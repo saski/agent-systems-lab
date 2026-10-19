@@ -105,11 +105,12 @@ be described as eliminating waiting without counting the upstream queue.
 ## Model, exports and trust
 
 Use `src/systems_lab/review_capacity.py` for pure validated computation independent
-of LangChain, LangGraph, Store and the journal. Proposed discovery commands are
-`systems-lab experiment review-capacity --scenario PATH` and
-`make review-capacity-demo`; implementation will add and document these targets.
+of LangChain, LangGraph, Store and the journal. The CLI command is
+`systems-lab experiment review-capacity --scenario PATH`. The
+`make review-capacity-demo` target runs the locked CLI with the fixed
+`experiments/review-capacity/scenario.json` scenario.
 
-Inputs are JSON with a fixed schema/model version. Initial implementation bounds
+Inputs are JSON with a fixed schema/model version. The implementation bounds
 tasks to 1..100, execution slots to 1..8, positive integer service durations to
 1..100 ticks, last arrival and observation horizon to 0..10000 ticks, and drain
 deadline to at most 50000 ticks. Reject unknown fields, booleans as numbers,
@@ -157,8 +158,10 @@ local dashboard only; container report mounting/import is a later requirement.
 
 ## Delivery slices and subsequent operational validation
 
-Slice 1: pure model, behavior tests, fixed JSON scenario and CLI exports.
-Slice 2: bounded read-only report loading and dashboard comparison/replay.
+Slice 1 (complete, 19 October 2026): pure model, behavior tests, fixed JSON
+scenario, CLI exports and fixed-scenario Make demo. Observation horizon is
+bounded to 0..10000 ticks; drain deadline is at most 50000 ticks.
+Slice 2 (pending): bounded read-only report loading and dashboard comparison/replay.
 Slice 3: reconcile outputs, document observations and capture the interface.
 These slices form v0.2. No new infrastructure or third-party dependency is needed.
 

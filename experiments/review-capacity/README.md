@@ -165,6 +165,13 @@ from *Thinking in Systems*.
 From the repository root:
 
 ```sh
+make review-capacity-demo
+```
+
+This runs the locked existing CLI with the fixed
+`experiments/review-capacity/scenario.json` scenario. The equivalent CLI command is:
+
+```sh
 uv run --locked systems-lab experiment review-capacity \
   --scenario experiments/review-capacity/scenario.json
 ```
@@ -173,7 +180,6 @@ The printed manifest identifies a new directory under
 `.lab/experiments/review-capacity/`, with `scenario.json`, `report.json` and the
 completion marker `manifest.json`. The command generates no control credentials
 and invokes no agent workers, providers, approval or canonical audit journal.
-The proposed `make review-capacity-demo` target is not implemented yet.
 
 Repeating an input creates a fresh attempt with identical report bytes and hash;
 an explicit reused `--attempt-id` is rejected. `status: complete` describes the
@@ -211,15 +217,18 @@ Every review accepts. Arrivals are finite and scheduled; service is uniform.
 There is no stochasticity, priority, output quality, rework, fatigue, failure,
 real human approval or empirical relationship to a team's throughput.
 
-The numerical model, exclusive export and CLI are implemented. Their two test
-files pass **50 tests**. The publication package also passes `make check`:
-Ruff lint/format, **83 tests passed**, **5 container tests skipped** by default,
-and Compose configuration validation. `make spec-check` passes all four items.
-The learning guide was inspected at desktop and mobile sizes.
+Slice 1 is closed: the bounded numerical model, exclusive export, CLI, fixed
+scenario and `make review-capacity-demo` are implemented. The scenario validator
+limits `observation_horizon` to 0..10000 ticks and keeps `drain_deadline` at or
+below 50000 ticks.
 
-The integrated Experiments API, dashboard replay, Make demo target and complete
-v0.2 acceptance remain pending. The model's observation-horizon maximum is
-currently 50000, while the design selects 10000; alignment remains an open task.
-The standalone learning guide is documentation, not completion of those product
-features. The unfinished API test draft is preserved in the implementation
-checkout and is excluded from this publication package.
+For the 19 October 2026 Slice 1 closure, the model/export test files passed 51
+tests and the demo completed with report SHA-256
+`a3a9c0396620438fa7c039f5aa9aace98a85cff968ba5004c52e5e25f473e58a`.
+`make check` passed Ruff lint/format, 101 tests and Compose configuration
+validation, with 5 opt-in container tests skipped. `make spec-check` passed all
+5 items and `git diff --check` passed.
+
+The integrated Experiments API and dashboard replay remain pending as Slice 2.
+Full v0.2 change acceptance and archival also remain pending. The standalone
+learning guide is documentation and does not complete those product features.

@@ -8,6 +8,7 @@ help:
 	@echo "dashboard-demo    Run an experiment through that persistent gateway"
 	@echo "history-check     Verify canonical history integrity"
 	@echo "spec-check        Validate OpenSpec requirements"
+	@echo "review-capacity-demo  Run the fixed numerical A/B/C comparison"
 	@echo "review-capacity-figures  Refresh learning graphics from REPORT=path/to/report.json"
 	@echo "containers-up     Start the container gateway and database"
 	@echo "containers-demo   Run isolated one-shot workers"
@@ -59,7 +60,10 @@ dashboard-demo:
 history-check:
 	uv run --locked systems-lab history-verify
 
-.PHONY: review-capacity-figures
+.PHONY: review-capacity-demo review-capacity-figures
+
+review-capacity-demo:
+	uv run --locked systems-lab experiment review-capacity --scenario experiments/review-capacity/scenario.json
 
 review-capacity-figures:
 	@test -n "$(REPORT)" || (echo "Usage: make review-capacity-figures REPORT=path/to/report.json" >&2; exit 2)

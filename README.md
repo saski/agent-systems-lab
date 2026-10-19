@@ -114,6 +114,12 @@ shows how waiting can move upstream while end-to-end delivery stays the same.
 It includes reproducible charts and a standalone interactive learning guide;
 integration into the Activity dashboard remains pending.
 
+Run the fixed numerical comparison from the repository root:
+
+```sh
+make review-capacity-demo
+```
+
 [![Decisions and all pending work at tick 60](docs/graphics/review-capacity/comparison.png)](experiments/review-capacity/README.md)
 
 ## Extend the playground
