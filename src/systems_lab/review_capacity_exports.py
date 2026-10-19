@@ -10,6 +10,7 @@ All paths, IDs, and file contents are validated to prevent directory traversal,
 symlink attacks, and data corruption.
 """
 
+import errno
 import hashlib
 import json
 import os
@@ -26,6 +27,10 @@ from systems_lab.review_capacity import simulate
 MAX_SCENARIO_BYTES = 16384
 MAX_REPORT_BYTES = 5242880
 ATTEMPT_ID_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]{0,63}\Z")
+
+
+class AttemptNotFoundError(ValueError):
+    """The requested attempt directory does not exist."""
 
 
 def _validate_attempt_id(attempt_id: Any) -> None:
@@ -77,8 +82,11 @@ def _strict_json_parse(data: bytes, filename: str) -> Any:
 
 def _validate_root_directory(root: Path) -> Path:
     """Validate and resolve root directory, rejecting symlinks."""
-    if root.is_symlink():
-        raise ValueError(f"Attempt root must not be a symlink: {root}")
+    for directory in (root, *root.parents):
+        if directory.is_symlink():
+            raise ValueError(f"Attempt root must not contain symlinks: {root}")
+    if root.exists() and not root.is_dir():
+        raise NotADirectoryError("Attempt root is not a directory")
     resolved = root.resolve(strict=False)
     return resolved
 
@@ -104,24 +112,26 @@ def _validate_attempt_directory(root: Path, attempt_id: str) -> Path:
 def _read_file_safe(path: Path, max_bytes: int, filename: str) -> bytes:
     """Read file with size limit and no symlink following."""
     try:
-        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
     except OSError as error:
-        raise ValueError(f"Cannot open file (may be symlink or missing): {filename}") from error
+        if error.errno in (errno.ENOENT, errno.ENOTDIR, errno.ELOOP):
+            raise ValueError(f"Cannot open file (may be symlink or missing): {filename}") from error
+        raise
 
-    with os.fdopen(fd, "rb") as f:
-        try:
-            file_stat = os.fstat(f.fileno())
-            if not stat.S_ISREG(file_stat.st_mode):
-                raise ValueError(f"Path is not a regular file: {filename}")
-            if file_stat.st_size > max_bytes:
-                raise ValueError(f"File exceeds size limit {max_bytes}: {filename}")
+    try:
+        file_stat = os.fstat(fd)
+        if not stat.S_ISREG(file_stat.st_mode):
+            raise ValueError(f"Path is not a regular file: {filename}")
+        if file_stat.st_size > max_bytes:
+            raise ValueError(f"File exceeds size limit {max_bytes}: {filename}")
 
+        with os.fdopen(fd, "rb", closefd=False) as f:
             data = f.read(max_bytes + 1)
-            if len(data) > max_bytes:
-                raise ValueError(f"File exceeds size limit {max_bytes}: {filename}")
-            return data
-        except OSError as error:
-            raise ValueError(f"Error reading file: {filename}") from error
+        if len(data) > max_bytes:
+            raise ValueError(f"File exceeds size limit {max_bytes}: {filename}")
+        return data
+    finally:
+        os.close(fd)
 
 
 def _write_file_exclusive(path: Path, data: bytes) -> None:
@@ -312,7 +322,7 @@ def read_attempt(root: Path, attempt_id: str) -> dict[str, Any]:
     attempt_dir = _validate_attempt_directory(validated_root, attempt_id)
 
     if not attempt_dir.exists():
-        raise ValueError(f"Attempt not found: {attempt_id}")
+        raise AttemptNotFoundError(f"Attempt not found: {attempt_id}")
     if not attempt_dir.is_dir():
         raise ValueError(f"Attempt path is not a directory: {attempt_id}")
 
@@ -373,13 +383,12 @@ def list_attempts(root: Path) -> list[dict[str, Any]]:
         List of manifest dicts
 
     Raises:
-        ValueError: Root is a symlink
+        ValueError: Root contains a symlink
+        OSError: Root cannot be read
     """
+    root = _validate_root_directory(root)
     if not root.exists():
         return []
-
-    if root.is_symlink():
-        raise ValueError(f"Attempt root must not be a symlink: {root}")
 
     results: list[dict[str, Any]] = []
 
@@ -400,7 +409,7 @@ def list_attempts(root: Path) -> list[dict[str, Any]]:
                     results.append(result["manifest"])
                 except ValueError:
                     continue
-    except OSError:
+    except FileNotFoundError:
         return []
 
     return results

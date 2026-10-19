@@ -52,7 +52,12 @@ def local_control(root: Path, token: str) -> Iterator[ControlClient]:
     port = listener.getsockname()[1]
     server = uvicorn.Server(
         uvicorn.Config(
-            create_app(store, token, (root / ".lab" / "viewer.token").read_text().strip()),
+            create_app(
+                store,
+                token,
+                (root / ".lab" / "viewer.token").read_text().strip(),
+                experiment_root=root / ".lab" / "experiments" / "review-capacity",
+            ),
             log_level="error",
             access_log=False,
         )
@@ -209,7 +214,12 @@ def main() -> None:
         store = Store(database)
         try:
             uvicorn.run(
-                create_app(store, token, os.environ.get("LAB_VIEWER_TOKEN")),
+                create_app(
+                    store,
+                    token,
+                    os.environ.get("LAB_VIEWER_TOKEN"),
+                    experiment_root=root / ".lab" / "experiments" / "review-capacity",
+                ),
                 host="0.0.0.0",
                 port=8000,
                 access_log=False,
@@ -245,7 +255,15 @@ def main() -> None:
         print(f"Read-only viewer credential: {root / '.lab' / 'viewer.token'}", flush=True)
         try:
             uvicorn.run(
-                create_app(store, token, viewer), host="127.0.0.1", port=args.port, access_log=False
+                create_app(
+                    store,
+                    token,
+                    viewer,
+                    experiment_root=root / ".lab" / "experiments" / "review-capacity",
+                ),
+                host="127.0.0.1",
+                port=args.port,
+                access_log=False,
             )
         finally:
             store.close()

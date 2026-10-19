@@ -3,7 +3,8 @@
 Slice 1 closure on 19 October 2026: the numerical model, CLI, exclusive exports,
 fixed scenario and Make demo target are implemented. The observation horizon is
 bounded to 0..10000 ticks; the drain deadline remains bounded to 50000 ticks.
-Slice 2 dashboard work, full-change acceptance and archival remain pending.
+The read-only HTTP report API and access tests for Slice 2 are implemented;
+dashboard work, full-change acceptance and archival remain pending.
 The model/export test files passed 51 tests and the fixed demo completed with
 the reference report hash. Full validation results are recorded below.
 
@@ -29,9 +30,9 @@ the reference report hash. Full validation results are recorded below.
 
 ## Slice 2: read-only experiment dashboard
 
-- [ ] Add bounded, ID-based report listing/loading under the trusted local root,
+- [x] Add bounded, ID-based report listing/loading under the configured local root,
       checking complete manifests, hashes and viewer authorization.
-- [ ] Test path traversal, oversized/incomplete/altered reports and read-only
+- [x] Test path traversal, oversized/incomplete/altered reports and read-only
       access; preserve the existing Activity endpoint contract.
 - [ ] Add A/B/C metrics and SVG charts, showing horizon and pending sample counts.
 - [ ] Add logical-tick flow playback with play/pause, seek, speed and reduced
@@ -52,10 +53,16 @@ the reference report hash. Full validation results are recorded below.
       Standalone learning figures and a guide screenshot are available; the
       integrated dashboard remains part of pending Slice 2.
 - [x] Run `make check`, `make spec-check` and `git diff --check`; report unavailable
-      checks accurately. On 19 October 2026, `make check` passed Ruff, 101 tests
+      checks accurately. On 19 October 2026, `make check` passed Ruff, 130 tests
       and Compose configuration validation; 5 opt-in container tests were
       skipped. `make spec-check` passed all 5 items and `git diff --check` passed.
 - [ ] Sync/archive only after required work is complete.
+
+Slice 2 API status on 19 October 2026: the two read-only HTTP endpoints and
+secure-access tests are implemented. Targeted API, export and Activity tests
+passed (84 total, including 29 HTTP tests), and Ruff passed. This is partial
+Slice 2 progress; the three dashboard tasks above, full-change acceptance and
+archival remain pending. Container report mounting is not implemented.
 
 ## Follow-on boundary
 

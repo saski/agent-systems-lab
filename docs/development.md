@@ -65,6 +65,21 @@ Add a real model only through an explicit gateway route change and evaluation.
 Do not inject provider keys into workers or claim fixture results establish
 model quality. Do not add an unrestricted URL proxy or shell to simplify an integration.
 
+## Read exported experiments
+
+The [Review Capacity guide](../experiments/review-capacity/README.md) documents
+the viewer-authorized report listing and detail endpoints. The CLI binds reads
+to `LAB_ROOT/.lab/experiments/review-capacity`, with `LAB_ROOT` defaulting to the
+working directory. Direct `create_app` callers can set the trusted
+`experiment_root` keyword; its default is the same relative layout under the
+working directory. Request parameters cannot change this root.
+
+Reads validate complete manifests, file hashes and size bounds, and reject
+symlinks in the root, its parents, attempt directories and data files. Missing
+roots list as empty; storage errors remain errors. These reads do not create
+attempts or operational events. Compose does not mount host experiment reports;
+container report import remains outside this slice.
+
 ## Refresh the numerical learning graphics
 
 The [review-capacity learning guide](../experiments/review-capacity/README.md)

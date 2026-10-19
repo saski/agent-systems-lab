@@ -156,12 +156,36 @@ there is no LIVE indicator or polling-based operational health claim. Existing
 Activity stale/reconnect behavior stays independent. First acceptance covers the
 local dashboard only; container report mounting/import is a later requirement.
 
+The HTTP API portion was implemented on 19 October 2026:
+
+- `GET /api/experiments/review-capacity` returns `{ "attempts": [...] }` with
+  up to 50 valid manifests after scanning at most 200 directory entries. An absent
+  report root returns an empty list; invalid or incomplete attempts are skipped.
+- `GET /api/experiments/review-capacity/{attempt_id}` returns
+  `{ "manifest": ..., "scenario": ..., "report": ... }`; a missing attempt
+  returns 404.
+- Both endpoints use the gateway's operator/viewer authorization and reject
+  worker credentials. The gateway CLI resolves `LAB_ROOT` (default `.`) and
+  configures the report root as `$LAB_ROOT/.lab/experiments/review-capacity`.
+  Requests cannot supply a root or file path.
+- Reads verify strict JSON, manifest completeness, byte hashes and integrity.
+  Symlinked roots, parent directories, attempts and data files are rejected.
+  Manifest and scenario files are limited to 16,384 bytes each; reports are
+  limited to 5,242,880 bytes. Invalid or corrupt attempts return a generic 422;
+  report-storage errors return a generic 503. Responses are JSON with
+  `Cache-Control: no-store`.
+- These GETs do not create files or change the journal, runs or decisions.
+  Container report mounting/import is not implemented.
+
 ## Delivery slices and subsequent operational validation
 
 Slice 1 (complete, 19 October 2026): pure model, behavior tests, fixed JSON
 scenario, CLI exports and fixed-scenario Make demo. Observation horizon is
 bounded to 0..10000 ticks; drain deadline is at most 50000 ticks.
-Slice 2 (pending): bounded read-only report loading and dashboard comparison/replay.
+Slice 2: bounded read-only report loading and access tests are implemented;
+dashboard comparison/replay remains pending. Targeted API, export and Activity
+checks passed 84 tests (including 29 HTTP tests), and Ruff passed. Full v0.2
+acceptance remains pending.
 Slice 3: reconcile outputs, document observations and capture the interface.
 These slices form v0.2. No new infrastructure or third-party dependency is needed.
 

@@ -14,6 +14,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
 
 from systems_lab.activity import activity, summarize
+from systems_lab.review_capacity_exports import AttemptNotFoundError, list_attempts, read_attempt
 from systems_lab.simulation import Scenario, simulate
 from systems_lab.store import ControlError, Store
 from systems_lab.telemetry import TelemetryDelivery
@@ -117,10 +118,17 @@ def create_app(
     operator_token: str,
     viewer_token: str | None = None,
     delivery: TelemetryDelivery | None = None,
+    *,
+    experiment_root: Path | None = None,
 ) -> FastAPI:
     if not operator_token:
         raise ValueError("An operator credential is required")
     delivery = delivery or TelemetryDelivery.from_environment(store.journal)
+    reports_root = (
+        experiment_root
+        if experiment_root is not None
+        else Path.cwd() / ".lab" / "experiments" / "review-capacity"
+    )
 
     @asynccontextmanager
     async def lifespan(_app: FastAPI) -> Any:
@@ -183,6 +191,26 @@ def create_app(
             "events": run["events"],
             "integrity": store.journal.verify(),
         }
+
+    @app.get("/api/experiments/review-capacity", dependencies=[Depends(viewer)])
+    def get_review_capacity_attempts() -> dict[str, Any]:
+        try:
+            return {"attempts": list_attempts(reports_root)}
+        except ValueError as error:
+            raise ControlError(422, "Invalid experiment reports") from error
+        except OSError as error:
+            raise ControlError(503, "Experiment reports unavailable") from error
+
+    @app.get("/api/experiments/review-capacity/{attempt_id}", dependencies=[Depends(viewer)])
+    def get_review_capacity_attempt(attempt_id: str) -> dict[str, Any]:
+        try:
+            return read_attempt(reports_root, attempt_id)
+        except AttemptNotFoundError as error:
+            raise ControlError(404, "Experiment report not found") from error
+        except ValueError as error:
+            raise ControlError(422, "Invalid experiment report") from error
+        except OSError as error:
+            raise ControlError(503, "Experiment reports unavailable") from error
 
     @app.get("/history/checkpoint", dependencies=[Depends(viewer)])
     def checkpoint() -> dict[str, Any]:

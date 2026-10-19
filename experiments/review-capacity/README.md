@@ -229,6 +229,35 @@ tests and the demo completed with report SHA-256
 validation, with 5 opt-in container tests skipped. `make spec-check` passed all
 5 items and `git diff --check` passed.
 
-The integrated Experiments API and dashboard replay remain pending as Slice 2.
-Full v0.2 change acceptance and archival also remain pending. The standalone
-learning guide is documentation and does not complete those product features.
+The read-only Experiments HTTP API and its access tests were implemented on
+19 October 2026; the integrated dashboard replay remains pending as Slice 2.
+Targeted API, export and Activity checks passed 84 tests, including 29 HTTP
+tests. Full validation passed Ruff, 130 tests and Compose configuration checks,
+with 5 opt-in container tests skipped; all 5 OpenSpec items and the whitespace
+check passed. Full v0.2 change acceptance and archival also remain pending.
+The standalone learning guide is documentation and does not complete those
+product features.
+
+### Read-only report API
+
+The local gateway exposes two viewer-authenticated JSON endpoints:
+
+| Request | Response |
+| --- | --- |
+| `GET /api/experiments/review-capacity` | `{ "attempts": [...] }`, containing up to 50 verified manifests after scanning at most 200 directory entries. |
+| `GET /api/experiments/review-capacity/{attempt_id}` | `{ "manifest": ..., "scenario": ..., "report": ... }` for one verified attempt. |
+
+The operator and viewer credentials are accepted; worker credentials are
+rejected. The gateway CLI configures the storage root from `LAB_ROOT` (default
+`.`) as `$LAB_ROOT/.lab/experiments/review-capacity`. Requests cannot provide a
+filesystem path. An absent root produces an empty list, while a missing attempt
+returns 404. Incomplete or invalid attempts are omitted from listing; a direct
+read of one returns a generic 422. Storage errors return a generic 503.
+
+The reader verifies strict JSON, complete manifests, byte hashes and file
+integrity. It rejects symlinked roots, parent directories, attempt directories
+and data files. Manifest and scenario files may each be at most 16,384 bytes;
+reports may be at most 5,242,880 bytes. Responses use `application/json` and
+`Cache-Control: no-store`. These read-only requests do not create files or
+change runs, decisions or the canonical journal. Container report mounting is
+not implemented.

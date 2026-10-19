@@ -60,13 +60,24 @@ exclusive report exports, fixed scenario and `make review-capacity-demo` target
 are available. The target runs the locked CLI against
 `experiments/review-capacity/scenario.json`. Observation horizon validation is
 bounded to 0..10000 ticks; the drain deadline remains at most 50000 ticks. The
-integrated Experiments API/dashboard and full v0.2 acceptance remain pending.
+read-only Experiments HTTP API and its access tests are implemented; the
+dashboard and full v0.2 acceptance remain pending. The API lists and loads
+complete, hash-verified reports by attempt ID under the server-configured
+`LAB_ROOT/.lab/experiments/review-capacity` directory. It uses the existing
+viewer authorization, rejects worker credentials, and does not accept request
+paths. Container report mounting remains unimplemented.
 The standalone learning guide does not complete the product-dashboard
 acceptance scope. Scenario values are selected teaching inputs, not measured
 agent demand. Slice 1 validation passed 51 model/export tests and the fixed demo
-reproduced the reference report hash. Full repository validation passed Ruff,
+reproduced the reference report hash. Slice 1 repository validation passed Ruff,
 101 tests and Compose configuration checks, with 5 opt-in container tests
 skipped; all 5 OpenSpec items and the whitespace check passed.
+
+The 19 October 2026 targeted API, export and Activity checks passed 84 tests,
+including 29 HTTP tests. Full validation passed Ruff, 130 tests and Compose
+configuration checks, with 5 opt-in container tests skipped; all 5 OpenSpec
+items and the whitespace check passed. This does not close the dashboard or
+full v0.2 acceptance.
 
 ## Planning Validation
 
