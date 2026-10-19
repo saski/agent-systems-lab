@@ -1,0 +1,62 @@
+{
+  "capture_date": "2026-10-16",
+  "timezone": "Europe/Madrid",
+  "source_commit": "e809c848a3975a72504c98e8d37b66e969e39e98",
+  "browser": "Codex in-app browser",
+  "context": {
+    "gateway": "Isolated local SQLite fixture gateway on loopback port 8767",
+    "worker_lifecycle": "Real Researcher, Builder and Reviewer subprocesses launched by the existing CLI; no seeded lifecycle records",
+    "model_mode": "fixture; no external provider requests",
+    "executor": "process; not an OS sandbox",
+    "run_id": "7ffee249-f643-4479-8500-7965dddbbd30",
+    "trace_id": "c04aec35ee809e4367f52d19cd4387d6",
+    "run_status": "awaiting_review",
+    "journal_events": 32,
+    "exporter": "disabled; pending observation count is not a delivery failure",
+    "source_state": "Clean runtime source at source_commit; documentation-only refresh",
+    "image_processing": "Unmodified browser viewport screenshots; no DOM changes or pixel editing"
+  },
+  "source_sha256": {
+    "src/systems_lab/activity.py": "26ff3dff0317d5483ed7b6bac2f87edf931c5e5f2d4dda487de97c379648bb8a",
+    "src/systems_lab/static/app.js": "1c33052a53e306eedafd36a93f715fafbc5eba6e76a343e116b10609a2ecb072",
+    "src/systems_lab/static/index.html": "c9659d2be60247895b0fbe88777a550daf749dcfaf788b932779e1a06c04c17a",
+    "src/systems_lab/static/style.css": "e47d3d42edcfb5aab761db2b35c8cb606b8d4885c04d0980332643e1263aa970",
+    "src/systems_lab/static/checkpoint.js": "5e12adeed3bbd10b6a6de8922e1bffe517f122ccc5817a24ee85716c54e81bd9",
+    "src/systems_lab/static/learning.js": "e92f3995a5cde18d919649ecf0abe7bd4e3fcd46ee47c6fc5b3266e6204cd58a"
+  },
+  "assets": [
+    {
+      "file": "activity-overview.jpg",
+      "captured_at": "2026-10-16T08:26:04.017Z",
+      "description": "Current Activity overview after a real three-process fixture run; one task awaiting human review and 32 observations pending with exporter disabled",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "scroll_y": 0,
+      "sha256": "88a4ebe710d5c4ac14290186137f9029e72121001cd5a259761c97e170cb90f3"
+    },
+    {
+      "file": "system-map.jpg",
+      "captured_at": "2026-10-16T08:28:22.044Z",
+      "description": "Configured components and current history-verification caption; topology does not prove worker health",
+      "sha256": "7c8f173ebf8e98d1f13906540aaabe21cc0756d8abee9fa25ff13eea068857d3",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "scroll_y": 1008
+    },
+    {
+      "file": "run-inspector.jpg",
+      "captured_at": "2026-10-16T08:28:21.683Z",
+      "description": "Selected run with fixture provenance, completed specialist stages and human-review pause",
+      "sha256": "f293189273cb7e3834ebe6e03db4125fc87c3434d4ea1394f89f042354a8128b",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "scroll_y": 1476
+    }
+  ]
+}

@@ -157,7 +157,9 @@ for history verification, external checkpoints, the dashboard and OTLP delivery.
 ## Refresh the dashboard screenshots
 
 The [dashboard guide](dashboard.md) embeds browser captures and two annotated
-SVGs from `docs/images/dashboard/`. The README reuses `overview.jpg`.
+SVGs from `docs/images/dashboard/`. The README uses a separate 16 October capture
+set in `docs/images/readme/`, with its own `captures.json`: a fresh three-process
+fixture run against an isolated gateway, with telemetry export disabled.
 Current JPG captures replace the older PNG tour in the guide; the earlier PNG
 files remain historical assets.
 
