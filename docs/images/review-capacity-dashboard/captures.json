@@ -89,6 +89,7 @@
   "limitations": [
     "Synthetic event-time values are not real worker, human review, productivity or model-quality measurements.",
     "Screenshots show paused states; behavior checks are separate observations.",
-    "Container report mounting and OpenSpec synchronization/archival remain pending."
+    "Container report mounting is not implemented.",
+    "OpenSpec synchronization/archival were pending at capture time; closure is recorded in docs/openspec/changes/archive/2026-10-20-review-capacity-experiment/verification.md."
   ]
 }

@@ -218,17 +218,22 @@ Every review accepts. Arrivals are finite and scheduled; service is uniform.
 There is no stochasticity, priority, output quality, rework, fatigue, failure,
 real human approval or empirical relationship to a team's throughput.
 
-Slice 1 is closed: the bounded numerical model, exclusive export, CLI, fixed
-scenario and `make review-capacity-demo` are implemented. The scenario validator
+**Review Capacity v0.2 is complete and closed as of 20 October 2026.** The bounded
+model, exclusive exports, CLI, fixed scenario, `make review-capacity-demo`,
+viewer-authorized API and integrated comparison/replay meet the accepted scope.
+The [closure record](../../docs/openspec/changes/archive/2026-10-20-review-capacity-experiment/verification.md)
+maps all eight requirements to implementation and evidence. OpenSpec synchronized
+the [canonical specification](../../docs/openspec/specs/review-capacity-experiment/spec.md)
+and archived the change.
+
+The scenario validator
 limits `observation_horizon` to 0..10000 ticks and keeps `drain_deadline` at or
 below 50000 ticks.
 
-For the 19 October 2026 Slice 1 closure, the model/export test files passed 51
-tests and the demo completed with report SHA-256
+Fresh closure validation passed Ruff, 131 tests and Compose configuration
+validation, with five opt-in container tests skipped. The demo reproduced report
+SHA-256
 `a3a9c0396620438fa7c039f5aa9aace98a85cff968ba5004c52e5e25f473e58a`.
-`make check` passed Ruff lint/format, 101 tests and Compose configuration
-validation, with 5 opt-in container tests skipped. `make spec-check` passed all
-5 items and `git diff --check` passed.
 
 The integrated dashboard reads these saved reports through the viewer-
 authorized API. To try it, start the gateway and dashboard, generate a saved

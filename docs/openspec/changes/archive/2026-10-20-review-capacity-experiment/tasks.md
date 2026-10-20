@@ -5,7 +5,8 @@ fixed scenario and Make demo target are implemented. The observation horizon is
 bounded to 0..10000 ticks; the drain deadline remains bounded to 50000 ticks.
 Slice 2 is implemented: the viewer-authorized API supplies the dashboard's
 comparison, SVG charts and local task replay. Desktop/mobile browser checks and
-documentation are complete. Spec synchronization and archival remain pending.
+documentation are complete. The change was synchronized and archived on
+20 October 2026; all eight requirements are now in the canonical specification.
 The model/export test files passed 51 tests and the fixed demo completed with
 the reference report hash. Full validation results are recorded below.
 
@@ -57,7 +58,9 @@ the reference report hash. Full validation results are recorded below.
       checks accurately. On 20 October 2026, `make check` passed Ruff, 131 tests
       and Compose configuration validation; 5 opt-in container tests were
       skipped. `make spec-check` passed all 5 items and `git diff --check` passed.
-- [ ] Sync/archive only after required work is complete.
+- [x] Sync/archive only after required work is complete. OpenSpec added eight
+      requirements to `specs/review-capacity-experiment/spec.md` and archived the
+      change as `2026-10-20-review-capacity-experiment`. See `verification.md`.
 
 Slice 2 verification on 20 October 2026: targeted frontend, API and Activity
 checks passed 49 tests. The frontend wrapper ran seven Node tests against actual

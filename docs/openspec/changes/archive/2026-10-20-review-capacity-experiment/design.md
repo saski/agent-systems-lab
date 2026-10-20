@@ -190,8 +190,9 @@ or a hidden document; reduced motion keeps manual seek and jump controls.
 Projection tests use actual model reports; browser checks cover desktop/mobile,
 controls and empty/loading/error states. Full validation passed 131 tests, with
 5 opt-in container tests skipped, plus Ruff and Compose configuration checks.
-Slice 3: outputs, observations, interface captures and guides are available;
-OpenSpec synchronization and archival remain pending.
+Slice 3 (complete, 20 October 2026): outputs, observations, interface captures
+and guides are available; all eight requirements were synchronized into the
+canonical specification and this change was archived. See `verification.md`.
 These slices form v0.2. No new infrastructure or third-party dependency is needed.
 
 After v0.2, scope a separate runtime admission experiment. Use the existing

@@ -138,6 +138,10 @@ openspec validate --all --strict
 Keep requirements focused on the current experiment. The roadmap is not a
 promise that all proposed capabilities are already implemented.
 
+Review Capacity v0.2 is closed. Its canonical requirements live in
+`openspec/specs/review-capacity-experiment/spec.md`; the archived change contains
+the requirement-to-evidence map in `verification.md`.
+
 With OpenSpec 1.10.0, archive from `docs/` so the CLI operates on the physical
 OpenSpec directory. Archiving through the root symlink can fail its final-move
 integrity check; validation and listing work from the repository root.

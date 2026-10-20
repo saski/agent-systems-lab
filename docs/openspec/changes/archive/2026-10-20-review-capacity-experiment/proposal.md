@@ -55,7 +55,8 @@ Make targets, `experiments/review-capacity/`, and operator documentation.
 Existing specialist capabilities, permission enforcement, live activity and
 human-decision semantics remain the reference boundaries.
 
-Status on 20 October 2026: Slices 1 and 2 are implemented. The numerical model, CLI,
+Status on 20 October 2026: all three slices are complete and v0.2 is closed.
+The numerical model, CLI,
 exclusive report exports, fixed scenario and `make review-capacity-demo` target
 are available. The target runs the locked CLI against
 `experiments/review-capacity/scenario.json`. Observation horizon validation is
@@ -73,11 +74,12 @@ demand. The standalone learning guide remains a complementary offline artifact.
 
 The 20 October 2026 targeted frontend, API and Activity checks passed 49 tests.
 Full validation passed Ruff, 131 tests and Compose
-configuration checks, with 5 opt-in container tests skipped; all 5 OpenSpec
-items and the whitespace check passed. Desktop/mobile browser checks and
+configuration checks, with 5 opt-in container tests skipped; all 5 pre-archive
+OpenSpec items and the whitespace check passed. Desktop/mobile browser checks and
 captures document the comparison and replay, loading, empty and error states,
-reduced motion and read-only playback. Spec synchronization and archival remain
-pending.
+reduced motion and read-only playback. OpenSpec synchronized all eight
+requirements and archived this change on 20 October 2026. See `verification.md`
+for the closure audit and fresh validation evidence.
 
 ## Planning Validation
 

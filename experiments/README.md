@@ -38,8 +38,9 @@ Compare the generated `simulation.json` files, including all parameters and
 time-series observations. A successful agent run is evidence about the workflow;
 it does not establish that the simulated system describes a real organization.
 
-The [review-capacity experiment](review-capacity/README.md) adds a graphical
-comparison of parallel execution, one synthetic reviewer and admitted-WIP limits.
+The completed [Review Capacity v0.2 experiment](review-capacity/README.md)
+compares parallel execution, one synthetic reviewer and admitted-WIP limits.
 Read its two-queue diagram, fixed-horizon comparison and full-drain curves, then
-use the standalone learning guide to replay individual task states. This is
-numerical documentation; the integrated Experiments dashboard is still pending.
+replay individual task states in the standalone learning guide or the local
+dashboard's Experiments view. These are saved numerical results, separate from
+actual agent workflow history.
