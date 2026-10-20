@@ -41,7 +41,7 @@ it does not establish real-model reasoning quality or safety.
 | --- | --- | --- |
 | Governed workflow | Three specialists, checkpoint recovery, role-scoped access, budgets, revocation and approval tied to the exact artifacts; local processes and optional Docker workers | Live-model and alternative-runtime comparisons are future experiments |
 | Backlog feedback | Deterministic model, controlled observation-delay comparison, scenario and documented results | Further sensitivity experiments with different gains, arrivals and capacity bounds |
-| Review Capacity | Completed v0.2: A/B/C numerical comparison, local CLI, hashed exports, viewer-authorized report API, integrated charts and task replay, plus an offline learning guide | Further experiments with variable workload, review quality and rework |
+| Review Capacity | Completed v0.2: A/B/C numerical comparison, local CLI, hashed exports, viewer-authorized report API, integrated charts and task replay, plus an offline learning guide | Runtime admission with fixtures is proposed; variable workload, review quality and rework remain future experiments |
 | Activity and history | Read-only Activity dashboard, task counts and wait ages, role tools, lifecycle events, session charts and saved-checkpoint comparison; separate saved-report Experiments view | Persistent historical charts |
 | Telemetry delivery | Durable event journal, retry outbox, correlated OpenTelemetry spans and an optional local Collector | The Grafana/Tempo/Prometheus reliability learning lab is a documented proposal; implementation has not started |
 
@@ -248,8 +248,12 @@ are independent histories; use the gateway corresponding to the run.
 ## Next experiments and further reading
 
 Review Capacity v0.2 is [verified and closed](docs/openspec/changes/archive/2026-10-20-review-capacity-experiment/verification.md).
+The next proposed slice is [fixture-workflow admission](docs/openspec/changes/fixture-workflow-admission/proposal.md):
+keep one workflow admitted while it waits for a human decision and a second
+task queued. This runtime experiment is not implemented; decisions remain
+explicit operator actions.
 
-The next documented work includes building the optional [telemetry reliability
+Another proposed change is the optional [telemetry reliability
 learning lab](docs/plans/2026-10-06-agent-telemetry-reliability-lab.md):
 querying traces in Grafana/Tempo, adding explicit metrics, and diagnosing bounded
 delivery failures. These remain proposals or incomplete changes, as tracked in

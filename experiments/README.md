@@ -44,3 +44,7 @@ Read its two-queue diagram, fixed-horizon comparison and full-drain curves, then
 replay individual task states in the standalone learning guide or the local
 dashboard's Experiments view. These are saved numerical results, separate from
 actual agent workflow history.
+
+The next [fixture-workflow admission proposal](../docs/openspec/changes/fixture-workflow-admission/proposal.md)
+will test whether an actual workflow waiting for human review retains its WIP
+place. It is proposed work, not a property established by the numerical model.

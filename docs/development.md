@@ -140,7 +140,8 @@ promise that all proposed capabilities are already implemented.
 
 Review Capacity v0.2 is closed. Its canonical requirements live in
 `openspec/specs/review-capacity-experiment/spec.md`; the archived change contains
-the requirement-to-evidence map in `verification.md`.
+the requirement-to-evidence map in `verification.md`. Fixture-workflow admission
+is a separate proposal and is not part of the implemented numerical model.
 
 With OpenSpec 1.10.0, archive from `docs/` so the CLI operates on the physical
 OpenSpec directory. Archiving through the root symlink can fail its final-move
