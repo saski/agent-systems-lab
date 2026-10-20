@@ -13,6 +13,48 @@ gateway. It does not start agents or make decisions for you.
 | **Event** | A record of an action, outcome or reported worker state. |
 | **History checkpoint** | An event count and a hash saved for a later comparison. It differs from a workflow checkpoint used to resume work. |
 
+## Experiments: compare and replay saved reports
+
+The **Experiments** view is separate from **Activity** and carries a
+**SIMULATION REPLAY** label. It reads saved, complete Review Capacity reports
+through the same viewer-authenticated gateway. It does not run a simulation in
+the browser, start agents or record operational decisions.
+
+![Full-page desktop capture of the Review Capacity comparison and task replay, using an isolated synthetic fixture report](images/review-capacity-dashboard/desktop.jpg)
+
+*Desktop full-page capture from an isolated gateway and a synthetic fixture
+report. It documents the comparison and replay UI; it is not a live performance
+measurement or evidence about real agent quality.*
+
+![Full-page mobile capture of the Review Capacity comparison and task replay, using an isolated synthetic fixture report](images/review-capacity-dashboard/mobile.jpg)
+
+*Mobile full-page capture of the same isolated synthetic fixture. The report
+values describe the supplied model only.*
+
+[Capture context and source/image hashes](images/review-capacity-dashboard/captures.json).
+
+Generate a saved report from the repository root with `make review-capacity-demo`,
+then connect to the local dashboard with `.lab/viewer.token`. Open **Experiments**
+and choose **Refresh reports**. Select a saved comparison to see all policies
+at the same observation horizon: decisions, unfinished tasks, admission and
+review queues, end-to-end latency p50/p95 with the completed sample count, and
+full-drain status. Step charts show decisions across policies and queue sizes
+for the selected policy.
+
+Choose a policy to inspect the saved task positions at each logical tick. The
+slider supports keyboard seeking; **Start**, **Horizon** and **Recorded end**
+jump to useful points. **Play/Pause** follows the recorded transitions at
+0.5×, 1×, 2× or 4× viewing speed. These controls change only the replay view.
+When reduced motion is enabled, automatic playback is disabled and the slider
+and jump controls remain available. The layout adapts to narrow screens; the
+wide comparison table can scroll horizontally.
+
+An empty report list prompts you to create an attempt locally. Loading and read
+errors have separate messages and retry controls. The viewer explains stale
+reports (404), incomplete or invalid reports (422), unavailable report storage
+(503), and other connection failures. Refresh the list after an attempt is
+removed or the report store changes.
+
 ## Start and connect
 
 From the repository root:
@@ -79,8 +121,8 @@ result as accepted work. Task counts include all runs; the selectable list shows
 only the latest 100.
 
 The useful distinction is between *how much is waiting* and *how long it has
-waited*. This view reads gateway records. It does not run the Review Capacity
-numerical experiment inside the dashboard.
+waited*. Activity reads gateway records; saved Review Capacity reports are
+available separately under **Experiments**.
 
 ## 3. Watch what changes
 
@@ -237,7 +279,7 @@ If your token is rejected, check that it belongs to the gateway at the URL you
 opened. The normal local setup uses `.lab/viewer.token`. Tokens from another
 workspace or a temporary test preview will not authenticate that gateway.
 
-## Capture context and limits
+## Activity capture context and limits
 
 These desktop captures were taken on **15 October 2026**, from the current
 working tree based on `4078a22`. An isolated test gateway on port 8766 supplied
@@ -247,9 +289,10 @@ They do not demonstrate real worker-process health or live-model quality.
 OTLP export was disabled. No real workspace credentials or database were used.
 
 The annotated SVGs place numbered notes around unchanged browser captures.
-[Capture evidence](images/dashboard/captures.json) records source-file and image
-hashes. Screenshots show recorded states, not a performance benchmark or
-production security validation. Mobile screenshots are outside this update.
+[Activity capture evidence](images/dashboard/captures.json) records source-file
+and image hashes. Screenshots show recorded states, not a performance benchmark
+or production security validation. The Experiments screenshots above have their
+own capture manifest and synthetic-fixture context.
 
 For operation and delivery details, continue with
 [Activity, telemetry and history](observability.md).

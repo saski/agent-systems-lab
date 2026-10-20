@@ -182,11 +182,16 @@ The HTTP API portion was implemented on 19 October 2026:
 Slice 1 (complete, 19 October 2026): pure model, behavior tests, fixed JSON
 scenario, CLI exports and fixed-scenario Make demo. Observation horizon is
 bounded to 0..10000 ticks; drain deadline is at most 50000 ticks.
-Slice 2: bounded read-only report loading and access tests are implemented;
-dashboard comparison/replay remains pending. Targeted API, export and Activity
-checks passed 84 tests (including 29 HTTP tests), and Ruff passed. Full v0.2
-acceptance remains pending.
-Slice 3: reconcile outputs, document observations and capture the interface.
+Slice 2 (implemented, 20 October 2026): bounded read-only report loading,
+access tests, dashboard comparison, SVG step charts and local logical-tick replay.
+The Experiments view uses the existing viewer session, clears its report cache
+on lock and refresh, and aborts stale reads. Playback pauses on navigation away
+or a hidden document; reduced motion keeps manual seek and jump controls.
+Projection tests use actual model reports; browser checks cover desktop/mobile,
+controls and empty/loading/error states. Full validation passed 131 tests, with
+5 opt-in container tests skipped, plus Ruff and Compose configuration checks.
+Slice 3: outputs, observations, interface captures and guides are available;
+OpenSpec synchronization and archival remain pending.
 These slices form v0.2. No new infrastructure or third-party dependency is needed.
 
 After v0.2, scope a separate runtime admission experiment. Use the existing

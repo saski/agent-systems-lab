@@ -55,29 +55,29 @@ Make targets, `experiments/review-capacity/`, and operator documentation.
 Existing specialist capabilities, permission enforcement, live activity and
 human-decision semantics remain the reference boundaries.
 
-Status on 19 October 2026: Slice 1 is complete. The numerical model, CLI,
+Status on 20 October 2026: Slices 1 and 2 are implemented. The numerical model, CLI,
 exclusive report exports, fixed scenario and `make review-capacity-demo` target
 are available. The target runs the locked CLI against
 `experiments/review-capacity/scenario.json`. Observation horizon validation is
 bounded to 0..10000 ticks; the drain deadline remains at most 50000 ticks. The
-read-only Experiments HTTP API and its access tests are implemented; the
-dashboard and full v0.2 acceptance remain pending. The API lists and loads
+read-only Experiments HTTP API, access tests and integrated dashboard comparison
+and replay are available. The API lists and loads
 complete, hash-verified reports by attempt ID under the server-configured
 `LAB_ROOT/.lab/experiments/review-capacity` directory. It uses the existing
 viewer authorization, rejects worker credentials, and does not accept request
 paths. Container report mounting remains unimplemented.
-The standalone learning guide does not complete the product-dashboard
-acceptance scope. Scenario values are selected teaching inputs, not measured
-agent demand. Slice 1 validation passed 51 model/export tests and the fixed demo
-reproduced the reference report hash. Slice 1 repository validation passed Ruff,
-101 tests and Compose configuration checks, with 5 opt-in container tests
-skipped; all 5 OpenSpec items and the whitespace check passed.
+The dashboard projects saved transitions with local play/pause, seek, speed and
+reduced-motion controls; it never executes a simulation or records operational
+decisions. Scenario values are selected teaching inputs, not measured agent
+demand. The standalone learning guide remains a complementary offline artifact.
 
-The 19 October 2026 targeted API, export and Activity checks passed 84 tests,
-including 29 HTTP tests. Full validation passed Ruff, 130 tests and Compose
+The 20 October 2026 targeted frontend, API and Activity checks passed 49 tests.
+Full validation passed Ruff, 131 tests and Compose
 configuration checks, with 5 opt-in container tests skipped; all 5 OpenSpec
-items and the whitespace check passed. This does not close the dashboard or
-full v0.2 acceptance.
+items and the whitespace check passed. Desktop/mobile browser checks and
+captures document the comparison and replay, loading, empty and error states,
+reduced motion and read-only playback. Spec synchronization and archival remain
+pending.
 
 ## Planning Validation
 

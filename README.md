@@ -8,8 +8,9 @@ Donella Meadows's *Thinking in Systems*, with a governed multi-agent workflow.
 The aim is to make a question concrete, change one factor, and inspect the
 result before adding more autonomy, tooling or infrastructure.
 
-**Current state: 19 October 2026.** The workflow, permission checks, activity
-dashboard and two numerical experiments are implemented. All agent model
+**Current state: 20 October 2026.** The workflow, permission checks, activity
+dashboard, saved Review Capacity
+comparison and two numerical experiments are implemented. All agent model
 responses remain **scripted fixtures**: no external provider requests or model
 token costs. Numerical results describe synthetic systems, not measured agent
 or team productivity.
@@ -40,8 +41,8 @@ it does not establish real-model reasoning quality or safety.
 | --- | --- | --- |
 | Governed workflow | Three specialists, checkpoint recovery, role-scoped access, budgets, revocation and approval tied to the exact artifacts; local processes and optional Docker workers | Live-model and alternative-runtime comparisons are future experiments |
 | Backlog feedback | Deterministic model, controlled observation-delay comparison, scenario and documented results | Further sensitivity experiments with different gains, arrivals and capacity bounds |
-| Review Capacity | A/B/C numerical comparison, local CLI, hashed exports, viewer-authorized report API, charts and an offline interactive learning guide | Integration into the Activity dashboard and remaining OpenSpec acceptance work |
-| Activity and history | Read-only dashboard, task counts and wait ages, role tools, lifecycle events, session charts and saved-checkpoint comparison | Persistent historical charts and a dedicated experiment replay interface |
+| Review Capacity | A/B/C numerical comparison, local CLI, hashed exports, viewer-authorized report API, integrated charts and task replay, plus an offline learning guide | OpenSpec synchronization/archival; further experiments with variable workload, review quality and rework |
+| Activity and history | Read-only Activity dashboard, task counts and wait ages, role tools, lifecycle events, session charts and saved-checkpoint comparison; separate saved-report Experiments view | Persistent historical charts |
 | Telemetry delivery | Durable event journal, retry outbox, correlated OpenTelemetry spans and an optional local Collector | The Grafana/Tempo/Prometheus reliability learning lab is a documented proposal; implementation has not started |
 
 ## How the system works
@@ -83,8 +84,10 @@ make dashboard-demo
 ```
 
 Open <http://127.0.0.1:8765/dashboard> and connect with `.lab/viewer.token`.
-The viewer is read-only. Runs, credentials, checkpoints and generated artifacts
-stay under ignored `.lab/`.
+The viewer is read-only. Select **Experiments** to inspect saved Review Capacity
+reports alongside Activity. Create a report first with `make review-capacity-demo`,
+then select **Refresh reports**. Runs, credentials, checkpoints and generated
+artifacts stay under ignored `.lab/`.
 
 The demo prints a run ID, artifact directory, digest and the next command.
 Inspect the JSON artifacts before recording your decision in the operator
@@ -184,18 +187,26 @@ the queues, full-drain curves and limitations. Download and open the
 [standalone HTML learning guide](docs/graphics/review-capacity/explainer.html)
 locally to replay task states without a server.
 
-The model uses uniform service times and a reviewer that accepts every task.
-Its ticks are logical units. It measures neither real agent concurrency nor
-human review quality, cost or productivity. The numerical model and learning
-guide are available; **integrated experiment replay remains pending**.
+The dashboard's separate **Experiments** view compares saved, complete,
+hash-verified reports at a common observation horizon. It shows decision and
+unfinished-work counts, queue sizes, latency percentiles with sample counts,
+full-drain status and step charts. Select a policy to replay task positions at
+any logical tick, or use Play/Pause and the 0.5×, 1×, 2× or 4× viewing speeds.
+This is a local replay of saved data: it does not launch agents, run a new
+simulation in the browser or record operational decisions. Logical ticks are
+not seconds. The model uses uniform service times and a reviewer that accepts
+every task; it measures neither real agent concurrency nor human review quality,
+cost or productivity. The offline interactive guide remains available as a
+complementary way to study the model without the dashboard.
 
 ## Read activity and verify evidence
 
-The dashboard distinguishes work in the workflow, work waiting for your review,
-finished decisions and revoked access. It shows wait ages, tools available to
-each role, recorded actions, and operator CLI commands. Two separate charts
-track task state and observation delivery during the current browser session;
-they reset on reload and do not replay Review Capacity.
+The **Activity** view distinguishes work in the workflow, work waiting for your
+review, finished decisions and revoked access. It shows wait ages, tools
+available to each role, recorded actions, and operator CLI commands. Two
+separate charts track task state and observation delivery during the current
+browser session; they reset on reload. The **Experiments** view presents the
+saved Review Capacity model separately from live activity.
 
 History verification and telemetry delivery are independent signals. A saved
 checkpoint can be compared with the current journal, including after later
@@ -236,8 +247,8 @@ are independent histories; use the gateway corresponding to the run.
 
 ## Next experiments and further reading
 
-The next documented work covers integrating Review Capacity into the dashboard
-and building the optional [telemetry reliability learning lab](docs/plans/2026-10-06-agent-telemetry-reliability-lab.md):
+The next documented work includes building the optional [telemetry reliability
+learning lab](docs/plans/2026-10-06-agent-telemetry-reliability-lab.md):
 querying traces in Grafana/Tempo, adding explicit metrics, and diagnosing bounded
 delivery failures. These remain proposals or incomplete changes, as tracked in
 [OpenSpec](docs/openspec/changes/).

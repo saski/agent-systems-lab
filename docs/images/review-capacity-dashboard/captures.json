@@ -1,0 +1,94 @@
+{
+  "capture_date": "2026-10-20",
+  "base_commit": "b88db82feef5b9eb133ab23d84be6e33052b1131",
+  "source_state": "Slice 2 dashboard implementation, uncommitted at capture time",
+  "origin": "Unaltered full-page JPEGs from the browser screenshot API; no generated or composited UI pixels.",
+  "browser": "Codex in-app browser",
+  "url": "http://127.0.0.1:8876/dashboard",
+  "context": "Isolated local gateway, separate SQLite database, fixed non-secret viewer test credential, OTLP exporter disabled; no workers or providers launched.",
+  "data": {
+    "attempt_id": "fixed-comparison",
+    "created_at": "2026-10-19T19:40:33.847781Z",
+    "provenance": "synthetic_event_time_model",
+    "scenario_sha256": "77c8a82e574cf23eb7bd1babd76332daa1a04926309f34427f638d1f29d3fae3",
+    "report_sha256": "a3a9c0396620438fa7c039f5aa9aace98a85cff968ba5004c52e5e25f473e58a",
+    "scenario": "experiments/review-capacity/scenario.json"
+  },
+  "sources": {
+    "src/systems_lab/static/index.html": "0f6977088e04641979224b1464849ba3769ad711437b4634f77742e18967a1ce",
+    "src/systems_lab/static/style.css": "e47d3d42edcfb5aab761db2b35c8cb606b8d4885c04d0980332643e1263aa970",
+    "src/systems_lab/static/app.js": "a20046cf8d438e36687e5499d772a5bd193f4ed9d6d60c875f72ce4e774e28c4",
+    "src/systems_lab/static/experiments.css": "45fa43d9d9fe26449a63f1982abd5a9ed505e3bef5cca112a7fca08cef51b4b3",
+    "src/systems_lab/static/experiments.js": "f622ff7cebe089d48424f7845b3ac79219f9bfc9e5314b3c4e443dc5a74ae88d",
+    "src/systems_lab/static/review-capacity.js": "ad507f454ddf5161d0144fd76d94c2c355ad9cab602118df89e173f88b33e7c5"
+  },
+  "images": [
+    {
+      "file": "desktop.jpg",
+      "sha256": "a41b473b44ce57a63e58094721cf970b9a0fd0575bc01011575b878b1855626a",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "full_page": true,
+      "captured_at_utc": "2026-10-20T08:33:35.063157+00:00",
+      "selected_policy": "C",
+      "logical_tick": 60,
+      "speed": "1x",
+      "reduced_motion": false
+    },
+    {
+      "file": "mobile.jpg",
+      "sha256": "25f18a4d36ea449be1f54e052e16fef7a07bfd48146fd4e3ce1d67018fd6927b",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "full_page": true,
+      "captured_at_utc": "2026-10-20T08:33:33.855093+00:00",
+      "selected_policy": "C",
+      "logical_tick": 60,
+      "speed": "1x",
+      "reduced_motion": false
+    }
+  ],
+  "browser_checks": [
+    "Fixed comparison at horizon 60: decisions 6/8/8; unfinished 18/16/16; full drain 198/152/152.",
+    "Policy switching, keyboard seek, Start/Horizon/Recorded end, Play/Pause and 4x playback.",
+    "Reduced motion disables automatic playback and speed while retaining seek/jump controls.",
+    "Zero-horizon report with no completions and incomplete drain renders unavailable metrics explicitly.",
+    "Loading with delayed reads, empty report root, isolated 503 failure and Retry recovery.",
+    "Lock during a pending read clears viewer report data; reconnect loads fresh data.",
+    "Mobile document width equals viewport width (390px); the wide table scrolls horizontally by keyboard.",
+    "Returning to Activity pauses replay; returning to Experiments reuses the report cache."
+  ],
+  "read_only_evidence": {
+    "playback_report_requests_before": 12,
+    "playback_report_requests_after": 12,
+    "non_GET_requests": 0,
+    "database_row_counts": {
+      "runs": 0,
+      "journal": 0,
+      "telemetry_outbox": 0
+    }
+  },
+  "design_review": {
+    "finish_verdict": "ship",
+    "scope": "Review Capacity dashboard extension, actual desktop/mobile screenshots",
+    "detector_runs": 1,
+    "triage": "New mobile navigation, SVG label size, coincident curve distinction and table scroll affordance were fixed. Detector warnings for inherited login/Activity typography, contrast, Inter and decorative style remain outside this extension and are not suppressed. A single file-scoped cramped-padding exception records intentional full-width separator rules, whose aligned text was accepted in desktop/mobile visual review.",
+    "exceptions": [
+      {
+        "rule": "cramped-padding",
+        "file": "src/systems_lab/static/index.html",
+        "config": ".impeccable/config.json",
+        "reason": "Full-width horizontal separators are not boxed panels; desktop/mobile screenshots and independent finish review confirm intentional alignment without clipping."
+      }
+    ]
+  },
+  "limitations": [
+    "Synthetic event-time values are not real worker, human review, productivity or model-quality measurements.",
+    "Screenshots show paused states; behavior checks are separate observations.",
+    "Container report mounting and OpenSpec synchronization/archival remain pending."
+  ]
+}

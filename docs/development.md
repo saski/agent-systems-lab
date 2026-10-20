@@ -9,8 +9,12 @@ make spec-check
 ```
 
 `make check` runs Ruff lint/format checks, pytest, and Compose configuration
-validation. Container integration tests are skipped unless explicitly
-enabled. `make spec-check` requires the OpenSpec CLI; the bootstrap used 1.10.0.
+validation. The pytest suite includes `tests/test_review_capacity_frontend.py`,
+which passes an actual deterministic fixture report to the browser projection's
+Node built-in test runner. It reports a clear skip when Node.js is unavailable;
+no npm dependencies are added. Container integration tests are skipped unless
+explicitly enabled. `make spec-check` requires the OpenSpec CLI; the bootstrap
+used 1.10.0.
 
 `make format` applies Ruff formatting and safe lint fixes. Python dependencies
 are locked in `uv.lock`; use `uv add` for deliberate changes and commit the lockfile.
@@ -49,6 +53,7 @@ src/systems_lab/
   activity.py           # Read-only activity projection
   telemetry.py          # Stable OpenTelemetry export from durable events
   static/               # Same-origin live browser dashboard
+    experiments.js      # Saved Review Capacity report view and replay
 experiments/            # Scenarios, hypotheses, interpretation and reading notes
 tests/                  # Numerical, authorization, workflow and container checks
 docs/openspec/          # Current requirements and reviewable changes
@@ -68,7 +73,8 @@ model quality. Do not add an unrestricted URL proxy or shell to simplify an inte
 ## Read exported experiments
 
 The [Review Capacity guide](../experiments/review-capacity/README.md) documents
-the viewer-authorized report listing and detail endpoints. The CLI binds reads
+the viewer-authorized report listing and detail endpoints used by the dashboard's
+separate Experiments view. The CLI binds reads
 to `LAB_ROOT/.lab/experiments/review-capacity`, with `LAB_ROOT` defaulting to the
 working directory. Direct `create_app` callers can set the trusted
 `experiment_root` keyword; its default is the same relative layout under the
@@ -183,7 +189,7 @@ files remain historical assets.
 7. Inspect the graphics in a browser, verify every local Markdown link and record
    capture time, context, source hashes and image hashes in `captures.json`.
 
-The October update uses desktop captures only. The guide records the isolated
+The Activity screenshot set uses desktop captures. The guide records the isolated
 fixture gateway, disabled exporter and seeded worker lifecycle records. The
 browser's screenshot API returns JPEG. Capture geometry and zoom are recorded
 with the evidence; do not claim that a screenshot proves animation or process
@@ -204,3 +210,11 @@ public images.
 | `checkpoint-match.jpg` / `checkpoint-annotated.svg` | Matching earlier checkpoint after a later event |
 | `checkpoint-mismatch.jpg` | Deliberately altered test checkpoint |
 | `connection-lost.jpg` | Failed activity read and cached last verification |
+
+The Review Capacity view has a separate full-page desktop and mobile capture
+set in `docs/images/review-capacity-dashboard/`, with source and image hashes
+in its `captures.json`. Capture it from an isolated local gateway using a
+synthetic fixture report. Keep the **SIMULATION REPLAY** label visible and
+caption the images as model evidence, not live agent or team performance. The
+captures should show both the common-horizon policy comparison and the
+task-level flow; do not alter browser content to manufacture values.

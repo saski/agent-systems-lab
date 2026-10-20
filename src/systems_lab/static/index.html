@@ -7,8 +7,11 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23171927'/%3E%3Cpath d='M18 40V24h6v16zm11 0V16h6v24zm11 0V29h6v11z' fill='%23a69bff'/%3E%3C/svg%3E">
     <title>Systems Lab · Activity</title>
     <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/experiments.css">
     <script src="/static/checkpoint.js" defer></script>
     <script src="/static/learning.js" defer></script>
+    <script src="/static/review-capacity.js" defer></script>
+    <script src="/static/experiments.js" defer></script>
     <script src="/static/app.js" defer></script>
   </head>
   <body>
@@ -44,12 +47,14 @@
       <div id="dashboard" class="dashboard hidden">
         <aside class="rail" aria-label="Workspace navigation">
           <div class="rail-label">WORKSPACE</div>
-          <div class="rail-item active"><span class="rail-icon">◫</span><span>Activity</span><span class="rail-count" id="run-count">0</span></div>
-          <div class="rail-item muted"><span class="rail-icon">⌘</span><span>System map</span></div>
-          <div class="rail-bottom"><div class="rail-label">ENVIRONMENT</div><div class="env-label"><i></i><span>Local workspace</span></div><p>Read only · live feed</p></div>
+          <nav aria-label="Dashboard views">
+            <button id="activity-nav" class="rail-item active" type="button" aria-pressed="true" aria-controls="activity-view"><span class="rail-icon" aria-hidden="true">◫</span><span>Activity</span><span class="rail-count" id="run-count">0</span></button>
+            <button id="experiments-nav" class="rail-item" type="button" aria-pressed="false" aria-controls="experiments-view"><svg class="rail-icon" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 15V9m7 6V4m7 11v-7M1 18h18"/></svg><span>Experiments</span></button>
+          </nav>
+          <div class="rail-bottom"><div class="rail-label">ENVIRONMENT</div><div class="env-label"><i></i><span>Local workspace</span></div><p id="view-context">Read only · live feed</p></div>
         </aside>
 
-        <section class="content">
+        <section class="content" id="activity-view">
           <div class="page-heading">
             <div><div class="breadcrumb">Workspace <span>/</span> Activity</div><h1>Activity overview</h1><p>Follow governed work as it moves through the system.</p></div>
             <div class="heading-meta"><span id="feed-badge" class="live-pill" data-state="offline"><i></i> FEED IDLE</span><span id="updated-at" class="updated-at">Waiting for first sync</span></div>
@@ -131,6 +136,59 @@
             </aside>
           </div>
           <footer class="page-footer"><span>Systems Lab <span class="footer-sep">·</span> governed execution</span><span id="footer-cursor">Cursor —</span></footer>
+        </section>
+        <section class="content hidden" id="experiments-view" aria-labelledby="experiments-title">
+          <header class="experiment-heading">
+            <div><h1 id="experiments-title">Review Capacity <span class="simulation-badge">SIMULATION REPLAY</span></h1><p>Compare execution capacity, fixed review capacity and where unfinished work waits.</p></div>
+          </header>
+          <div class="experiment-toolbar">
+            <div class="report-field"><label for="experiment-attempt">Saved comparison</label><select id="experiment-attempt" disabled><option value="">No report selected</option></select></div>
+            <button id="experiment-refresh" class="button button-quiet" type="button">Refresh reports</button>
+          </div>
+          <div class="experiment-feedback">
+            <p id="experiment-status" role="status" aria-live="polite">Open Experiments to load saved reports.</p>
+            <p id="experiment-empty" class="hidden">Create a comparison with <code>make review-capacity-demo</code>, then refresh reports. This viewer does not run experiments.</p>
+            <button id="experiment-retry" class="button button-quiet hidden" type="button">Retry</button>
+          </div>
+          <div id="experiment-report" class="hidden">
+            <section class="experiment-comparison" aria-labelledby="comparison-title">
+              <h2 id="comparison-title">Compare policies at the same horizon</h2>
+              <p id="experiment-boundary"></p>
+              <p class="comparison-scroll-hint">Scroll sideways or use arrow keys in the table to see all metrics.</p>
+              <div class="comparison-scroll" role="region" aria-label="Policy comparison table, scroll horizontally for more metrics" tabindex="0">
+                <table class="comparison-table"><caption id="comparison-caption"></caption><thead><tr><th scope="col">Policy</th><th scope="col">Decisions (n)</th><th scope="col">All unfinished</th><th scope="col">Admission queue</th><th scope="col">Review queue</th><th scope="col">End-to-end p50 / p95</th><th scope="col">Full drain</th></tr></thead><tbody id="comparison-rows"></tbody></table>
+              </div>
+              <p class="experiment-note">Latency percentiles use only decisions completed by the horizon; n is that sample count. Unfinished work includes future arrivals and tasks in service. Queue counts exclude tasks in service.</p>
+            </section>
+            <section class="experiment-replay" aria-labelledby="replay-title">
+              <div class="replay-heading"><h2 id="replay-title">Follow the saved trace</h2><div class="policy-field"><label for="replay-policy">Policy</label><select id="replay-policy"></select></div></div>
+              <p id="replay-policy-facts"></p>
+              <div class="replay-controls">
+                <button id="replay-play" class="button button-primary" type="button">Play</button>
+                <button id="replay-start" class="button button-quiet" type="button">Start</button>
+                <button id="replay-horizon" class="button button-quiet" type="button">Horizon</button>
+                <button id="replay-end" class="button button-quiet" type="button">Recorded end</button>
+                <label class="speed-field" for="replay-speed">Speed <select id="replay-speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label>
+              </div>
+              <div class="replay-seek"><label for="replay-seek">Logical tick</label><output id="replay-tick" for="replay-seek">0</output><input id="replay-seek" type="range" min="0" max="1" step="1" value="0"></div>
+              <p id="replay-motion" class="experiment-note"></p>
+              <div class="experiment-charts">
+                <section><h3>Simulated decisions · all policies</h3><div id="decision-chart"></div><div id="decision-legend" class="chart-legend"></div></section>
+                <section><h3>Waiting queues · selected policy</h3><div id="queue-chart"></div><div id="queue-legend" class="chart-legend"></div></section>
+              </div>
+              <div class="replay-summary"><span id="replay-future"></span><strong id="replay-totals" role="status" aria-live="off"></strong></div>
+              <div class="replay-flow" aria-label="Saved task positions">
+                <section data-stage="queued"><h3>1 · Admission queue</h3><p>Before admission</p><strong data-count="queued">0</strong><div data-tasks="queued" class="task-list"></div></section>
+                <section data-stage="executing"><h3>Execution</h3><p>Admitted WIP</p><strong data-count="executing">0</strong><div data-tasks="executing" class="task-list"></div></section>
+                <section data-stage="awaiting_review"><h3>2 · Review queue</h3><p>Admitted WIP</p><strong data-count="awaiting_review">0</strong><div data-tasks="awaiting_review" class="task-list"></div></section>
+                <section data-stage="reviewing"><h3>Synthetic reviewer</h3><p>One service slot</p><strong data-count="reviewing">0</strong><div data-tasks="reviewing" class="task-list"></div></section>
+                <section data-stage="decided"><h3>Decided</h3><p>Every decision accepts</p><strong data-count="decided">0</strong><div data-tasks="decided" class="task-list"></div></section>
+              </div>
+              <p class="experiment-note">Admitted WIP includes execution, the review queue and review service. A decision releases its WIP slot. Admission waiting remains outside that cap and inside the measurement boundary.</p>
+              <p id="replay-drain" class="experiment-note"></p>
+            </section>
+            <details class="experiment-evidence"><summary>Report provenance and limits</summary><p>Saved synthetic event-time model. Logical ticks are not seconds. This replay measures neither real agent concurrency nor human review quality. Playback and speed only change this view; they never run agents or record decisions.</p><dl id="experiment-evidence"></dl></details>
+          </div>
         </section>
       </div>
     </main>

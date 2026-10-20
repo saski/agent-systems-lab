@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "src/systems_lab/static/index.html"
+        ],
+        "createdAt": "2026-10-20T08:40:37.264Z",
+        "reason": "Agent review: the Review Capacity sections use full-width horizontal separator rules, not boxed panels. Desktop and mobile screenshots and independent finish review confirm intentional aligned text without clipping; adding left padding would misalign these section headings."
+      }
+    ]
+  }
+}

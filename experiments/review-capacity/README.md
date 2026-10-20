@@ -8,8 +8,9 @@ or a real team's productivity.
 [Open the interactive learning guide](../../docs/graphics/review-capacity/explainer.html)
 in a browser from a local checkout. It contains policy selection, a logical-time
 slider and task replay. GitHub displays HTML as source; the figures below remain
-readable there. This frozen learning artifact is separate from the pending
-integrated Experiments dashboard.
+readable there. The same learning is available in the dashboard's separate
+**Experiments** view, which reads saved reports from the local gateway. The
+standalone page complements that view with an offline replay.
 
 ## Start with the boundary
 
@@ -229,14 +230,26 @@ tests and the demo completed with report SHA-256
 validation, with 5 opt-in container tests skipped. `make spec-check` passed all
 5 items and `git diff --check` passed.
 
-The read-only Experiments HTTP API and its access tests were implemented on
-19 October 2026; the integrated dashboard replay remains pending as Slice 2.
-Targeted API, export and Activity checks passed 84 tests, including 29 HTTP
-tests. Full validation passed Ruff, 130 tests and Compose configuration checks,
-with 5 opt-in container tests skipped; all 5 OpenSpec items and the whitespace
-check passed. Full v0.2 change acceptance and archival also remain pending.
-The standalone learning guide is documentation and does not complete those
-product features.
+The integrated dashboard reads these saved reports through the viewer-
+authorized API. To try it, start the gateway and dashboard, generate a saved
+attempt, then open **Experiments** and refresh the report list:
+
+```sh
+make dashboard
+# In another terminal:
+make review-capacity-demo
+```
+
+Connect with `.lab/viewer.token`. The list includes complete, verified reports;
+choose one to compare policies at the shared horizon and replay task positions.
+The dashboard handles loading, empty results and retryable read failures. It
+does not create attempts or run the simulation in the browser. Compose does not
+mount host experiment reports, so this flow uses the local gateway and its
+`.lab/experiments/review-capacity` data.
+
+The standalone learning guide remains an offline documentation artifact; it
+does not replace the gateway's saved-report reader or establish live-model
+quality.
 
 ### Read-only report API
 

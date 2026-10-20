@@ -3,8 +3,9 @@
 Slice 1 closure on 19 October 2026: the numerical model, CLI, exclusive exports,
 fixed scenario and Make demo target are implemented. The observation horizon is
 bounded to 0..10000 ticks; the drain deadline remains bounded to 50000 ticks.
-The read-only HTTP report API and access tests for Slice 2 are implemented;
-dashboard work, full-change acceptance and archival remain pending.
+Slice 2 is implemented: the viewer-authorized API supplies the dashboard's
+comparison, SVG charts and local task replay. Desktop/mobile browser checks and
+documentation are complete. Spec synchronization and archival remain pending.
 The model/export test files passed 51 tests and the fixed demo completed with
 the reference report hash. Full validation results are recorded below.
 
@@ -34,10 +35,10 @@ the reference report hash. Full validation results are recorded below.
       checking complete manifests, hashes and viewer authorization.
 - [x] Test path traversal, oversized/incomplete/altered reports and read-only
       access; preserve the existing Activity endpoint contract.
-- [ ] Add A/B/C metrics and SVG charts, showing horizon and pending sample counts.
-- [ ] Add logical-tick flow playback with play/pause, seek, speed and reduced
+- [x] Add A/B/C metrics and SVG charts, showing horizon and pending sample counts.
+- [x] Add logical-tick flow playback with play/pause, seek, speed and reduced
       motion; prominently distinguish simulation replay from live agent activity.
-- [ ] Inspect desktop/mobile presentation and empty/loading/error states using
+- [x] Inspect desktop/mobile presentation and empty/loading/error states using
       real browser rendering; confirm playback performs no operational writes.
 
 ## Slice 3: evidence and documentation
@@ -45,24 +46,29 @@ the reference report hash. Full validation results are recorded below.
 - [x] Run the fixed comparison, export original reports and reconcile all counts.
 - [x] Write observations that support or contradict the hypothesis, with explicit
       upstream waiting, pending-work and synthetic-review limits.
-- [ ] Update the experiment guide, dashboard guide, user README and development
+- [x] Update the experiment guide, dashboard guide, user README and development
       guide for commands/features that have actually been implemented.
-      Experiment/user/development guides and reproducible learning figures are
-      available; integrated-dashboard documentation remains pending.
+      The guides cover the integrated Experiments view and the complementary
+      offline learning artifact.
 - [x] Capture a readable comparison and flow view with simulation labels intact.
-      Standalone learning figures and a guide screenshot are available; the
-      integrated dashboard remains part of pending Slice 2.
+      Integrated desktop/mobile captures and source/image hashes are in
+      `docs/images/review-capacity-dashboard/`.
 - [x] Run `make check`, `make spec-check` and `git diff --check`; report unavailable
-      checks accurately. On 19 October 2026, `make check` passed Ruff, 130 tests
+      checks accurately. On 20 October 2026, `make check` passed Ruff, 131 tests
       and Compose configuration validation; 5 opt-in container tests were
       skipped. `make spec-check` passed all 5 items and `git diff --check` passed.
 - [ ] Sync/archive only after required work is complete.
 
-Slice 2 API status on 19 October 2026: the two read-only HTTP endpoints and
-secure-access tests are implemented. Targeted API, export and Activity tests
-passed (84 total, including 29 HTTP tests), and Ruff passed. This is partial
-Slice 2 progress; the three dashboard tasks above, full-change acceptance and
-archival remain pending. Container report mounting is not implemented.
+Slice 2 verification on 20 October 2026: targeted frontend, API and Activity
+checks passed 49 tests. The frontend wrapper ran seven Node tests against actual
+model reports, including zero-horizon and incomplete-drain data. In the browser,
+the fixed comparison matched 6/8/8 decisions and 18/16/16 unfinished tasks at
+tick 60. Policy changes, keyboard seek, play/pause, speed, horizon/end jumps,
+reduced motion, loading, empty results, a 503 error/retry and lock during loading
+were exercised. Playback and navigation added zero report requests (12 before
+and after); the isolated session used GET requests only, with zero journal
+events or runs. The interface finish review returned `ship` for desktop and
+mobile. Container report mounting is not implemented.
 
 ## Follow-on boundary
 

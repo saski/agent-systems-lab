@@ -113,6 +113,8 @@
     state.firstSnapshot = true;
     state.flow = null;
     globalThis.LabLearning?.reset();
+    const generation = state.generation;
+    globalThis.LabExperiments?.connect(token, () => handleUnauthorized(generation));
     $("#auth-gate").classList.add("hidden");
     $("#dashboard").classList.remove("hidden");
     $("#logout").classList.remove("hidden");
@@ -123,6 +125,7 @@
   }
 
   function lockViewer() {
+    globalThis.LabExperiments?.reset();
     state.generation += 1;
     clearTimeout(state.pollTimer);
     state.pollController?.abort();
@@ -544,6 +547,7 @@
 
   function handleUnauthorized(generation) {
     if (generation !== state.generation) return;
+    globalThis.LabExperiments?.reset();
     state.generation += 1;
     clearTimeout(state.pollTimer);
     state.pollController?.abort();
