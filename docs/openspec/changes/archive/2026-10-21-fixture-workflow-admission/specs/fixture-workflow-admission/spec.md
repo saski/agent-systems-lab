@@ -5,7 +5,10 @@
 The system SHALL provide an operator-created FIFO batch of exactly two tasks
 using copies of the existing bounded backlog fixture scenario, with admitted
 WIP fixed at one. It SHALL reuse existing specialist roles, scripted model
-responses, gateway permissions and budgets.
+responses, gateway permissions and budgets. The gateway SHALL load the fixed
+fixture itself and reject arbitrary scenarios, task lists, paths or WIP limits.
+The admission cap SHALL apply per batch within one trusted local POSIX state
+root and SQLite gateway; it SHALL NOT imply a global or distributed scheduler.
 It SHALL preserve compatibility with existing single-run commands.
 
 #### Scenario: queue the second fixture task
@@ -14,6 +17,12 @@ It SHALL preserve compatibility with existing single-run commands.
 - WHEN the first is admitted and reaches `awaiting_review`
 - THEN it retains the only admitted place
 - AND the second task has no canonical run or worker
+
+#### Scenario: reject unsupported batch creation
+
+- GIVEN a gateway has no configured local admission coordinator
+- WHEN an operator requests a batch
+- THEN creation is rejected before a batch or run is persisted
 
 ### Requirement: durable single-owner admission
 
@@ -43,6 +52,13 @@ create duplicate runs or exceed the cap.
 - THEN no invocation is permitted until prior-owner exit and worker cleanup are confirmed
 - AND Store fencing alone is not treated as proof that an earlier launch stopped
 
+#### Scenario: the coordinator dies while its child remains alive
+
+- GIVEN a child process inherited the batch lock descriptor
+- WHEN the coordinator exits before the child
+- THEN the child continues to exclude takeover until it exits
+- AND the recovered launch intent still requires explicit reconciliation
+
 ### Requirement: human review retains admitted WIP
 
 The system SHALL count reservations, active workflows, human-review waits and
@@ -65,9 +81,16 @@ interrupt, nor release capacity merely because ownership expires.
 - THEN it remains blocked and counts against WIP until safely reconciled
 - AND it is not automatically retried or re-admitted
 
+#### Scenario: explicitly reconcile an ambiguous terminal run
+
+- GIVEN an ambiguous item has a canonical terminal outcome
+- WHEN the operator reconciles it after obtaining process exclusion
+- THEN its place is released exactly once
+- AND reconciliation itself does not launch the next queued item
+
 ### Requirement: authorized decisions and isolated checkpoints
 
-The system SHALL require operator authorization for batch writes and preserve
+The system SHALL require operator authorization for batch reads and writes and preserve
 the existing digest-bound manual decision flow. Each item SHALL have a distinct
 run/checkpoint identity. Resume SHALL NOT bypass authorization, repeat completed
 specialists at a human-review checkpoint or mix another task's state.

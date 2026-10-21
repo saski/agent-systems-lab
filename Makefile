@@ -10,6 +10,10 @@ help:
 	@echo "spec-check        Validate OpenSpec requirements"
 	@echo "review-capacity-demo  Run the fixed numerical A/B/C comparison"
 	@echo "review-capacity-figures  Refresh learning graphics from REPORT=path/to/report.json"
+	@echo "fixture-admission-create  Queue two fixture tasks in isolated local state"
+	@echo "fixture-admission-advance/status/reconcile  Inspect or advance BATCH=id"
+	@echo "fixture-admission-run-status  Inspect RUN=id before a decision"
+	@echo "fixture-admission-decide  Decide RUN=id DIGEST=hash DECISION=approve|reject"
 	@echo "containers-up     Start the container gateway and database"
 	@echo "containers-demo   Run isolated one-shot workers"
 	@echo "containers-down   Stop services and retain database volumes"
@@ -68,6 +72,24 @@ review-capacity-demo:
 review-capacity-figures:
 	@test -n "$(REPORT)" || (echo "Usage: make review-capacity-figures REPORT=path/to/report.json" >&2; exit 2)
 	uv run --no-project --with matplotlib==3.11.2 python docs/graphics/render_review_capacity.py "$(REPORT)"
+
+FIXTURE_LAB_ROOT ?= $(CURDIR)/.lab/fixture-admission
+.PHONY: fixture-admission-create fixture-admission-status fixture-admission-advance fixture-admission-reconcile fixture-admission-run-status fixture-admission-decide
+
+fixture-admission-create:
+	LAB_ROOT="$(FIXTURE_LAB_ROOT)" uv run --locked systems-lab batch create
+
+fixture-admission-status fixture-admission-advance fixture-admission-reconcile:
+	@test -n "$(BATCH)" || (echo "BATCH=id is required" >&2; exit 2)
+	LAB_ROOT="$(FIXTURE_LAB_ROOT)" uv run --locked systems-lab batch $(patsubst fixture-admission-%,%,$@) "$(BATCH)"
+
+fixture-admission-run-status:
+	@test -n "$(RUN)" || (echo "RUN=id is required" >&2; exit 2)
+	LAB_ROOT="$(FIXTURE_LAB_ROOT)" uv run --locked systems-lab status "$(RUN)"
+
+fixture-admission-decide:
+	@test -n "$(RUN)" && test -n "$(DIGEST)" && test -n "$(DECISION)" || (echo "RUN=id DIGEST=hash DECISION=approve|reject are required" >&2; exit 2)
+	LAB_ROOT="$(FIXTURE_LAB_ROOT)" uv run --locked systems-lab decide "$(RUN)" --digest "$(DIGEST)" "--$(DECISION)"
 
 .PHONY: telemetry-up telemetry-down
 

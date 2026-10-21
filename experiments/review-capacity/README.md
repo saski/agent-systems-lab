@@ -235,10 +235,10 @@ validation, with five opt-in container tests skipped. The demo reproduced report
 SHA-256
 `a3a9c0396620438fa7c039f5aa9aace98a85cff968ba5004c52e5e25f473e58a`.
 
-The [next proposal](../../docs/openspec/changes/fixture-workflow-admission/proposal.md)
-tests admission against actual fixture workflows, starting with two tasks and
-WIP capped at one. It is not implemented and does not add live models or
-automatic approval.
+The separate [fixture-workflow admission experiment](../fixture-workflow-admission/README.md)
+now tests admission against actual fixture workflows, with two tasks and WIP
+capped at one per batch. It preserves explicit operator decisions. That runtime
+evidence does not turn this numerical model into a productivity measurement.
 
 The integrated dashboard reads these saved reports through the viewer-
 authorized API. To try it, start the gateway and dashboard, generate a saved

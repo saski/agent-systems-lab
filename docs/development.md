@@ -140,8 +140,25 @@ promise that all proposed capabilities are already implemented.
 
 Review Capacity v0.2 is closed. Its canonical requirements live in
 `openspec/specs/review-capacity-experiment/spec.md`; the archived change contains
-the requirement-to-evidence map in `verification.md`. Fixture-workflow admission
-is a separate proposal and is not part of the implemented numerical model.
+the requirement-to-evidence map in `verification.md`. The separate
+[fixture-workflow admission experiment](../experiments/fixture-workflow-admission/README.md)
+adds actual process coordination without changing that numerical model.
+
+Fixture batch writes execute only in the local CLI gateway. `POST /batches`
+accepts an optional UUID and creates two copies of the fixed backlog scenario;
+`GET /batches/{id}`, `POST /batches/{id}/advance` and
+`POST /batches/{id}/reconcile` require operator authorization. A gateway without
+a configured local coordinator rejects batch creation/advance/reconcile.
+Batch and item tables are additive. A transaction binds each item to its run;
+owner epochs fence mutations. A POSIX lock inherited by workers covers the
+graph invocation and batch decisions. Admission never treats journal delivery,
+a CLI exit or a checkpoint alone as proof that an uncertain worker stopped.
+
+Use `PYTEST_ADDOPTS='tests/test_admission.py tests/test_admission_store.py
+tests/test_admission_access.py tests/test_admission_recovery.py
+tests/test_admission_processes.py' make test` for focused checks. Process tests
+use temporary local state and loopback servers. Five existing opt-in container
+tests are still separate; they do not validate container batch admission.
 
 With OpenSpec 1.10.0, archive from `docs/` so the CLI operates on the physical
 OpenSpec directory. Archiving through the root symlink can fail its final-move

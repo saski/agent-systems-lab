@@ -1,15 +1,15 @@
 # Fixture-workflow admission
 
-Status: proposed on 20 October 2026; not implemented. This proposal does not
-authorize implementation, live providers or automatic human decisions.
+Status: implemented on 21 October 2026 after explicit user authorization.
+Live providers and automatic human decisions remain outside this change.
 
 ## Why
 
-[Review Capacity v0.2 is closed](../archive/2026-10-20-review-capacity-experiment/verification.md).
+[Review Capacity v0.2 is closed](../2026-10-20-review-capacity-experiment/verification.md).
 Its synthetic model shows that a task keeps its
 admitted-WIP place while waiting for review, but it does not schedule actual
-LangGraph workflows. The current CLI launches one run at a time and has no
-durable admission owner or queue.
+LangGraph workflows. At proposal time, the CLI launched one run at a time and
+had no durable admission owner or queue.
 
 Before comparing concurrent runtime policies, test the smallest operational
 boundary: can one fixture workflow retain its place through a human interrupt
@@ -66,11 +66,11 @@ independent and remains unimplemented.
 
 ## Impact
 
-Likely changes: a small admission module, additive Store tables/transactions,
+Implemented changes: an admission coordinator, additive Store tables/transactions,
 operator-only gateway operations, CLI batch operations, workflow integration,
 behavior/security tests and a dedicated fixture experiment guide. Existing
 single-run commands and numerical report readers remain compatible.
 
-Approval of this proposal and a reviewed implementation plan are required before
-coding. The first implementation action is the failing two-task admission test
-in `tasks.md`.
+Implementation started with the failing two-task admission test in `tasks.md`.
+The fixed-fixture API, local CLI, recovery controls and evidence are documented
+in `verification.md`. The cap is per batch; this is not a global scheduler.

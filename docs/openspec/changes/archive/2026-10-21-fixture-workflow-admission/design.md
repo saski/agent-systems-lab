@@ -1,10 +1,11 @@
 # Fixture-workflow admission design
 
-Proposed design; no runtime admission controller exists yet.
+Implemented on 21 October 2026. The initial design and its boundary are retained
+below; the implementation details and evidence follow at the end.
 
 ## Existing Interfaces and Missing Behavior
 
-`cli.execute` currently creates one run through `ControlClient`, invokes
+At proposal time, `cli.execute` created one run through `ControlClient`, invoked
 `workflow` with `thread_id=run_id`, and exports the gateway snapshot. The graph
 runs three specialist processes, validates their artifacts, marks the run ready
 and pauses for human review. The existing `decide` command verifies a matching
@@ -15,9 +16,9 @@ LangGraph checkpoints live separately in SQLite. Worker execution failures and
 timeouts revoke the run. Existing workflow tests cover resume at human review
 without repeating specialists, but not batch admission or concurrent owners.
 
-These interfaces can be reused; a durable queue, ownership, reservations and
-idempotent run binding must be added. Neither a synthetic WIP limit nor distinct
-thread IDs supplies those controls by itself.
+The implementation reuses these interfaces and adds a durable queue, ownership,
+reservations and idempotent run binding. Neither a synthetic WIP limit nor
+distinct thread IDs supplies those controls by itself.
 
 ## Boundary and Identity
 
@@ -105,3 +106,42 @@ Only after this slice meets its contract should a separate proposal introduce
 WIP above one, parallel worker scheduling, SQLite contention under that load or
 container execution. Quality/rework and live-model evaluation require their own
 hypotheses and evidence.
+
+## Implemented Local Slice
+
+`admission_store.py` owns two additive tables. Each item has a stable UUID,
+FIFO position, unique run binding and state. The batch stores its fixed scenario,
+owner epoch and timestamped queue transitions. `Store._create_run` participates
+in the same transaction as reservation and binding. SQLite serializes writes;
+conditional owner-epoch updates and checked mutations reject stale owners.
+
+`admission.py` acquires an exclusive nonblocking POSIX lock before claiming the
+owner epoch and keeps it through the graph invocation. `WorkerExecutor` passes
+that descriptor to local children. The parent closes its copy without calling
+`LOCK_UN`, preserving exclusion in a surviving child. Lock files are never
+unlinked. The database and lock directory must belong to the same local state
+root. These controls assume trusted local processes and administrators.
+
+The item states are `queued`, `reserved`, `launching`, `awaiting_review`, `blocked`
+and `released`. Launch intent is committed before invoking. A recovered
+`launching` item is blocked even when its old workers have exited. Explicit
+reconciliation requires a canonical terminal outcome and the process lock;
+it releases capacity but does not launch the next task. A subsequent advance
+can admit that next task. There is no automatic retry or decision policy.
+
+The local gateway owns the coordinator. Its operator-only create API accepts
+only an optional batch UUID and loads the existing fixed backlog fixture on the
+server. The API rejects supplied scenarios, task lists, WIP limits and paths.
+Gateways without a configured local coordinator reject create/advance/reconcile;
+operator status reads remain available. No model or worker gets a batch tool.
+
+CLI `batch create/status/advance/reconcile` uses an isolated local SQLite state
+root and rejects external gateways. Existing `decide` checks the matching
+checkpoint and digest, and holds the batch lock for batch-owned runs. Each run
+retains its own checkpoint thread. Single-run commands keep their existing flow.
+
+Each advance/reconcile writes a fresh derived snapshot with fixture provenance,
+batch/item/run identities, run snapshots and observation time. Queue transitions
+are persisted in batch state; worker and decision events remain in the canonical
+journal. Neither the queue table nor derived exports claim journal immutability.
+The numerical experiment and its report API remain independent.

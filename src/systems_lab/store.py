@@ -22,6 +22,7 @@ from sqlalchemy import (
     select,
 )
 
+from systems_lab.admission_store import AdmissionStore
 from systems_lab.journal import Journal, JournalConflict
 
 CAPABILITIES = {
@@ -109,6 +110,7 @@ class Store:
             Column("detail", String, nullable=False),
             Column("model_mode", String, nullable=False),
         )
+        self.admission: AdmissionStore = AdmissionStore(self, metadata)
         metadata.create_all(self.engine)
         self.journal = Journal(self.engine, clock)
         self.journal.import_legacy(self.events)
@@ -136,23 +138,26 @@ class Store:
             raise ControlError(409, str(error)) from error
 
     def create_run(self, scenario: dict[str, Any]) -> str:
-        run_id = str(uuid.uuid4())
         with self.engine.begin() as connection:
-            connection.execute(
-                self.runs.insert().values(
-                    run_id=run_id,
-                    status="running",
-                    scenario=scenario,
-                    artifacts={},
-                    created_at=self.clock(),
-                    policy_digest=POLICY_DIGEST,
-                    owner="saski",
-                    model_mode="fixture",
-                )
+            return self._create_run(connection, scenario)
+
+    def _create_run(self, connection: Any, scenario: dict[str, Any]) -> str:
+        run_id = str(uuid.uuid4())
+        connection.execute(
+            self.runs.insert().values(
+                run_id=run_id,
+                status="running",
+                scenario=scenario,
+                artifacts={},
+                created_at=self.clock(),
+                policy_digest=POLICY_DIGEST,
+                owner="saski",
+                model_mode="fixture",
             )
-            self._event(
-                connection, run_id, "operator", "run.create", "allow", key=f"run:{run_id}:create"
-            )
+        )
+        self._event(
+            connection, run_id, "operator", "run.create", "allow", key=f"run:{run_id}:create"
+        )
         return run_id
 
     def get_run(self, run_id: str) -> dict[str, Any]:
@@ -165,6 +170,13 @@ class Store:
             if row is None:
                 raise ControlError(404, "Unknown run")
             result = dict(row)
+            batch_id = connection.execute(
+                select(self.admission.items.c.batch_id).where(
+                    self.admission.items.c.run_id == run_id
+                )
+            ).scalar_one_or_none()
+            if batch_id is not None:
+                result["batch_id"] = batch_id
             result["digest"] = digest(
                 {
                     "scenario": result["scenario"],

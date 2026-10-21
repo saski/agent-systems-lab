@@ -7,6 +7,7 @@ import time
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Annotated, Any, Literal
+from uuid import UUID, uuid4
 
 from fastapi import Depends, FastAPI, Header, Query, Request
 from fastapi.responses import FileResponse, JSONResponse
@@ -36,6 +37,11 @@ class GrantRequest(BaseModel):
     role: Literal["researcher", "builder", "reviewer"]
     ttl_seconds: int = Field(default=120, ge=1, le=300)
     max_calls: int = Field(default=12, ge=1, le=40)
+
+
+class BatchRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    batch_id: UUID = Field(default_factory=uuid4)
 
 
 class Decision(BaseModel):
@@ -120,10 +126,22 @@ def create_app(
     delivery: TelemetryDelivery | None = None,
     *,
     experiment_root: Path | None = None,
+    admission_root: Path | None = None,
+    admission_gateway_url: str | None = None,
 ) -> FastAPI:
+    from systems_lab.admission import AdmissionCoordinator, fixture_scenario
+    from systems_lab.orchestrator import ControlClient
+
     if not operator_token:
         raise ValueError("An operator credential is required")
     delivery = delivery or TelemetryDelivery.from_environment(store.journal)
+    coordinator = (
+        AdmissionCoordinator(
+            admission_root, store, ControlClient(admission_gateway_url, operator_token)
+        )
+        if admission_root is not None and admission_gateway_url is not None
+        else None
+    )
     reports_root = (
         experiment_root
         if experiment_root is not None
@@ -238,6 +256,36 @@ def create_app(
     @app.get("/runs/{run_id}", dependencies=[Depends(operator)])
     def get_run(run_id: str) -> dict[str, Any]:
         return store.get_run(run_id)
+
+    @app.post("/batches", dependencies=[Depends(operator)])
+    def create_batch(request: BatchRequest) -> dict[str, Any]:
+        if coordinator is None:
+            raise ControlError(409, "Batch creation requires the local batch CLI")
+        values = fixture_scenario()
+        try:
+            scenario = Scenario.from_dict(values)
+            if scenario.steps > 1000:
+                raise ValueError("Gateway allows at most 1000 simulation steps")
+            simulate(scenario)
+        except (ValueError, TypeError) as error:
+            raise ControlError(422, str(error)) from error
+        return store.admission.create(str(request.batch_id), values)
+
+    @app.get("/batches/{batch_id}", dependencies=[Depends(operator)])
+    def get_batch(batch_id: UUID) -> dict[str, Any]:
+        return store.admission.snapshot(str(batch_id))
+
+    @app.post("/batches/{batch_id}/advance", dependencies=[Depends(operator)])
+    def advance_batch(batch_id: UUID) -> dict[str, Any]:
+        if coordinator is None:
+            raise ControlError(409, "Batch execution requires the local batch CLI")
+        return coordinator.advance(str(batch_id))
+
+    @app.post("/batches/{batch_id}/reconcile", dependencies=[Depends(operator)])
+    def reconcile_batch(batch_id: UUID) -> dict[str, Any]:
+        if coordinator is None:
+            raise ControlError(409, "Batch reconciliation requires the local batch CLI")
+        return coordinator.advance(str(batch_id), reconcile=True)
 
     @app.post("/runs/{run_id}/grants", dependencies=[Depends(operator)])
     def grant(run_id: str, request: GrantRequest) -> dict[str, str]:

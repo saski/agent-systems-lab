@@ -9,13 +9,15 @@ import socket
 import threading
 import time
 from collections.abc import Iterator
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from pathlib import Path
 from typing import Any
+from uuid import UUID, uuid4
 
 import uvicorn
 from langgraph.types import Command
 
+from systems_lab.admission import batch_lock
 from systems_lab.gateway import create_app
 from systems_lab.orchestrator import ControlClient, WorkerExecutor, stop_containers, workflow
 from systems_lab.review_capacity_exports import export_attempt
@@ -57,6 +59,8 @@ def local_control(root: Path, token: str) -> Iterator[ControlClient]:
                 token,
                 (root / ".lab" / "viewer.token").read_text().strip(),
                 experiment_root=root / ".lab" / "experiments" / "review-capacity",
+                admission_root=root,
+                admission_gateway_url=f"http://127.0.0.1:{port}",
             ),
             log_level="error",
             access_log=False,
@@ -90,7 +94,26 @@ def export_run(root: Path, snapshot: dict[str, Any]) -> Path:
 
 
 def execute(args: argparse.Namespace, root: Path, control: ControlClient) -> None:
-    if args.command in {"run", "demo"}:
+    if args.command == "batch":
+        if args.gateway:
+            raise ValueError("Batch commands require their local SQLite gateway")
+        if args.batch_action == "create":
+            result = control.request(
+                "POST",
+                "/batches",
+                {
+                    "batch_id": str(args.batch_id or uuid4()),
+                },
+            )
+        else:
+            path = f"/batches/{args.batch_id}"
+            result = (
+                control.request("GET", path)
+                if args.batch_action == "status"
+                else control.request("POST", f"{path}/{args.batch_action}", timeout=360)
+            )
+        print(json.dumps(result, indent=2))
+    elif args.command in {"run", "demo"}:
         scenario = json.loads((root / args.scenario).read_text())
         run_id = control.request("POST", "/runs", {"scenario": scenario})["run_id"]
         executor = WorkerExecutor(root, control, args.executor)
@@ -141,7 +164,12 @@ def execute(args: argparse.Namespace, root: Path, control: ControlClient) -> Non
     elif args.command == "decide":
         checkpoint = root / ".lab" / "checkpoints.db"
         config = {"configurable": {"thread_id": args.run_id}}
-        with workflow(checkpoint, control, WorkerExecutor(root, control)) as graph:
+        snapshot = control.request("GET", f"/runs/{args.run_id}")
+        batch_id = snapshot.get("batch_id")
+        if batch_id and args.gateway:
+            raise ValueError("Batch decisions require the same local LAB_ROOT as batch creation")
+        lock = batch_lock(root, batch_id) if batch_id else nullcontext()
+        with lock, workflow(checkpoint, control, WorkerExecutor(root, control)) as graph:
             state = graph.get_state(config)
             if not state.values or state.values.get("digest") != args.digest:
                 raise ValueError("No pending local checkpoint matches this run and digest")
@@ -172,6 +200,13 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument("--gateway", help="External gateway; omitted uses a local SQLite gateway")
     commands = result.add_subparsers(dest="command", required=True)
     commands.add_parser("init", help="Generate local operator credentials without printing them")
+    batch = commands.add_parser("batch", help="Run two local fixture tasks with WIP one")
+    actions = batch.add_subparsers(dest="batch_action", required=True)
+    create = actions.add_parser("create", help="Queue two copies of the fixed backlog fixture")
+    create.add_argument("--batch-id", type=UUID, help="Stable identity for idempotent creation")
+    for action in ("status", "advance", "reconcile"):
+        command = actions.add_parser(action)
+        command.add_argument("batch_id", type=UUID)
     commands.add_parser("gateway", help="Serve the trusted control gateway")
     dashboard = commands.add_parser("dashboard", help="Serve the local dashboard and gateway")
     dashboard.add_argument("--port", type=int, default=8765)
@@ -207,7 +242,12 @@ def parser() -> argparse.ArgumentParser:
 
 def main() -> None:
     args = parser().parse_args()
-    root = Path(os.environ.get("LAB_ROOT", ".")).resolve()
+    default_root = ".lab/fixture-admission" if args.command == "batch" else "."
+    root = Path(os.environ.get("LAB_ROOT", default_root)).resolve()
+    if args.command == "batch" and args.gateway:
+        raise SystemExit("Batch commands require their local SQLite gateway")
+    if args.command == "batch":
+        root.mkdir(parents=True, exist_ok=True)
     if args.command == "gateway":
         token = os.environ["LAB_OPERATOR_TOKEN"]
         database = os.environ["LAB_DATABASE_URL"]

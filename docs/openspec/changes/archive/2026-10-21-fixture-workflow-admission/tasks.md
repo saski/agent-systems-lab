@@ -1,40 +1,40 @@
 # Implementation tasks
 
-All tasks are pending. This is a proposal, not implementation authorization.
-Review this design and its implementation plan before starting code.
+Implemented and verified on 21 October 2026 after explicit user authorization.
+All acceptance tasks are complete; see `verification.md` for evidence and limits.
 
 ## First Vertical Slice: Two Fixture Tasks, WIP One
 
-- [ ] Start with one failing behavior test: advance two queued fixture tasks;
+- [x] Start with one failing behavior test: advance two queued fixture tasks;
       the first reaches `awaiting_review`, retains WIP one and the second has
       no canonical run or worker. Repeating advance changes none of those facts.
-- [ ] Add bounded durable batch/item state, transactional reservation and
+- [x] Add bounded durable batch/item state, transactional reservation and
       idempotent run binding; use stable item identities and FIFO order.
-- [ ] Add operator-only batch create/advance/status operations and CLI integration;
+- [x] Add operator-only batch create/advance/status operations and CLI integration;
       reject viewer/worker writes and preserve existing single-run commands.
-- [ ] Reuse separate run/checkpoint identities and the existing fixture graph;
+- [x] Reuse separate run/checkpoint identities and the existing fixture graph;
       prove that worker completion and human interrupt do not release WIP.
-- [ ] Exercise manual accept and reject with the exact digest; show that a stale
+- [x] Exercise manual accept and reject with the exact digest; show that a stale
       digest, unauthorized request or direct checkpoint resume cannot free WIP.
-- [ ] Reconcile a terminal outcome and admit task two exactly once, preserving
+- [x] Reconcile a terminal outcome and admit task two exactly once, preserving
       the first run's artifacts and completed-worker count.
 
 ## Ownership and Recovery
 
-- [ ] Test competing owners through independent database connections and actual
+- [x] Test competing owners through independent database connections and actual
       coordinator processes; cover the graph-launch boundary and hold the local
       process lock until invocation exits. A binding retry returns the same run
       without dispatch; uncertain prior launch remains blocked.
-- [ ] Restart at human review without repeating specialists; block ambiguous
+- [x] Restart at human review without repeating specialists; block ambiguous
       in-flight recovery instead of automatically executing or re-admitting work.
-- [ ] Test revocation, worker failure, gateway outage and owner takeover;
+- [x] Test revocation, worker failure, gateway outage and owner takeover;
       retain capacity until canonical outcomes and worker cleanup are confirmed.
 
 ## Evidence and Closure
 
-- [ ] Run an isolated real-process fixture demonstration, record all identities
+- [x] Run an isolated real-process fixture demonstration, record all identities
       and reconcile queue, worker and canonical outcome counts; label provenance.
-- [ ] Document the hypothesis, boundary, observations, recovery limits and manual
+- [x] Document the hypothesis, boundary, observations, recovery limits and manual
       operator steps; update the roadmap without changing numerical claims.
-- [ ] Run `make check`, `make spec-check` and `git diff --check`; archive only
+- [x] Run `make check`, `make spec-check` and `git diff --check`; archive only
       after the implementation and evidence meet this proposal.

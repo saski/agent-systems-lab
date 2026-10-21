@@ -34,8 +34,15 @@ class ControlClient:
         self.url = url.rstrip("/")
         self.headers = {"Authorization": f"Bearer {token}"}
 
-    def request(self, method: str, path: str, body: dict[str, Any] | None = None) -> Any:
-        with httpx.Client(timeout=30, trust_env=False) as client:
+    def request(
+        self,
+        method: str,
+        path: str,
+        body: dict[str, Any] | None = None,
+        *,
+        timeout: float = 30,
+    ) -> Any:
+        with httpx.Client(timeout=timeout, trust_env=False) as client:
             response = client.request(method, self.url + path, headers=self.headers, json=body)
             response.raise_for_status()
             return response.json()
@@ -43,11 +50,19 @@ class ControlClient:
 
 class WorkerExecutor:
     def __init__(
-        self, root: Path, control: ControlClient, kind: Literal["process", "docker"] = "process"
+        self,
+        root: Path,
+        control: ControlClient,
+        kind: Literal["process", "docker"] = "process",
+        *,
+        admission_lock_fd: int | None = None,
     ) -> None:
         self.root = root
         self.control = control
         self.kind = kind
+        self.admission_lock_fd: int | None = admission_lock_fd
+        if admission_lock_fd is not None and kind != "process":
+            raise ValueError("Admission locking supports local process workers only")
 
     def run(self, run_id: str, role: str) -> AgentResult:
         credential = self.control.request("POST", f"/runs/{run_id}/grants", {"role": role})
@@ -117,6 +132,7 @@ class WorkerExecutor:
                 env=environment,
                 timeout=90,
                 check=True,
+                pass_fds=() if self.admission_lock_fd is None else (self.admission_lock_fd,),
             )
         except subprocess.TimeoutExpired:
             self.control.request("POST", f"/runs/{run_id}/revoke")
