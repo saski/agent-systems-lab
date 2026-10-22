@@ -1,10 +1,13 @@
 # fixture-workflow-admission Specification
 
 ## Purpose
-Validate durable admission of two fixed fixture workflows with WIP one per batch,
-explicit digest-bound decisions and fail-closed local process recovery. Preserve
-run identity and human-review waits without conflating fixture evidence with
-synthetic queue models or live-model quality.
+Study whether two fixed fixture tasks can share one admitted place per batch
+while preserving each run's identity across repeated commands and restarts.
+The admitted task keeps its place while waiting for a person's decision, which
+must match the digest of the reviewed material. Recovery blocks further work
+when worker state is uncertain. These observations come from local workflow
+processes; keep them separate from synthetic queue results and claims about
+live-model or human review quality.
 
 ## Requirements
 

@@ -3,9 +3,12 @@
 ## Why
 
 A quiet activity screen can mean slow or failed execution, a legitimate human
-review checkpoint, or interrupted telemetry. The lab already has canonical
-history and recoverable OTLP trace delivery, but lacks a queryable trace backend
-and independent metrics for learning how to distinguish those conditions.
+review checkpoint, or interrupted telemetry. The gateway keeps an ordered,
+durable journal of task events, and its outbox retries sending those events as
+OpenTelemetry Protocol (OTLP) traces. The lab lacks a place to search those
+traces and metrics that remain available independently of the Collector. The
+exercise teaches how to use those separate signals to tell the three conditions
+apart.
 
 The primary outcome is learner understanding through a real fixture workflow,
 queries and controlled failures. The [learning plan](../../../plans/2026-10-06-agent-telemetry-reliability-lab.md)
@@ -13,24 +16,30 @@ explains the baseline, options, exercises, sources, estimates and demonstration.
 
 ## What Changes
 
-- Add an opt-in local LGTM backend, using the existing lab Collector as an
-  independently stoppable ingestion hop, with traces stored in Tempo.
-- Add five read-only OTel metric families, scraped directly by Prometheus, plus
-  direct Collector self-metric collection outside its own delivery pipeline.
+- Add an opt-in local LGTM observability bundle with Grafana to query and display
+  results, Tempo to store traces, and Prometheus to collect metrics. Keep the
+  existing lab Collector as an independently stoppable trace-ingestion hop.
+- Add five read-only OpenTelemetry metric families, each grouping a measurement
+  with its permitted labels, scraped directly by Prometheus. Also
+  collect Collector health metrics directly, outside its own trace pipeline.
 - Provision a compact Grafana dashboard and one local alert rule with explicit
   missing/stale/error behavior.
-- Add bounded fixture delay/failure exercises and a read-only comparison of a
-  finite run's expected journal spans against queryable Tempo evidence.
+- Add opt-in fixture exercises with fixed, short delay or failure cases, then
+  compare the expected event IDs for one run with the spans queryable in Tempo.
+  The comparison reads evidence; it does not change the journal or outbox.
 - Supply a startup guide, learner exercises, three-minute demo and limitations.
 
 ## Acceptance Scope
 
-Fresh fixture runs, one gateway/exporter per database, normal execution,
-human-review pending, short worker delay/failure, a stopped ingress Collector,
-recovery and retransmission, and explicit missing-data evidence. Recovery must
-preserve canonical history and event identities. Accepted-but-missing downstream
-evidence must be detectable by finite comparison, without claiming permanent
-retention or automatic replay after acknowledgement.
+The acceptance path follows fresh fixture runs through normal execution, a
+human-review pause, a short worker delay or failure, a stopped ingress Collector,
+recovery and retransmission. Use one gateway/exporter per database. The journal
+is the durable task history; the outbox tracks telemetry events awaiting
+acknowledgement by the next receiver. Recovery must preserve journal history and
+event identities. If an event is acknowledged by the Collector but is absent
+from a complete Tempo query, the finite comparison should report its ID missing.
+This does not establish permanent retention or automatic replay after
+acknowledgement.
 
 Metrics and Grafana remain observers. They gain no task-execution authority.
 No Review Capacity logical ticks are exported as live workflow time.

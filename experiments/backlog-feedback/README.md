@@ -1,10 +1,11 @@
 # Backlog feedback experiment
 
-This experiment models a task backlog as a stock. New tasks arrive each step,
-and a staffing controller changes the processing capacity in response to an
-observed backlog. It is inspired by feedback, delays, and capacity limits
-discussed in Donella Meadows's *Thinking in Systems*. The numbers here are a
-small teaching model; they do not reproduce examples or results from the book.
+This experiment follows a task backlog over time. The backlog is a stock: the
+number of unfinished tasks carried from one step to the next. New tasks arrive
+each step, while a staffing controller adjusts how many tasks can be processed
+after observing the backlog. The model explores feedback, delays and capacity
+limits discussed in Donella Meadows's *Thinking in Systems*. Its numbers are
+for teaching; they do not reproduce examples or results from the book.
 
 ## Hypothesis and boundary
 
@@ -12,11 +13,12 @@ small teaching model; they do not reproduce examples or results from the book.
 same gain can produce a larger backlog peak and more total capacity movement
 than when it sees the current backlog.
 
-The model boundary includes one backlog stock, constant task arrivals, bounded
-processing capacity, and one backlog-based controller. It excludes task
-priorities, partial work, worker ramp-up, turnover, stochastic arrivals, and
-other feedback from quality or deadlines. One time step represents one
-unspecified planning interval; task counts and capacity use the same interval.
+The model includes one backlog, constant task arrivals, a processing capacity
+with lower and upper bounds, and one controller that reacts to backlog. It
+leaves out task priorities, partial work, worker ramp-up, turnover, random
+arrivals, and effects from quality or deadlines. A step stands for an
+unspecified planning interval; both task counts and capacity are measured for
+that interval.
 
 ## Variables and update order
 
@@ -37,12 +39,13 @@ Each step follows this order:
    available tasks and current capacity.
 4. Record the remaining backlog and retain it for future observations.
 
-Backlog and arrivals are tasks. Capacity and completed work are tasks per
-step. The gain has units of capacity per task. There is no random sampling, so
-the same scenario always produces the same result. An observation delay as long
-as the experiment horizon means the controller sees only the initial backlog;
-this is a deliberate frozen-information scenario, not an invalid numeric input.
-The gateway limits each run to 1,000 steps and rejects non-finite computations.
+Backlog and arrivals count tasks. Capacity and completed work count tasks per
+step, and the gain measures capacity change per task of backlog error. The
+model uses no random sampling, so the same scenario always produces the same
+result. If the observation delay lasts as long as the experiment, the
+controller sees only the initial backlog. That is a deliberate scenario in
+which its information stays fixed, not an invalid numeric input. The gateway
+limits each run to 1,000 steps and rejects non-finite computations.
 
 Model version: `backlog-feedback-v1`. The initial capacity is the starting
 reference for measuring capacity movement; the controller chooses the first
@@ -50,23 +53,23 @@ effective capacity before processing any tasks.
 
 ## Observations
 
-For the supplied parameters, the model produces the following results:
+With the supplied parameters, the model produces these results:
 
 | Observation delay | Final backlog | Maximum backlog | Completed tasks | Total capacity movement |
 | ---: | ---: | ---: | ---: | ---: |
 | 0 steps | 8.00 | 10.00 | 362.00 | 7.60 |
 | 4 steps | 10.13 | 12.76 | 359.87 | 16.81 |
 
-These are numerical facts about this particular deterministic simulation. They
-show a higher peak backlog, more capacity movement, and fewer completed tasks
-with the longer delay in this run. They do not establish that delay always has this effect: the outcome
-depends on the arrivals, initial conditions, gain, capacity bounds, and run
+These numbers describe this deterministic simulation. With the longer delay,
+the backlog peaks higher, capacity moves more, and fewer tasks are completed
+than with no delay. The result does not show that delay always has this effect.
+It depends on arrivals, initial conditions, gain, capacity bounds and run
 length. The model also has no empirically calibrated relationship between
 staffing and real-world throughput.
 
-The result includes the parameters, each step's observed backlog and flows,
-and summary metrics for final and maximum backlog, total completions, and
-cumulative absolute capacity change. The result can be serialized as JSON.
+The JSON result includes the parameters, the backlog seen by the controller and
+the flows at each step. It also reports final and maximum backlog, total
+completions and cumulative absolute capacity change.
 
 ## Reading prompts
 

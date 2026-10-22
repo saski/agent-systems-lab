@@ -11,11 +11,12 @@ You are running the lab and see no new activity. Before restarting anything,
 you want to know whether the Builder is still working, a worker failed, a human
 decision is pending, or information stopped reaching the screen.
 
-Imagine a fixture run reaches its human review checkpoint just as the Collector
-stops. Grafana shows an incomplete trace. The existing activity dashboard still
-shows `awaiting_review`, and the gateway has events waiting for delivery. There
-are two simultaneous facts: the task needs a person, and telemetry delivery
-needs repair. Restarting the task would not explain either fact.
+The learning exercise follows a fixture run that reaches its human review
+checkpoint just as the Collector stops. Grafana shows an incomplete trace, while
+the activity dashboard still shows `awaiting_review` and the gateway has events
+waiting for delivery. The task is waiting for a person, and telemetry delivery
+needs repair. Restarting the workflow would neither clarify its state nor
+restore telemetry delivery.
 
 The first user is you, the lab operator and learner. Success means being able
 to explain this situation with evidence, then reproduce the explanation without

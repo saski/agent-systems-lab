@@ -1,8 +1,9 @@
 # Read agent activity
 
-The dashboard helps you answer four questions: **Where is the work? What can
-each agent use? What happened? How can I intervene?** It reads records from the
-gateway. It does not start agents or make decisions for you.
+The dashboard answers operational questions from gateway records: where work is
+waiting, what each agent may access, and what happened. Learn to use those
+records to decide whether an operator action applies. The dashboard reads
+gateway records; it does not start agents or make decisions for you.
 
 | Term | Meaning in this playground |
 | --- | --- |
@@ -11,14 +12,15 @@ gateway. It does not start agents or make decisions for you.
 | **Tool** | An operation an agent can request, such as running a simulation. |
 | **Gateway** | The service that checks access before allowing a model or tool call. |
 | **Event** | A record of an action, outcome or reported worker state. |
-| **History checkpoint** | An event count and a hash saved for a later comparison. It differs from a workflow checkpoint used to resume work. |
+| **History checkpoint** | An event count and a hash, a fixed-size fingerprint of event content, saved for a later comparison. A workflow checkpoint stores state used to resume work; it serves a different purpose. |
 
 ## Experiments: compare and replay saved reports
 
 The **Experiments** view is separate from **Activity** and carries a
 **SIMULATION REPLAY** label. It reads saved, complete Review Capacity reports
-through the same viewer-authenticated gateway. It does not run a simulation in
-the browser, start agents or record operational decisions.
+through the same gateway the viewer authenticated to. A report contains
+results from the numerical Review Capacity model; this view does not run that
+model in the browser, start agents or record operational decisions.
 
 ![Full-page desktop capture of the Review Capacity comparison and task replay, using an isolated synthetic fixture report](images/review-capacity-dashboard/desktop.jpg)
 
@@ -36,13 +38,17 @@ values describe the supplied model only.*
 Generate a saved report from the repository root with `make review-capacity-demo`,
 then connect to the local dashboard with `.lab/viewer.token`. Open **Experiments**
 and choose **Refresh reports**. Select a saved comparison to see all policies
-at the same observation horizon: decisions, unfinished tasks, admission and
-review queues, end-to-end latency p50/p95 with the completed sample count, and
-full-drain status. Step charts show decisions across policies and queue sizes
-for the selected policy.
+at the same observation horizon, the point in model time where they are
+compared. The report shows decisions, unfinished tasks, the admission queue
+(tasks waiting to enter the workflow) and review queue (tasks waiting for a
+human decision), end-to-end latency p50/p95 with the completed sample count, and
+whether all work drained. The p50 and p95 values are the 50th and 95th percentiles
+of completed task latency. Step charts show decisions across policies and queue
+sizes for the selected policy.
 
-Choose a policy to inspect the saved task positions at each logical tick. The
-slider supports keyboard seeking; **Start**, **Horizon** and **Recorded end**
+Choose a policy to inspect the saved task positions at each logical tick, a
+discrete step in model time. The slider supports keyboard seeking; **Start**,
+**Horizon** and **Recorded end**
 jump to useful points. **Play/Pause** follows the recorded transitions at
 0.5×, 1×, 2× or 4× viewing speed. These controls change only the replay view.
 When reduced motion is enabled, automatic playback is disabled and the slider
@@ -190,8 +196,9 @@ review waits for a decision; reaching Completed alone does not mean acceptance.
 ![Recorded events with expandable evidence and IDs](images/dashboard/events.jpg)
 
 Each event shows an action, time, actor and recorded outcome. Open **Evidence
-and IDs** for the detail, trace/span IDs and event hashes. A trace ID connects
-events from one run with its exported OpenTelemetry spans.
+and IDs** for the detail, trace/span IDs and event hashes. A span is a timed
+record of an observed operation. The trace ID connects events from one run
+with its exported OpenTelemetry spans.
 
 The timeline displays the latest 45 entries. Selecting a run loads its full event
 history; the count can therefore be larger than the visible rows.

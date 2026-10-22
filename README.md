@@ -1,19 +1,23 @@
 # Agent Systems Lab
 
-A runnable playground for learning how agent systems behave: how work flows,
-where it waits, who can authorize an action, and what the recorded evidence
-actually tells us. It combines small systems-thinking models, inspired by
-Donella Meadows's *Thinking in Systems*, with a governed multi-agent workflow.
+We use this lab to study how work moves through an agent system, where it waits,
+and who can decide what happens next. The experiments are small enough to rerun
+and inspect. The numerical models draw on Donella Meadows's *Thinking in
+Systems*; the agent workflow lets us study permissions and human intervention
+in running code.
 
-The aim is to make a question concrete, change one factor, and inspect the
-result before adding more autonomy, tooling or infrastructure.
+Each experiment starts with a question. We hold the setup steady, change one
+factor and look at the result before adding more autonomy or infrastructure.
+The learning goal is to explain why a result follows from the rules we chose,
+and where that explanation stops being useful.
 
-**Current state: 20 October 2026.** The workflow, permission checks, activity
-dashboard, saved Review Capacity
-comparison and two numerical experiments are implemented. All agent model
-responses remain **scripted fixtures**: no external provider requests or model
-token costs. Numerical results describe synthetic systems, not measured agent
-or team productivity.
+**Current state: 21 October 2026.** The workflow, permission checks, activity
+dashboard, saved Review Capacity comparison, two numerical experiments and
+fixture admission are implemented. All agent model responses are scripted
+fixtures: predefined replies that let us repeat the same workflow without an
+external model provider or model token costs. The workers and permission checks
+still run. Numerical results describe the systems we modeled; they do not
+measure agent or team productivity.
 
 [![Activity dashboard: one task waiting for human review, verified history and a separate observation-delivery queue](docs/images/readme/activity-overview.jpg)](docs/dashboard.md)
 
@@ -24,16 +28,26 @@ The run is waiting for a human decision. Telemetry export is disabled, so its
 
 ## What we are exploring
 
-- **Systems thinking:** stocks, flows, feedback delays, capacity constraints,
-  review bottlenecks and the effect of limiting work in progress (WIP).
-- **Agent design and control:** specialist roles, orchestration, explicit
-  permissions, bounded operations, recovery and human intervention.
-- **Evidence and observability:** distinguishing a requested action from an
-  authorized or completed action, and workflow state from telemetry delivery.
+- In the numerical models, we study stocks (work that has accumulated) and flows
+  (work entering or leaving), then see what changes when information arrives
+  late or one stage has less capacity than another. Review Capacity adds a
+  limit on work in progress, or WIP: tasks admitted but not yet decided.
+- In the agent workflow, we study how specialist roles work together, which
+  actions they are allowed to take, and how the system pauses or recovers when
+  a person needs to intervene.
+- In the dashboard, we learn to read the evidence. An action being requested,
+  authorized and completed are different observations. So are a task waiting
+  for review and an event waiting to reach a telemetry collector.
 
-Experiments keep their question, hypothesis, inputs, observations and limitations
-together. A successful fixture run demonstrates the workflow and its controls;
-it does not establish real-model reasoning quality or safety.
+Each experiment keeps its question, hypothesis, inputs, observations and
+limitations together. A fixture run can demonstrate the workflow and its
+controls under those conditions. It cannot establish the reasoning quality or
+safety of a real model.
+
+If you are starting here, run the workflow below and follow one task to human
+review. Then use Backlog Feedback to study a single queue, and Review Capacity
+to compare where work waits across several stages. Fixture admission takes the
+WIP rule into the running workflow, where a human decision has to release it.
 
 ## Progress at a glance
 
@@ -42,7 +56,7 @@ it does not establish real-model reasoning quality or safety.
 | Governed workflow | Three specialists, checkpoint recovery, role-scoped access, budgets, revocation and approval tied to the exact artifacts; local processes and optional Docker workers | Live-model and alternative-runtime comparisons are future experiments |
 | Backlog feedback | Deterministic model, controlled observation-delay comparison, scenario and documented results | Further sensitivity experiments with different gains, arrivals and capacity bounds |
 | Review Capacity | Completed v0.2: A/B/C numerical comparison, local CLI, hashed exports, viewer-authorized report API, integrated charts and task replay, plus an offline learning guide | Variable workload, review quality and rework remain future experiments |
-| Fixture admission | Two fixed tasks, WIP one per batch, durable run identities, fenced ownership, inherited process locks and explicit digest-bound decisions | Local POSIX processes and SQLite only; parallel/container admission and a batch dashboard remain outside this slice |
+| Fixture admission | Two fixed tasks, WIP one per batch, saved run identities, one current coordinator, locks held by workers and decisions tied to the reviewed artifacts | Local POSIX processes and SQLite only; parallel/container admission and a batch dashboard remain outside this slice |
 | Activity and history | Read-only Activity dashboard, task counts and wait ages, role tools, lifecycle events, session charts and saved-checkpoint comparison; separate saved-report Experiments view | Persistent historical charts |
 | Telemetry delivery | Durable event journal, retry outbox, correlated OpenTelemetry spans and an optional local Collector | The Grafana/Tempo/Prometheus reliability learning lab is a documented proposal; implementation has not started |
 
@@ -52,13 +66,15 @@ The first workflow takes one backlog scenario through
 **Researcher → Builder → Reviewer → human decision**. Each specialist runs in a
 separate process, or an isolated one-shot container in Docker mode.
 
-1. **LangChain specialists** run the model/tool loop. The Researcher describes
+1. LangChain specialists run the model/tool loop: a model requests a tool,
+   receives its result and continues. The Researcher describes
    the system, the Builder runs its simulation, and the Reviewer checks the
    output. Their personas and selected skills guide behavior.
-2. **LangGraph** coordinates that fixed sequence, validates the result, persists
-   checkpoints and pauses for human review.
-3. **A deterministic gateway** authorizes every model and tool call. It enforces
-   identity, role capabilities, grant expiry, call budgets and revocation.
+2. LangGraph coordinates that fixed sequence, validates the result and saves
+   checkpoints so the workflow can resume after a pause for human review.
+3. The gateway checks every model and tool call against rules in code. It checks
+   the caller's identity, the operations allowed for that role, permission
+   expiry, call budgets and whether access has been revoked.
    Personas, skills and model output cannot grant permissions.
 
 [![System map: operator, orchestrator, specialists, policy gateway, audit ledger and optional OTLP export](docs/images/readme/system-map.jpg)](docs/architecture.md)
@@ -66,11 +82,16 @@ separate process, or an isolated one-shot container in Docker mode.
 *The map shows the configured components. Worker activity and completion come
 from recorded lifecycle events; the topology alone does not prove process health.*
 
-The gateway records artifacts and an append-only, hash-chained event journal.
-SQLite stores local operational state; Compose uses Postgres. LangGraph keeps
-its checkpoints separately. Human approval must match the digest of the
-scenario, artifacts and policy version. Acceptance records the decision and
-resumes the workflow; it does not publish, merge or deploy anything.
+The gateway stores the outputs, called artifacts, and keeps an append-only
+event journal. Each event includes a hash that links it to the previous one, so
+we can check whether the recorded history still agrees with those links. SQLite stores
+local operational state; Compose uses Postgres. LangGraph keeps its checkpoints
+separately.
+
+Human approval must match a digest, a hash of the scenario, artifacts and policy
+version. This ties the decision to the material the person reviewed. Acceptance
+records that decision and resumes the workflow; it does not publish, merge or
+deploy anything.
 
 ## Run it locally
 
@@ -109,8 +130,9 @@ network boundaries.
 
 ### 1. Governed execution and human intervention
 
-**Question:** Can three specialists complete a bounded workflow, pause for an
-exact-artifact decision, and recover without bypassing authorization?
+Here we want to learn whether three specialists can complete a bounded workflow,
+pause for a decision on the exact artifacts they produced, and recover without
+bypassing authorization.
 
 The fixture workflow is runnable end to end. Tests cover role denials, grant
 limits, revocation, checkpoint recovery and digest-bound decisions. The opt-in
@@ -124,15 +146,18 @@ stopping a run's labelled container.
 
 </details>
 
-This establishes behavior under the tested fixture and trust boundaries. The
-host and gateway are trusted; local processes have no filesystem confinement,
-and Docker mode is not a hostile multi-tenant security platform.
+The useful observation is where the workflow stops, and which checks still
+apply when it resumes. The tests establish behavior with these fixtures and
+trust assumptions. The host and gateway are trusted; local processes have no
+filesystem confinement, and Docker mode is not a security platform for mutually
+untrusted users.
 See [architecture and trust boundaries](docs/architecture.md).
 
 ### 2. Backlog feedback: reacting to delayed information
 
-**Question:** How does a controller behave when it adjusts capacity using an
-older backlog observation?
+Here we study a controller that adjusts processing capacity using the backlog
+it can see. If that observation is old, its next adjustment responds to a state
+the system has already left behind.
 
 The model has one backlog, constant arrivals, bounded processing capacity and
 a backlog-based controller. Holding the supplied 36-step scenario constant and
@@ -143,10 +168,11 @@ changing only observation delay gives:
 | 0 steps | 10.00 | 362.00 | 7.60 |
 | 4 steps | 12.76 | 359.87 | 16.81 |
 
-In this scenario, delayed information increases the backlog peak and capacity
-movement while reducing completed work. That outcome depends on the chosen
-parameters; it is not a calibrated staffing model or a universal claim about
-delay.
+With a four-step delay, this controller moves capacity more, reaches a higher
+backlog peak and completes slightly less work. Follow the backlog and capacity
+together to understand the response. These results depend on the chosen
+parameters; the model is not calibrated for staffing decisions, and this run
+does not establish a universal effect of delay.
 
 `make dashboard-demo` runs this scenario through the specialist workflow and
 exports `simulation.json`. The [backlog feedback guide](experiments/backlog-feedback/README.md)
@@ -155,8 +181,10 @@ defines the update order, assumptions and observations; the
 
 ### 3. Review Capacity: faster execution, fixed review capacity
 
-**Question:** If execution becomes faster while review capacity stays fixed,
-how much more work reaches a decision, and where does unfinished work wait?
+This experiment follows work all the way to a decision. We want to learn what
+extra execution capacity changes when the capacity to review its output stays
+fixed. Counting only finished execution would miss the work still waiting for
+review.
 
 The model follows 24 tasks through admission, execution and one synthetic
 reviewer. It compares one execution slot, four slots, and four slots with an
@@ -200,6 +228,22 @@ every task; it measures neither real agent concurrency nor human review quality,
 cost or productivity. The offline interactive guide remains available as a
 complementary way to study the model without the dashboard.
 
+### 4. Fixture admission: keeping a place occupied until a decision
+
+The [fixture-workflow admission experiment](experiments/fixture-workflow-admission/README.md)
+applies a WIP limit to the running workflow. It queues two fixed tasks and admits
+one at a time. When the first reaches human review, it keeps its place; the
+second stays queued. The learning goal is to follow that boundary through a
+pause, a restart and an explicit decision, without accidentally starting the
+same work twice.
+
+Start with `make fixture-admission-create`, then advance the returned batch
+explicitly. Its local state is isolated under `.lab/fixture-admission`.
+Decisions remain explicit operator actions. The guide explains how saved run
+identities, ownership checks and process locks support this behavior, and why
+uncertain worker state blocks further admission. This experiment supports local
+POSIX processes and SQLite, with a WIP limit per batch.
+
 ## Read activity and verify evidence
 
 The **Activity** view distinguishes work in the workflow, work waiting for your
@@ -214,11 +258,12 @@ checkpoint can be compared with the current journal, including after later
 events. Keep an independent copy to detect rewriting against that earlier
 history; a privileged database owner can rewrite the local chain.
 
-OpenTelemetry export is disabled by default. When explicitly enabled, a durable
-outbox retries delivery and preserves stable trace/span IDs. Delivery is at least
-once. Prompts, credentials, tool arguments, response bodies and scenario contents
-are excluded. The existing optional Collector is distinct from the proposed
-Grafana learning lab.
+OpenTelemetry export is disabled by default. When explicitly enabled, a stored
+delivery queue, the outbox, retries sending events and preserves stable
+trace/span IDs. Delivery is at least once: the receiver may get an event again
+after a retry. Prompts, credentials, tool arguments, response bodies and scenario
+contents are excluded. The optional Collector is already available; the Grafana
+learning lab remains a proposal.
 
 See the [illustrated dashboard tour](docs/dashboard.md) and
 [activity, telemetry and history guide](docs/observability.md) for checkpoint
@@ -249,17 +294,14 @@ are independent histories; use the gateway corresponding to the run.
 ## Next experiments and further reading
 
 Review Capacity v0.2 is [verified and closed](docs/openspec/changes/archive/2026-10-20-review-capacity-experiment/verification.md).
-The [fixture-workflow admission experiment](experiments/fixture-workflow-admission/README.md)
-now keeps one workflow admitted while it waits for a human decision and a second
-task queued. Start with `make fixture-admission-create`, then advance the returned
-batch explicitly. Its local state is isolated under `.lab/fixture-admission`;
-decisions remain explicit operator actions.
-
-Another proposed change is the optional [telemetry reliability
-learning lab](docs/plans/2026-10-06-agent-telemetry-reliability-lab.md):
-querying traces in Grafana/Tempo, adding explicit metrics, and diagnosing bounded
-delivery failures. These remain proposals or incomplete changes, as tracked in
-[OpenSpec](docs/openspec/changes/).
+The proposed [telemetry reliability
+learning lab](docs/plans/2026-10-06-agent-telemetry-reliability-lab.md) asks how to
+diagnose delivery failures using traces in Grafana/Tempo and metrics that remain
+available when the Collector stops. A separate [Dafny call-budget
+experiment](docs/openspec/changes/dafny-call-budget/proposal.md) asks what a formal
+proof could establish about a call limit beyond the cases covered by tests.
+Neither proposal is implemented. [OpenSpec](docs/openspec/changes/) keeps their
+scope and acceptance criteria.
 
 The [evolution roadmap](docs/roadmap.md) also explores fixed live-model routes,
 runtime substitution, constrained child delegation and sandboxed coding. Live

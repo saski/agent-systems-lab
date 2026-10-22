@@ -1,10 +1,12 @@
 # review-capacity-experiment Specification
 
 ## Purpose
-Provide a reproducible numerical experiment for execution capacity, fixed review
-capacity and total-WIP admission, with bounded exports and authenticated local
-dashboard replay. Keep synthetic task transitions separate from operational
-worker history and from claims about real review quality or productivity.
+Study where work waits when execution capacity changes and review capacity
+stays fixed. The reproducible numerical model compares parallel execution and
+limits on admitted work, with size-limited exports and an authenticated local
+dashboard replay. Its task transitions use logical ticks and automatic
+acceptance. Keep them separate from operational worker history: they do not
+measure real worker speed, review quality or productivity.
 
 ## Requirements
 

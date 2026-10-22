@@ -1,5 +1,11 @@
 # Development
 
+A useful experiment has a testable hypothesis and makes clear what its results
+can establish. This guide walks through the repository steps for adding one,
+from defining the model boundary to retaining evidence. A simulation result
+does not establish agent behavior or quality, and a workflow run does not
+validate the simulation model.
+
 ## Setup and checks
 
 ```sh
@@ -8,13 +14,14 @@ make check
 make spec-check
 ```
 
-`make check` runs Ruff lint/format checks, pytest, and Compose configuration
-validation. The pytest suite includes `tests/test_review_capacity_frontend.py`,
-which passes an actual deterministic fixture report to the browser projection's
-Node built-in test runner. It reports a clear skip when Node.js is unavailable;
-no npm dependencies are added. Container integration tests are skipped unless
-explicitly enabled. `make spec-check` requires the OpenSpec CLI; the bootstrap
-used 1.10.0.
+`make check` runs Ruff lint and format checks, pytest, and Compose configuration
+validation. The pytest suite includes `tests/test_review_capacity_frontend.py`.
+That test passes an actual deterministic fixture report, generated from fixed
+test data, to the browser projection's Node built-in test runner. The test
+reports a clear skip if Node.js is unavailable and adds no npm dependencies.
+Container integration tests are skipped unless you enable them explicitly.
+`make spec-check` requires the OpenSpec command-line interface (CLI); the
+bootstrap used version 1.10.0.
 
 `make format` applies Ruff formatting and safe lint fixes. Python dependencies
 are locked in `uv.lock`; use `uv add` for deliberate changes and commit the lockfile.
@@ -62,9 +69,10 @@ docs/openspec/          # Current requirements and reviewable changes
 ## Add an experiment
 
 Start with the experiment guide and one behavior-level test. Keep deterministic
-model calculations independent of the agent framework. Extend the gateway with
-a typed, resource-bounded operation, then explicitly grant it to the needed
-role. Unknown operations must remain denied.
+model calculations independent of the agent framework so you can interpret
+model results without attributing them to an agent. Extend the gateway with a
+typed operation that limits the resources it can use, then explicitly grant it
+to the needed role. The gateway must continue to deny unknown operations.
 
 Add a real model only through an explicit gateway route change and evaluation.
 Do not inject provider keys into workers or claim fixture results establish
@@ -80,11 +88,12 @@ working directory. Direct `create_app` callers can set the trusted
 `experiment_root` keyword; its default is the same relative layout under the
 working directory. Request parameters cannot change this root.
 
-Reads validate complete manifests, file hashes and size bounds, and reject
-symlinks in the root, its parents, attempt directories and data files. Missing
-roots list as empty; storage errors remain errors. These reads do not create
-attempts or operational events. Compose does not mount host experiment reports;
-container report import remains outside this slice.
+Reads validate complete manifests, file hashes and size bounds. They also reject
+symbolic links in the root, its parents, attempt directories and data files, so
+the configured report root cannot silently point elsewhere. A missing root
+produces an empty list; storage errors remain errors. Reads do not create
+attempts or operational events. Compose does not mount host experiment reports,
+so importing reports into a container is outside this change.
 
 ## Refresh the numerical learning graphics
 
@@ -106,11 +115,11 @@ capacity and horizon counts before creating SVG/PNG charts, `evidence.json` and
 the self-contained `explainer.html`. `flow.svg` is the separately authored model
 boundary diagram; `explainer.template.html` contains the learning-page layout.
 
-The JSON is a **frozen documentation projection** with numerical task IDs and
-timestamps, not runtime attempt IDs or lifecycle-event identities. Raw exports
-remain ignored under `.lab/`. Keep generated assets in Git so Markdown images
-work without a running application; open HTML locally because GitHub shows its
-source. To preview it over localhost:
+The JSON is a **frozen documentation projection**: its task IDs and timestamps
+belong to the numerical model, not to runtime attempts or lifecycle events.
+Raw exports remain ignored under `.lab/`. Keep the generated assets in Git so
+Markdown images work without a running application. Open the HTML locally,
+because GitHub displays its source. To preview it over localhost:
 
 ```sh
 python -m http.server 8877 --bind 127.0.0.1 \
@@ -121,13 +130,15 @@ python -m http.server 8877 --bind 127.0.0.1 \
 Compare the documented numbers and hashes with the source report. Inspect figure
 labels and legends, desktop/mobile layout, policy selection, seek, playback and
 reduced motion. Verify task counts at startup, the horizon and full drain.
-The page uses embedded data and no operational requests or credentials.
+The page uses embedded data, makes no operational requests and uses no
+credentials.
 If the scenario changes, update the prose and interpretation alongside the figures.
 
 ## OpenSpec
 
-`openspec` at the root is a symlink to `docs/openspec/`. Use the shared OpenSpec
-workflow to propose, implement, verify, and archive meaningful changes:
+`openspec` at the root is a symbolic link to `docs/openspec/`. Use the shared
+OpenSpec workflow to propose, implement, verify and archive meaningful changes.
+It keeps requirements and their evidence reviewable:
 
 ```sh
 openspec list
@@ -135,8 +146,8 @@ openspec list --specs
 openspec validate --all --strict
 ```
 
-Keep requirements focused on the current experiment. The roadmap is not a
-promise that all proposed capabilities are already implemented.
+Keep requirements focused on the current experiment. The roadmap describes
+proposals; it does not mean those capabilities have been implemented.
 
 Review Capacity v0.2 is closed. Its canonical requirements live in
 `openspec/specs/review-capacity-experiment/spec.md`; the archived change contains
@@ -149,10 +160,12 @@ accepts an optional UUID and creates two copies of the fixed backlog scenario;
 `GET /batches/{id}`, `POST /batches/{id}/advance` and
 `POST /batches/{id}/reconcile` require operator authorization. A gateway without
 a configured local coordinator rejects batch creation/advance/reconcile.
-Batch and item tables are additive. A transaction binds each item to its run;
-owner epochs fence mutations. A POSIX lock inherited by workers covers the
-graph invocation and batch decisions. Admission never treats journal delivery,
-a CLI exit or a checkpoint alone as proof that an uncertain worker stopped.
+Batch and item tables are additive. A transaction binds each item to its run.
+Owner epochs (generation numbers for the current owner) reject mutations from
+an earlier owner. A POSIX (Unix-style) file lock inherited by workers covers the
+graph invocation and batch decisions. Admission does not assume an uncertain
+worker has stopped just because its journal entry was delivered, the CLI exited
+or a checkpoint exists.
 
 Use `PYTEST_ADDOPTS='tests/test_admission.py tests/test_admission_store.py
 tests/test_admission_access.py tests/test_admission_recovery.py

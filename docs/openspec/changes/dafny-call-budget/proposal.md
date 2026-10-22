@@ -4,8 +4,9 @@ Status: proposed on 20 October 2026; no Dafny implementation or proof exists yet
 
 ## Why
 
-Learn what a formal proof adds to the gateway's existing example-based tests.
-Use one concrete question: can a grant ever authorize more calls than its limit?
+Learn what a formal proof can establish beyond the gateway's example-based
+tests. The question is whether any sequence of requests can spend more calls
+than one grant allows.
 
 The current `Store.authorize` checks the run state, expiry, capability and call
 budget, then increments the grant counter before dispatch. The budget is per
@@ -20,21 +21,24 @@ consume budget; an authorized operation that later fails does.
   for arbitrary finite sequences of the modeled transitions.
 - Compare those properties with current gateway tests and two additional
   accounting tests, without changing the production authorization behavior.
-- Introduce one deliberately incorrect `<=` guard in an isolated negative
-  variant. Keep the contract unchanged and demonstrate rejection at the limit.
+- Introduce one deliberately incorrect `<=` guard in an isolated faulty
+  variant. The verifier should reject it at the exhausted limit, showing that
+  the check can catch the specific off-by-one error. Keep the contract unchanged.
 - Provide an explicit, opt-in verification command and a short learning guide
   with reproducible evidence and a precise guarantee statement.
 
 ## Hypothesis, Variables and Observations
 
-Hypothesis: an invariant over the authorization transition can establish a
-per-grant budget bound for all finite modeled request sequences, while the
-Python tests establish behavior only for their exercised cases.
+Hypothesis: a property that holds in the initial state and remains true after
+every modeled authorization step can establish the per-grant budget bound for
+all finite request sequences in this model. Python tests provide evidence only
+for the cases they execute.
 
 Keep the contract, initial state and toolchain fixed. Vary request eligibility,
-call limit, request sequence and deactivation position; for the negative variant
-change only `<` to `<=`. Record verification diagnostics, source hashes, commands,
-tool versions, test outcomes and the concrete boundary witness `used = limit = 1`.
+call limit, request sequence and deactivation position; in the faulty variant,
+change only `<` to `<=`. At the boundary `used = limit = 1`, the grant has no
+calls left, so this faulty guard would incorrectly allow one more. Record
+verification diagnostics, source hashes, commands, tool versions and test outcomes.
 No performance or model-quality comparison is intended.
 
 ## First Acceptance Slice and Non-Goals

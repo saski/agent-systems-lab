@@ -1,8 +1,15 @@
 # Activity, telemetry and history
 
-For a screenshot-led tour of each interface module, see the
-[illustrated dashboard guide](dashboard.md). This page covers operation,
-telemetry delivery and historical integrity.
+When work is waiting, telemetry may also be waiting for delivery. This guide
+teaches you to read those as separate states, then explains what history checks
+can establish about recorded events and what they cannot establish about
+process health or administrators. For a tour of each interface module, see the
+[illustrated dashboard guide](dashboard.md).
+
+The **Activity** view reads events recorded by the gateway during workflow
+execution. The separate **Experiments** view reads saved reports from the
+numerical Review Capacity simulation. The first describes recorded application
+activity; the second describes model results.
 
 ## Start the activity dashboard
 
@@ -21,9 +28,11 @@ In another terminal, run through that persistent gateway:
 make dashboard-demo
 ```
 
-The dashboard shows the real fixture workflow, its specialists and current stage,
+The dashboard shows the fixture workflow, its specialists and current stage,
 an event timeline, chain verification and telemetry delivery backlog. It also
-shows older local runs. It does not launch workers or make operator decisions.
+shows older local runs. These records describe the workflow shown by the
+gateway; they do not establish worker process health. The dashboard does not
+launch workers or make operator decisions.
 Task-state counts cover all recorded runs; the selectable list shows the latest
 100. Workflow age starts at run creation; review wait starts at `run.ready`.
 Telemetry pending count and oldest pending age describe a separate delivery
@@ -31,10 +40,11 @@ queue. Missing or invalid ages remain unknown. The two session charts keep up
 to 120 readings in browser memory, preserve gaps after failed reads, and reset
 on reload or a new viewer session. They are not persistent historical charts
 or the Review Capacity simulation.
-Polling resumes from a sequence cursor; repeated batches are deduplicated. A
-failed connection is displayed as stale and stops live animation. A worker that
-has no terminal event after 120 seconds is unknown, not assumed healthy. Revocation
-means access was revoked, not proof that the OS process has stopped.
+Polling resumes from a sequence cursor, the last event number received, and
+deduplicates repeated batches. A failed connection is displayed as stale and
+stops live animation. A worker with no terminal event after 120 seconds is
+unknown, not assumed healthy. Revocation means access was revoked; it does not
+prove that the OS process has stopped.
 
 `make demo` still uses a temporary local gateway and the same SQLite database.
 `make dashboard-demo` makes the browser and workers share the persistent gateway.
@@ -45,10 +55,12 @@ Container users open the same dashboard URL after `make containers-up`, then use
 
 Every new event and its operational state change commit in one database
 transaction. Globally sequenced events carry stable event IDs, trace/span IDs,
-actor, run, outcome, timestamp, provenance and a SHA-256 link to the previous event.
-The final head is stored separately. SQL triggers reject updates, deletes and
-replacement of history; Postgres also rejects truncation. There is no API to
-rewrite or delete recorded events.
+actor, run, outcome, timestamp, provenance (where the record came from) and a
+SHA-256 link to the previous event. SHA-256 is a hash function that produces a
+fixed-size fingerprint of the event content.
+The final head is stored separately. SQL triggers are automatic database rules
+that reject updates, deletes and replacement of history; Postgres also rejects
+truncation. The gateway exposes no API to rewrite or delete recorded events.
 
 Lifecycle event keys deduplicate exact retransmission, even after restart.
 Conflicting content under the same identity is rejected. Repeated model/tool
@@ -62,10 +74,12 @@ Migration never deletes or resets experiment state. Back up important state befo
 an upgrade; a running older gateway must be stopped before switching versions.
 
 Operational run rows, local JSON exports, dashboard projections and telemetry
-acknowledgements are mutable views. The canonical journal is the historical source.
+acknowledgements are mutable views. The canonical journal is the historical
+source: it records the events against which those views can be checked.
 Neither a database administrator nor a host administrator is excluded by this
 local setup: they can disable SQL triggers and rewrite the database, including
-all hashes. A chain on the same machine is not WORM storage or a signature.
+all hashes. A chain on the same machine is not write-once, read-many (WORM)
+storage or a signature.
 
 ## Verify and keep an independent checkpoint
 
@@ -98,26 +112,32 @@ inspect the Postgres history rather than the local SQLite history.
 
 ## OpenTelemetry scope and delivery
 
-OpenTelemetry exports gateway-observed spans for run, grant, authorization,
-worker lifecycle, tool/model completion, artifact and human-decision events.
-One run has one trace ID; event/span IDs remain stable across retransmission.
+OpenTelemetry exports spans, timed records of gateway-observed operations, for
+run, grant, authorization, worker lifecycle, tool/model completion, artifact
+and human-decision events.
+Each run has one trace ID to group its spans. Event and span IDs remain stable
+across retransmission.
 Completion events include measured operation duration; worker duration is observed
 from its start and terminal events. Spans do not expose private reasoning or
 claim to capture every function or CPU activity inside a worker.
 
-A persistent outbox is committed with each event. Only successful exporter
-acknowledgement marks a batch delivered. An unavailable collector retains the
-batch for later attempts, including after process restart. No collector network
-call occurs inside the authorization/state-change transaction. Integrity failure
-halts export. Delivery is **at least once**: a crash after receiver acceptance but
-before local acknowledgement may resend a span. Stable IDs help downstream
-correlation; downstream deduplication depends on that backend. The dashboard uses
-the journal, so collector retries never duplicate canonical history.
+A persistent delivery outbox, a queue of records awaiting export, is committed
+with each event. The outbox holds records until the exporter reports successful
+delivery; only that acknowledgement marks a batch delivered. The collector is
+the service that receives exported telemetry. If it is unavailable, the outbox
+retains the batch for later attempts, including after process restart. No
+collector network call occurs inside the authorization/state-change transaction.
+Integrity failure halts export. Delivery is **at least once**: a crash after
+receiver acceptance but before local acknowledgement may resend a span. Stable
+IDs help downstream correlation; downstream deduplication depends on that
+backend. The dashboard uses the journal, so collector retries never duplicate
+canonical history.
 
-There is no network exporter by default. Explicitly configure
-`OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` with the complete OTLP/HTTP traces endpoint to
-enable it. Credentials, prompts, tool arguments, response bodies and scenario
-contents are not exported. Export is an explicit destination choice; configure
+There is no network exporter by default. Configure
+`OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` with the complete OpenTelemetry Protocol
+(OTLP) over HTTP traces endpoint to enable it. Credentials, prompts, tool
+arguments, response bodies and scenario contents are not exported. Export is an
+explicit destination choice; configure
 a trusted receiver before enabling it. One gateway/exporter process per database
 is the supported playground topology. A new destination does not automatically
 re-export already acknowledged history.
@@ -152,10 +172,10 @@ The integration follows the OpenTelemetry [Python exporter documentation](https:
 [public trace SDK](https://opentelemetry-python.readthedocs.io/en/latest/sdk/trace.html)
 and [Collector resiliency guidance](https://opentelemetry.io/docs/collector/resiliency/).
 
-SQLite uses WAL with read snapshots so dashboard scans do not reserve its writer
-slot; ledger writers still serialize sequence allocation. Full-chain verification
-and live projections deliberately prioritize clarity over
-scale in this single-operator playground. The run overview is limited to the
+SQLite uses write-ahead logging (WAL) with read snapshots so dashboard scans do
+not reserve its writer slot; ledger writers still serialize sequence allocation.
+Full-chain verification and live projections deliberately prioritize clarity
+over scale in this single-operator playground. The run overview is limited to the
 latest 100 runs; historical events have stable cursors. Multi-tenant access,
 external WORM anchoring, horizontally scaled exporters, configurable retention,
 host metrics and production-grade database roles are future extensions.

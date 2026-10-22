@@ -1,9 +1,10 @@
 # Review capacity: where does the waiting go?
 
-**Four execution slots complete 8 decisions by tick 60, versus 6 with one slot.
-WIP 3 keeps those 8 decisions, but moves most waiting from review to admission.**
-These are results of the supplied deterministic model, not measurements of agents
-or a real team's productivity.
+**Four execution slots complete 8 decisions by tick 60, compared with 6 using
+one slot. A work-in-progress (WIP) limit of 3 keeps the same 8 decisions while
+moving most waiting from review to admission.** These results come from the
+supplied deterministic model. They do not measure agents or a real team's
+productivity.
 
 [Open the interactive learning guide](../../docs/graphics/review-capacity/explainer.html)
 in a browser from a local checkout. It contains policy selection, a logical-time
@@ -16,26 +17,29 @@ standalone page complements that view with an offline replay.
 
 ![Two numbered queues and the admitted-WIP boundary](../../docs/graphics/review-capacity/flow.svg)
 
-There are **two in-memory queues**. Admission requires a free execution slot and
-room under the WIP cap. Admitted WIP includes executing, awaiting-review and
-reviewing tasks. Admission waiting remains outside that cap, but inside the
-measurement boundary. Finishing execution frees an execution slot; only a
-simulated decision frees the task's WIP allocation.
+The model has **two in-memory queues**. A task can enter execution only when a
+slot is free and there is room under the work-in-progress (WIP) cap. Admitted
+WIP includes tasks in execution, waiting for review or being reviewed. Tasks
+waiting for admission sit outside the cap, but still count in the reported
+workload. Finishing execution frees a slot; a simulated decision frees the
+task's WIP place.
 
 The synthetic reviewer is one modeled resource, separate from the playground's
-Reviewer agent. Execution ticks represent abstract automated service; they do
-not time the Researcher, Builder or Reviewer implementations.
+Reviewer agent. An execution tick is one unit of logical model time for
+abstract automated service. It does not time the Researcher, Builder or
+Reviewer implementations.
 
 ## Question, prediction and controlled comparison
 
-**Question:** when execution speeds up but review stays fixed, how much more
-accepted output leaves the system, and where does unfinished work accumulate?
+**Question:** when execution speeds up but review stays fixed, how many more
+decisions does the system complete, and where does unfinished work accumulate?
 
 **Prediction:** increasing execution slots will increase review waiting without
 multiplying accepted output fourfold. A WIP cap may keep the reviewer supplied
 while reducing admitted work and moving waiting upstream.
 
-The checked-in [scenario](scenario.json) holds these inputs fixed:
+The checked-in [scenario](scenario.json) keeps these inputs fixed across the
+three policies:
 
 | Input | Value |
 | --- | --- |
@@ -53,10 +57,11 @@ The checked-in [scenario](scenario.json) holds these inputs fixed:
 | B · more execution | 4 | None |
 | C · bounded WIP | 4 | 3 |
 
-**A → B changes execution slots. B → C changes only the admission cap.**
-Ticks are logical model time, not seconds. At a shared tick, services complete,
-arrivals register, review starts and eligible tasks enter execution before the
-post-transition state is recorded.
+FIFO means first-in, first-out: tasks enter admission in arrival order.
+**A → B changes the number of execution slots. B → C changes only the admission
+cap.** Ticks count logical model time, not seconds. At each tick, the model
+completes services, registers arrivals, starts reviews and admits eligible
+tasks to execution, then records the resulting state.
 
 ## Read delivery and unfinished work together
 
@@ -73,17 +78,18 @@ post-transition state is recorded.
 | Admitted WIP | 2 | 16 | 3 |
 | Not yet arrived | 0 | 0 | 0 |
 
-Read the comparison in two passes:
+Compare the policies in two steps:
 
-1. **A → B:** 4× execution capacity produces 8/6 = **1.33× completed decisions**
-   over the same window. Execution helps; fixed review service constrains
-   further output. This ratio includes startup and finite-horizon effects;
-   it is not a universal scaling law.
+1. **A → B:** 4× as many execution slots produce 8/6 = **1.33× as many
+   completed decisions** in the same window. More execution increases output,
+   while the fixed review service limits further increase. This ratio includes
+   startup and finite-horizon effects, so it does not predict scaling in other
+   workloads.
 2. **B → C:** the review queue falls from **15 to 1**, while admission waiting
    rises from **0 to 13**. Total unfinished work remains **16**. The cap changes
    where tasks wait; it does not remove demand or create review capacity.
 
-Conservation is visible without reading code:
+You can account for every task from the report:
 `24 = admission queue + executing + review queue + reviewing + decided`.
 At earlier ticks, also count tasks scheduled to arrive in the future.
 
@@ -91,9 +97,14 @@ At earlier ticks, also count tasks scheduled to arrive in the future.
 
 ![Decisions, both queues and admitted WIP through full drain](../../docs/graphics/review-capacity/trajectories.svg)
 
-The dotted vertical line marks the common horizon. Curves continue through full
-drain; step values hold between events. **B and C have identical per-task decision
-ticks** here, despite markedly different queue occupancy.
+The dotted vertical line marks the common observation horizon. The curves
+continue until all tasks finish, and each value holds between events. **B and C
+complete each task at the same tick** in this scenario, even though their queues
+contain very different numbers of tasks.
+
+The makespan is the tick when the final task receives its decision. Here, the
+full-drain latency and wait results use percentiles: p50 is the median, and p95
+is the 95th percentile.
 
 | Full drain · the same 24 tasks | A | B | C |
 | --- | ---: | ---: | ---: |
@@ -102,25 +113,28 @@ ticks** here, despite markedly different queue occupancy.
 | Admission wait p50 / p95, ticks | 66 / 132 | 0 / 0 | 40 / 84 |
 | Review-queue wait p50 / p95, ticks | 0 / 0 | 44 / 88 | 4 / 4 |
 
-This supports the selected prediction: C keeps the reviewer supplied while
-limiting admitted work. It exposes the tradeoff: **the same delivery timing can
-coexist with a smaller review queue and more upstream waiting**. WIP 3 is
-sufficient here; the experiment does not establish an optimal cap for other
-workloads or measure cost, context switching or quality improvements.
+The results support the prediction for this scenario: C keeps the reviewer
+supplied while limiting how many tasks have been admitted. It also shows
+the tradeoff: **delivery can happen at the same times even when the review queue
+is smaller and more tasks wait for admission**. A WIP cap of 3 is sufficient
+here. The experiment does not establish the right cap for other workloads or
+measure cost, context switching or quality improvements.
 
-## Read the metrics without losing the denominator
+## Read each metric with its sample size
 
 - Horizon counts use decisions at or before tick 60. Pending means **all 24
   scheduled tasks minus those decisions**, including future arrivals when any
   remain. `not_arrived` identifies that portion separately.
-- Horizon latency and wait percentiles include only tasks decided in that
-  window: A has **n = 6**, B and C **n = 8**. These are selected completed
-  cohorts, not the whole workload or automatically identical task sets.
-- Full-drain percentiles above use the same **n = 24** tasks per policy.
-  If the drain bound is exhausted, the report marks it incomplete and makespan
-  unavailable; pending work is retained.
-- p50/p95 use nearest rank: sort values and select rank `ceil(p × n)`.
-  Zero completed observations produce `null`, not zero waiting.
+- Horizon latency and wait percentiles include only tasks decided by that
+  horizon: A has **n = 6**, while B and C have **n = 8**. These are completed
+  subsets of the workload, and the policies do not necessarily decide the same
+  tasks by tick 60.
+- Full-drain percentiles use the same **n = 24** tasks for every policy. If the
+  drain bound expires first, the report marks the run incomplete, leaves the
+  makespan unavailable and retains the unfinished tasks.
+- The model calculates percentiles with nearest rank: sort the values and
+  select rank `ceil(p × n)`. When no task has completed,
+  the percentile is `null`, not zero waiting.
 - Queue means and utilization integrate post-transition occupancy over logical
   time. An unweighted average of event snapshots would bias the result.
   Execution utilization is normalized by execution slots.
@@ -150,16 +164,17 @@ It does not invoke workers, run a new experiment or operate permissions.
 
 ## Connect the result to systems thinking
 
-Queues are stocks; arrivals, admission, execution completion and review are
-flows. Review is a capacity constraint for B and C after startup. The cap is
-a balancing admission rule: occupied WIP blocks intake until a decision frees
-room.
+In systems thinking, a queue is a stock: it holds work until a flow moves that
+work elsewhere. Arrivals, admission, execution completion and review are the
+flows in this model. Review limits throughput for B and C after startup. The
+WIP cap balances admission by keeping new tasks in the admission queue until a
+decision frees a place. That queue remains inside the system we measure.
 
-The measurement boundary changes the apparent result. Observe only awaiting
-review and C looks much faster. Include admission waiting and end-to-end
-decisions, and the location of waiting becomes the central observation. This
-is our interpretation of a teaching model, not a quoted result or experiment
-from *Thinking in Systems*.
+The measurement boundary changes what appears faster. If we count only time
+spent awaiting review, C looks much faster. Counting admission wait as well
+shows where the waiting moved and that B and C complete tasks at the same
+ticks. This is an interpretation of the teaching model, not a quoted result or
+experiment from *Thinking in Systems*.
 
 ## Reproduce and inspect the evidence
 
@@ -169,22 +184,26 @@ From the repository root:
 make review-capacity-demo
 ```
 
-This runs the locked existing CLI with the fixed
-`experiments/review-capacity/scenario.json` scenario. The equivalent CLI command is:
+This runs the existing CLI with the committed dependencies and fixed
+`experiments/review-capacity/scenario.json` scenario. You can run the same
+experiment directly with:
 
 ```sh
 uv run --locked systems-lab experiment review-capacity \
   --scenario experiments/review-capacity/scenario.json
 ```
 
-The printed manifest identifies a new directory under
-`.lab/experiments/review-capacity/`, with `scenario.json`, `report.json` and the
-completion marker `manifest.json`. The command generates no control credentials
-and invokes no agent workers, providers, approval or canonical audit journal.
+The command prints a manifest naming the new attempt directory under
+`.lab/experiments/review-capacity/`. It contains `scenario.json`, `report.json`
+and the completion marker `manifest.json`. Running this numerical experiment
+does not create control credentials, start agent workers or providers, request
+approval, or write to the canonical audit journal.
 
-Repeating an input creates a fresh attempt with identical report bytes and hash;
-an explicit reused `--attempt-id` is rejected. `status: complete` describes the
-artifact files, independently of numerical `drain.complete`.
+Each run creates a fresh attempt. Repeating the same input produces identical
+report bytes and hash, while reusing an explicit `--attempt-id` is rejected.
+`status: complete` means the artifact files were completed; numerical
+`drain.complete` separately says whether all tasks finished before the drain
+bound.
 
 The graphics were regenerated from a CLI export on **5 October 2026**. Their
 [frozen documentation projection](../../docs/graphics/review-capacity/evidence.json)
@@ -197,9 +216,10 @@ operational history or OpenTelemetry measurements**.
 | Scenario | `77c8a82e574cf23eb7bd1babd76332daa1a04926309f34427f638d1f29d3fae3` |
 | Deterministic report | `a3a9c0396620438fa7c039f5aa9aace98a85cff968ba5004c52e5e25f473e58a` |
 
-Hashes detect disagreement against a preserved reference. A privileged owner
-can rewrite both a local file and its hash; these files are not WORM storage.
-An independently retained reference is needed for a stronger history claim.
+Hashes let you detect when a file differs from a preserved reference. Someone
+with sufficient local privileges can rewrite both the file and its hash, so
+they do not make these files immutable storage. An independently retained
+reference would support a stronger claim about their history.
 
 ## Try to disprove the explanation
 

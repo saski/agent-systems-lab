@@ -3,10 +3,12 @@
 ## Why
 
 The lab needs a small runnable experiment that makes agent permissions and
-system behavior observable. The first slice uses a stock-and-flow backlog model
-while reading Donella Meadows' *Thinking in Systems*. It establishes a governed
-workflow that can later support other experiments without implying that the
-initial system is a general-purpose coding agent.
+system behavior observable. The first slice uses a stock-and-flow backlog model:
+work accumulates in a queue, moves through a process and leaves when completed.
+While reading Donella Meadows' *Thinking in Systems*, the learner can compare
+that model with the three-specialist workflow and see where the gateway checks
+each model or tool request. This establishes a governed workflow for later
+experiments without making the first slice a general-purpose coding agent.
 
 ## What changes
 
@@ -17,6 +19,8 @@ initial system is a general-purpose coding agent.
   every call.
 - Provide the bounded tools `system.describe`, `simulation.run`, and
   `simulation.review` for a deterministic stock-and-flow backlog experiment.
+  The simulation accepts only validated inputs within documented limits, and
+  the gateway exposes no arbitrary code-execution tool.
 - Run scripted responses through the real LangChain tool loop in the local
   fixture mode, and label the resulting evidence as fixture-backed.
 - Persist gateway audit state locally with SQLAlchemy/SQLite and in the Compose
@@ -39,7 +43,8 @@ initial system is a general-purpose coding agent.
 
 - A local demo completes the experiment through the actual LangChain tool loop
   using scripted responses, needs no provider credentials or provider requests,
-  and identifies fixture provenance in its output and audit trail.
+  and labels its output and audit trail to show that the responses came from a
+  scripted fixture rather than a live provider.
 - Each model or tool call is authorized by the gateway against the current
   task's role allowlist and unexpired grant; revocation blocks later calls for
   the whole run.

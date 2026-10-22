@@ -2,10 +2,13 @@
 
 ## Why
 
-The playground can show a workflow waiting for an operator, but it cannot yet
-explain how execution capacity, review capacity and admission policy interact.
-A reproducible comparison would connect technical controls to an engineering
-leadership question: which intervention improves delivery when review is scarce?
+The playground can show one workflow waiting for an operator, but it cannot yet
+show what happens when many tasks compete for execution and review. Here,
+execution capacity means the number of tasks that can run in parallel; review
+capacity is the rate at which the single modeled reviewer can decide; and the
+admission policy controls how many tasks may enter while earlier work is still
+unfinished. Comparing those controls makes the queueing tradeoff visible when
+review is scarce.
 
 The current backlog model is a numerical stock-and-flow model. The current
 LangGraph workflow executes specialists sequentially within one run; the CLI
@@ -14,14 +17,20 @@ runtime queue or concurrency controller.
 
 ## What Changes
 
-Propose version 0.2 as one bounded review-capacity experiment:
+Propose version 0.2 as one finite, reproducible review-capacity experiment. Its
+task count, service times and simulation horizon have fixed limits, so the
+comparison stays small enough to inspect:
 
-- Add a deterministic event-time model with finite arrivals, parallel execution
-  slots, one synthetic reviewer, FIFO queues and optional total-WIP admission.
+- Add a deterministic event-time model that advances in logical ticks, with
+  finite arrivals, parallel execution slots, one simulated reviewer that accepts
+  every task, first-in, first-out (FIFO) queues and optional total
+  work-in-progress (WIP) admission.
 - Compare one execution slot, four slots, and four slots with WIP capped at three,
   keeping workload and review service fixed.
-- Export scenario, event trace, reconciled metrics and provenance to fresh local
-  attempt directories, with deterministic report hashes and no overwrites.
+- Save each run's scenario, event trace, reconciled metrics and a source label
+  identifying the results as simulated in its own local attempt directory. A
+  report hash, a fingerprint calculated from its contents, helps detect changes;
+  repeated attempts never overwrite earlier files.
 - Add a read-only Experiments view to the local dashboard: queue occupancy,
   cumulative simulated decisions, waiting times and an animated replay.
 - Document predictions, actual observations after implementation, and limits.

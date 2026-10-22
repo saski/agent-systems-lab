@@ -2,22 +2,24 @@
 
 ## Runtime shape
 
-Python 3.11+ is managed with `uv` and the committed lockfile. LangGraph owns the
-macro workflow and checkpointed state. Each specialist is a LangChain
-`create_agent` instance with a role-specific `agent.yaml`, `persona.md`, and
-skills. The initial roles are Researcher, Builder, and Reviewer. These files
-shape behavior only; the gateway's deterministic policy is the authority for
-access.
+Python 3.11+ is managed with `uv` and the committed lockfile. LangGraph
+coordinates the overall workflow and saves checkpoints so it can resume after
+the human review pause. Each specialist is a LangChain `create_agent` instance
+with a role-specific `agent.yaml`, `persona.md`, and skills. The initial roles
+are Researcher, Builder, and Reviewer. These files guide each specialist's
+behavior; the gateway's deterministic policy decides which calls are allowed.
 
-The host CLI creates a run and launches one-shot workers from a fixed worker
-template. Docker workers use an internal Compose network with no external
-egress and can reach the gateway. Local process mode is trusted development
-execution without filesystem or network sandboxing.
-The gateway fronts all model requests and the three experiment tools:
+The host CLI creates a run and launches workers from a fixed template. Each
+worker handles its assigned task once, then exits. Docker workers use an
+internal Compose network with no external egress and can reach the gateway.
+Local process mode is trusted development execution without filesystem or
+network sandboxing.
+The gateway receives all model requests and calls to the three experiment tools:
 `system.describe`, `simulation.run`, and `simulation.review`. It validates every
-call using an opaque, expiring per-task grant and the calling role's allowlist.
-Tokens are stored and compared as hashes. The host can revoke every grant in a
-run and stop only workers carrying that run's labels. V0 does not let agents
+call using an opaque, expiring per-task grant: a random credential tied to one
+task and role, with a limited call set and lifetime. Tokens are stored and
+compared as hashes. The host can revoke every grant in a run and stop only
+workers carrying that run's labels. V0 does not let agents
 create or delegate to child workers.
 
 ```text
@@ -60,21 +62,26 @@ the local workflow and does not trigger external publication.
 For the local demo, scripted responses exercise the actual LangChain agent and
 tool loop through a fixture model adapter. The demo requires no provider
 credentials and makes no provider requests. Every result and audit record must
-identify fixture provenance. This demonstrates workflow wiring and policy
-enforcement only; it is not a live-provider evaluation. Live model routing may
+be labelled as using scripted fixture responses, so a reader can tell where the
+evidence came from. This demonstrates workflow wiring and policy enforcement
+only; it is not a live-provider evaluation. Live model routing may
 be added later behind fixed gateway configuration, with credentials remaining
 in the gateway.
 
 ## Experiment model
 
-The first experiment is a deterministic stock-and-flow backlog model. Its
-description names the system boundary, stocks, flows, assumptions, and units.
+The first experiment is a deterministic stock-and-flow backlog model: it tracks
+the amount of unfinished work and how tasks enter, move through and leave the
+system. Its description names the system boundary (what the model includes),
+stocks (amounts of work held at a stage), flows (changes to those amounts),
+assumptions and units.
 The gateway limits simulations to 1,000 steps and rejects non-finite computations.
 An observation delay at least as long as the horizon means the controller
 observes only the initial backlog throughout that finite experiment.
-The run accepts bounded, validated inputs and records the hypothesis, variables,
-and time horizon. The review reports observations and limitations, including
-that deterministic fixture runs do not establish real-world causal validity.
+The run accepts only inputs that pass validation and stay within documented
+limits, and records the hypothesis, variables and time horizon. The review
+reports observations and limitations, including that deterministic fixture runs
+do not establish real-world causal validity.
 The experiment exposes only `system.describe`, `simulation.run`, and
 `simulation.review`; it does not expose arbitrary shell or code execution.
 
@@ -91,7 +98,7 @@ CI should validate Compose and exercise containers when available.
 
 ## Deferred architecture
 
-Fixed live-model routes, dynamic delegation with attenuated grants, OTLP
-telemetry, stronger isolation, and general coding workflows remain future
-directions. None is part of the first slice's delivered behavior or acceptance
-claim.
+Fixed live-model routes, dynamic delegation with grants narrower than their
+parent grants, OTLP telemetry, stronger isolation, and general coding workflows
+remain future directions. None is part of the first slice's delivered behavior
+or acceptance claim.

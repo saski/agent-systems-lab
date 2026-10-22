@@ -6,12 +6,11 @@ Prepared October 7, 2026. Adds a product/frontend learning track to the
 It does not replace that proposal, approve its implementation or change the
 gateway, permissions, agent runtime or funding boundaries.
 
-## Why Adjust The Learning Goal
+## Why adjust the learning goal
 
-The learner now prioritizes a frontend engineering-management opportunity.
-The most useful additional question is not simply whether telemetry arrives,
-but whether a person can find the right resource, understand its state and keep
-context while moving between views.
+The learner is prioritizing a frontend engineering-management opportunity. This
+track adds an interface question: can a person find the right resource,
+understand its state and keep context while moving between views?
 
 Keep the existing distinction between execution, human review and observation
 delivery. Add a narrow interface/navigation lesson around it. This remains a
@@ -29,7 +28,7 @@ Re-inspection on October 7 of the primary checkout at `13b7ac6` found:
   run, so do not claim either complete compliance or total absence of support.
 - The Collector exports to a local file; no Grafana frontend extension or live
   Grafana integration is demonstrated by this checkout.
-- The October6 integration plan is still explicitly a proposal. Its future
+- The October 6 integration plan is still explicitly a proposal. Its future
   target names must not be presented as current commands.
 
 Current branch: `docs/agent-telemetry-reliability-proposal`. GitHub metadata for
@@ -80,7 +79,7 @@ This is a proposed user journey, not an implemented routing architecture.
 Grafana is a diagnostic interface, not an authority to approve tasks or change
 gateway permissions.
 
-## Hypothesis, Boundary And Observations
+## Hypothesis, boundary and observations
 
 Hypothesis: clear resource naming, preserved navigation context and explicit
 data freshness help the learner distinguish the next human action from an
@@ -255,8 +254,8 @@ or deferred separately from the opportunity decision.
 
 Local links, Markdown fences and whitespace checks passed. `git diff --check`
 passed. An initial sandboxed `make check` could not bind localhost sockets in
-three existing tests; an authorized rerun passed Ruff,83 tests and Compose
-configuration validation, with5 container tests skipped. Those legacy checks
+three existing tests; an authorized rerun passed Ruff, 83 tests and Compose
+configuration validation, with 5 container tests skipped. Those legacy checks
 do not validate the proposed Grafana/plugin integration. Existing tests used
 ephemeral local listeners; no persistent service or new dependency was started.
 

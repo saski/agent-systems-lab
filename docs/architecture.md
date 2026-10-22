@@ -1,14 +1,25 @@
 # Architecture
 
+The workflow separates deciding what to do, coordinating the steps and granting
+permission to act. We want to understand which part is responsible for each
+decision, so that a model's request cannot become its own authorization.
+
+Follow one Builder call through this design: LangGraph starts the specialist,
+LangChain handles its model/tool loop, and the gateway checks whether the
+Builder may run the simulation. The same boundaries apply when a workflow
+pauses for human review or resumes from saved state.
+
 ## Three levels of control
 
-1. **LangChain specialists** own the model → tool → model loop, persona, and
-   selected procedural skills. The initial model is an explicitly scripted fixture.
-2. **LangGraph** owns ordering, state, deterministic validation, checkpoints,
-   and the human review interrupt.
-3. **The control gateway** owns identity, authorization, expiry, call limits,
-   audit records, artifact storage, and run revocation. It does not ask an LLM
-   whether an action is permitted.
+1. LangChain specialists handle the model → tool → model loop. Their personas
+   describe their roles, and selected skills give them procedures to follow.
+   The model replies are scripted fixtures, so the same inputs produce a
+   repeatable exercise of the workflow.
+2. LangGraph runs the steps in order, tracks state and validates results with
+   rules in code. It saves checkpoints and pauses at the human review step.
+3. The control gateway checks identity and permission, including expiry and call
+   limits. It also records actions, stores artifacts and revokes run access.
+   Authorization comes from these rules; an LLM cannot grant it.
 
 ```mermaid
 flowchart TB
@@ -31,13 +42,17 @@ flowchart TB
   class DB,CP store
 ```
 
-There is no external message broker in v0. Work is sequential and bounded.
-The simulation's task backlog is a modeled stock, not a runtime task queue.
+There is no external message broker in v0. Specialists run sequentially, with
+limits on their work. The simulation's backlog is a stock, a quantity of work
+inside the numerical model. It is separate from the actual tasks admitted to
+the workflow.
 
 ## Physical boundaries
 
-In local mode, the gateway runs briefly on loopback and workers are separate
-processes. This mode is for fast development, not filesystem confinement.
+In local mode, workers are separate processes and reach the gateway over
+loopback, the machine's local network interface. The terminal demo starts a
+temporary gateway; the dashboard can keep one running. This makes development
+quick, but it does not restrict which host files a worker process can access.
 
 In Compose mode, the trusted host CLI creates one-shot worker containers from
 one fixed image. The workers network is internal. The database has a different
@@ -50,9 +65,10 @@ trusted and can have outbound connectivity; v0 exposes no forwarding tool or
 live provider route through it.
 
 The workers share an internal network but expose no listening services and
-have no shared writable volumes. This is not hostile multi-tenant isolation.
-The host and gateway are trusted. Container escape and compromise of the host,
-Docker daemon, gateway, or database are outside this first experiment's guarantee.
+have no shared writable volumes. We still trust the host and gateway. The
+experiment does not establish isolation between hostile users or protection
+against container escape, or compromise of the host, Docker daemon, gateway
+or database.
 
 There is no worker shell tool. Registered numerical tools execute in the trusted
 gateway, with strict scenario validation and a 1,000-step limit. General code
@@ -65,11 +81,13 @@ and requested capabilities. The closed `CAPABILITIES` map in `store.py` is the
 enforcement authority. Changing a persona or requested capabilities cannot
 expand this map.
 
-The operator creates a run and receives separate task grants for each role.
-Every grant has a unique instance ID, run ID, role, expiration, and maximum
-number of calls. The worker receives an opaque bearer token via stdin; only its
-SHA-256 hash is stored. Worker credentials cannot create grants or use operator
-endpoints. The gateway resolves identity from the token, never a caller-supplied role.
+The operator creates a run and receives a separate grant for each role. A grant
+is a permission record: it identifies the worker instance, run and role, and
+sets an expiry time and maximum number of calls. The worker receives a bearer
+token through standard input. Possession of that token lets it use the grant;
+the store keeps only its SHA-256 hash. A worker cannot create another grant or
+use operator endpoints. The gateway looks up identity from the token instead
+of trusting the role claimed in a request.
 
 | Role | Permitted operations |
 | --- | --- |
@@ -87,15 +105,18 @@ Compose. It records identities, permissions, statuses, fixture provenance,
 authorization outcomes, and artifacts. These records are not an immutable or
 tamper-proof audit service; the trusted host/database owner can change them.
 
-LangGraph checkpoints use a separate SQLite file on the host. They describe
-workflow progress, not authorization. Reopening a checkpoint cannot approve
-the run. Operator approval is checked against the authoritative store and the
-digest of scenario, artifacts, and policy version.
+LangGraph checkpoints use a separate SQLite file on the host. They save where
+the workflow reached, so it can resume there. Permission still comes from the
+operational store: reopening a checkpoint cannot approve a run. Approval must
+match the digest of the scenario, artifacts and policy version, which ties the
+decision to those exact inputs and outputs.
 
 Artifacts are recorded once per name and run. Retrying a completed registered
-tool returns the existing artifact. After validation, the run becomes
-`awaiting_review`, which closes worker access. This scoped idempotency does not
-claim exactly-once execution for future external side effects.
+tool returns the artifact already stored. This is the idempotency we support:
+repeating that operation does not create another result. After validation, the
+run becomes `awaiting_review`, which closes worker access. This behavior does
+not establish that future operations with external side effects would execute
+exactly once.
 
 Revocation changes the authoritative run status. Subsequent calls fail without
 waiting for token expiry. `revoke --stop-containers` also kills containers
@@ -110,9 +131,9 @@ kill guarantee. A worker timeout revokes the run and kills its containers.
 agent implementation from the graph. Keep that contract and permission model
 when experimenting with Hermes, ADK, OpenAI Agents SDK, or Claude Agent SDK.
 
-Useful future comparisons change one runtime or control at a time, using the
-same task, fixtures, budgets, and outcome criteria. Adding a framework is an
-experiment, not automatically an architectural improvement.
+To compare runtimes, change one specialist or control at a time while keeping
+the task, fixtures, budgets and outcome criteria the same. We then have a way
+to judge what the new framework changes, including its operational cost.
 
 ## References
 
@@ -127,10 +148,16 @@ complete implementation of Blueprint Alliance governance.
 
 ## Observable activity and historical evidence
 
-The gateway commits an append-only journal and a delivery outbox with each
-operational event. The dashboard reads journal-derived activity; OpenTelemetry
-receives correlated spans from that outbox. Collector outages do not interrupt
-authorization or the workflow. Database triggers and hash verification protect
-normal append-only use; independent checkpoints detect rewriting against an
-older trusted head. This local architecture does not exclude a privileged host
-or database administrator. See [observability](observability.md) for details.
+For each operational event, the gateway saves both the event in an append-only
+journal and a record in the delivery outbox. The journal is the history the
+dashboard reads. The outbox is the queue of observations to send through
+OpenTelemetry, where related events can be followed as a trace. A collector
+outage leaves delivery waiting while authorization and the workflow continue.
+
+Database triggers reject ordinary changes to existing journal entries, and hash
+verification checks their links. An independently kept checkpoint lets us compare
+today's history with a previously trusted position and hash. A privileged host
+or database administrator can still rewrite local state. The learning task is
+to tell workflow progress, history integrity and delivery apart; each answers a
+different question. See [observability](observability.md) for the commands and
+limits of those checks.

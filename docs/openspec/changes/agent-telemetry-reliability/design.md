@@ -9,25 +9,36 @@ It is the design reference for this change; all runtime changes are proposed.
 
 1. Use the existing fixture workflow and persistent gateway, independent of the
    dirty Review Capacity implementation. Preserve existing source changes.
-2. Retain the lab Collector as the stopped component in the outage exercise.
-   Forward to the receiver bundled with LGTM. Grafana and Prometheus must remain
-   alive when that ingress Collector stops.
-3. Use OTel metrics with a direct Prometheus scrape from an authenticated gateway
-   endpoint. Neither application freshness nor Collector reachability depends
-   exclusively on the stopped Collector's OTLP pipeline.
-4. Derive current task counts from canonical operational state, never received
-   spans or delivery attempts. Read-only aggregates have bounded labels and
-   distinguish legitimate zeros, disabled export, failed reads and stale data.
-5. Compare expected journal identities against complete Tempo trace results for
-   one small run. At-least-once delivery, downstream gaps and query incompleteness
-   stay visible; no production loss detection or deduplication guarantee is made.
+2. Retain the lab Collector, the service that receives and forwards traces, as
+   the stopped component in the outage exercise. Forward to the receiver in the
+   local LGTM bundle used for Grafana, Tempo and Prometheus. Grafana and
+   Prometheus must remain alive when the lab Collector stops.
+3. Use OpenTelemetry metrics with a direct Prometheus scrape from an authenticated
+   gateway endpoint. Prometheus reads the gateway's current snapshot directly, so
+   metric freshness and Collector reachability do not depend on the stopped
+   Collector's trace pipeline.
+4. Derive current task counts from the gateway's canonical run state, never from
+   received spans or delivery attempts. Keep metric labels to the fixed run-state
+   values and deployment names; do not add a unique label for each run or event.
+   This keeps the number of stored time series bounded as the lab runs more tasks.
+   Distinguish a real zero from disabled export, failed reads and stale data.
+5. Compare the unique event/span IDs in the gateway journal, the durable ordered
+   record of task events, with a complete Tempo trace query for one small run.
+   The outbox records events awaiting the next receiver's acknowledgement.
+   Retries retain IDs, but OpenTelemetry delivery is at least once, so a receiver
+   may see duplicates; a later gap can still occur after acknowledgement. Keep
+   incomplete queries visible and make no production loss-detection or
+   deduplication guarantee.
 6. Keep host control, gateway permissions, worker isolation and human approval
-   unchanged. Only a scoped fixture demo path may inject bounded delay/failure.
+   unchanged. The only fault exercise is an opt-in fixture case for one selected
+   role/run: a fixed delay of at most five seconds or a controlled worker failure.
+   It uses the normal gateway lifecycle and accepts no arbitrary command.
 
 ## Risks and mitigations
 
 - **Bundled backend failure:** the observer can fail with the backend. Retain the
-  original gateway dashboard and a host-side diagnostic; do not claim HA.
+  original gateway dashboard and a host-side diagnostic; this local setup does
+  not provide high availability (HA).
 - **Post-acknowledgement loss:** the durable gateway outbox covers its own
   acknowledgement boundary. Finite reconciliation can reveal missing downstream
   spans; persisted Collector recovery remains deferred.

@@ -1,8 +1,11 @@
 # observable-activity Specification
 
 ## Purpose
-Provide attributable, append-only operational history, recoverable OpenTelemetry
-delivery and a live read-only view of agent workflows.
+Help an operator follow a workflow from its durable, append-only event history
+to its live read-only activity view. Each event records who acted and what
+happened. Then study how OpenTelemetry delivery recovers after interruption:
+telemetry carries those observations to other tools and may deliver them more
+than once, while the journal remains the history used for comparison.
 
 ## Requirements
 

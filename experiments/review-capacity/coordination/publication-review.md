@@ -7,13 +7,19 @@
 
 ## Verified Observations
 
-At tick 60, decision distributions: A decides 6/24, B decides 8/24, C decides 8/24 tasks.
+By model tick 60, policy A had decided 6/24 tasks. Policies B and C had each
+decided 8/24 tasks.
 
-Unfinished work: B and C have 16 tasks each, with review queues at 15 and 1 respectively. Admission queues: B has 0, C has 13 tasks pending admission. Admitted WIP is 16 for B and 3 for C.
+Policies B and C each have 16 unfinished tasks. Of those, 15 are waiting for
+review under B and 1 under C. B has no tasks waiting for admission; C has 13.
+Work in progress (WIP) admitted under the cap is 16 for B and 3 for C.
 
-Decision timing is identical per-task across B and C. Full drain completion: A requires 198 ticks, B and C require 152 ticks.
+Each task has the same decision tick under B and C. To complete the full
+workload, A requires 198 ticks; B and C each require 152 ticks.
 
-The WIP cap moves waiting upstream in this scenario. These synthetic results establish neither a universal optimum nor quality, cost or productivity gains.
+In this scenario, the WIP cap moves waiting upstream to admission. These
+synthetic results do not establish a universal optimum or gains in quality,
+cost or productivity.
 
 ## Quality Checks
 

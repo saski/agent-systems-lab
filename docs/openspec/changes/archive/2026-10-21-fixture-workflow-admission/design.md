@@ -11,24 +11,29 @@ runs three specialist processes, validates their artifacts, marks the run ready
 and pauses for human review. The existing `decide` command verifies a matching
 local checkpoint and digest before recording an operator decision and resuming.
 
-`Store` owns canonical run status, artifacts, permissions and journal events.
+`Store` owns the gateway's authoritative record of each run: its status,
+artifacts, permissions and journal events.
 LangGraph checkpoints live separately in SQLite. Worker execution failures and
 timeouts revoke the run. Existing workflow tests cover resume at human review
 without repeating specialists, but not batch admission or concurrent owners.
 
-The implementation reuses these interfaces and adds a durable queue, ownership,
-reservations and idempotent run binding. Neither a synthetic WIP limit nor
-distinct thread IDs supplies those controls by itself.
+The implementation reuses these interfaces and adds a durable queue and a
+single coordinator that owns admission. A reservation holds the batch's one
+place while its run is being created; binding records which run belongs to that
+item. An idempotent binding makes a retry return the same run instead of
+creating or launching another one. Neither a synthetic WIP limit nor distinct
+thread IDs supplies these runtime controls by itself.
 
 ## Boundary and Identity
 
-The first batch contains exactly two copies of the existing bounded backlog
-fixture scenario. It uses a separate local lab state directory and gateway,
-the process executor and WIP one. An operator requests each advance; there is
-no polling daemon or automatic decision loop.
+The first batch contains exactly two copies of the existing backlog fixture
+scenario, whose inputs are already validated and limited by the gateway. It uses
+a separate local lab state directory and gateway, the process executor and one
+work-in-progress (WIP) place. An operator requests each advance; there is no
+polling daemon or automatic decision loop.
 
-Use a batch ID and stable item IDs distinct from canonical run IDs. Each item
-maps to at most one run. Preserve `thread_id=run_id` for compatibility with the
+Use a batch ID and stable item IDs distinct from gateway run IDs. Each item maps
+to at most one run. Preserve `thread_id=run_id` for compatibility with the
 existing decision CLI; different runs must have different checkpoint threads.
 The batch ID must never become a shared workflow thread ID.
 
@@ -45,16 +50,20 @@ worker execution from checkpointing alone.
 
 ## Admission and Recovery
 
-One fenced owner may advance a batch. Transactional conditional updates and
-unique identities must reject stale or competing Store writes; an in-process
-mutex alone is insufficient. Test two independent connections against SQLite.
+Only the coordinator holding the current owner generation may advance a batch.
+This database-enforced check is the fence: conditional updates and unique
+identities reject writes from an older or competing owner. An in-process mutex
+alone is insufficient because separate processes do not share it. Test two
+independent connections against SQLite.
 
-The Store fence does not make an external process launch atomic. For this local
-slice, hold an exclusive process lock across the full advance/graph invocation
-and check the current owner epoch at the launch boundary. Takeover may invoke
-only after the previous owner has exited and its active workers are confirmed
-absent or stopped. Unknown liveness blocks takeover execution. Test this with
-competing coordinator processes, not only database connections.
+The Store fence does not make an external process launch atomic: the database
+cannot commit a process start in the same transaction as its state change. For
+this local slice, hold an exclusive process lock across the full advance/graph
+invocation and check the current owner epoch, a generation number changed when
+ownership is claimed, at the launch boundary. A takeover may launch only after
+the previous owner has exited and its active workers are confirmed absent or
+stopped. Unknown liveness blocks takeover execution. Test this with competing
+coordinator processes, not only database connections.
 
 Persist launch intent before invoking the graph. Retrying the run-binding
 operation returns metadata only; it does not itself dispatch workers. If a prior
@@ -89,8 +98,8 @@ its result; it never submits a synthetic acceptance. No new specialist tool,
 provider route, permission expansion or external write is needed.
 
 Record actual admission/worker/decision observations with run and item identities,
-fixture provenance and operational timestamps. Preserve them under ignored local
-storage and distinguish canonical events from derived batch exports. Do not
+a fixture-source label and operational timestamps. Preserve them under ignored
+local storage and distinguish canonical events from derived batch exports. Do not
 write runtime observations into numerical reports or compare wall time directly
 with synthetic ticks.
 
@@ -140,7 +149,7 @@ root and rejects external gateways. Existing `decide` checks the matching
 checkpoint and digest, and holds the batch lock for batch-owned runs. Each run
 retains its own checkpoint thread. Single-run commands keep their existing flow.
 
-Each advance/reconcile writes a fresh derived snapshot with fixture provenance,
+Each advance/reconcile writes a fresh derived snapshot with a fixture-source label,
 batch/item/run identities, run snapshots and observation time. Queue transitions
 are persisted in batch state; worker and decision events remain in the canonical
 journal. Neither the queue table nor derived exports claim journal immutability.

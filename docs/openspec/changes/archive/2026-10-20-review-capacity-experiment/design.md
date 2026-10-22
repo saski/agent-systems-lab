@@ -11,15 +11,17 @@ limit of three may keep the reviewer supplied while moving some waiting to the
 admission queue. These are predictions, not observed results or universal laws.
 
 The boundary includes finite arrivals, uniform execution demand, one synthetic
-reviewer, FIFO scheduling and accept-all simulated decisions. It excludes output
+reviewer, first-in, first-out (FIFO) scheduling and accept-all simulated
+decisions. It excludes output
 quality, rework, priorities, stochastic service times, worker failures and human
 fatigue. The reviewer is a modeled operator, distinct from the Reviewer agent.
 
 ## Fixed initial scenario
 
-Time uses integer logical ticks, not wall-clock seconds. Arrive before admitting
-work; service completes after the configured positive duration. All comparisons
-use the same task IDs and arrival list.
+Time uses integer logical ticks: model steps that order events, with no conversion
+to wall-clock seconds. At each step, arrivals are considered before work is
+admitted, and service completes only after its configured positive number of
+ticks. Every policy uses the same task IDs and arrival list.
 
 | Input | Value |
 | --- | --- |
@@ -36,6 +38,10 @@ use the same task IDs and arrival list.
 | A: baseline | 1 | None |
 | B: more execution | 4 | None |
 | C: bounded WIP | 4 | 3 |
+
+Work in progress (WIP) means admitted tasks that have not reached a decision.
+Its limit includes tasks executing, waiting for review and under review. The
+admission queue is visible, but those tasks have not taken a WIP place yet.
 
 Eight execution ticks are an abstract service demand; they do not measure the
 Researcher, Builder or Reviewer implementations. Four slots mean four parallel
@@ -61,10 +67,9 @@ flowchart LR
 
 Queue count: two. Both queues are in-memory model state, not external services.
 Each task progresses through `queued -> executing -> awaiting_review ->
-reviewing -> decided`. Total WIP includes executing, awaiting-review and
-reviewing tasks. A modeled decision releases the WIP slot; finishing automated
-execution releases only the execution slot. Admission requires both capacities.
-The admission queue stays visible and is not counted as admitted WIP.
+reviewing -> decided`. A modeled decision releases its WIP place; finishing
+automated execution releases only the execution slot. Admission requires both
+an available execution slot and room under the WIP limit.
 
 At the same tick, complete active services, register arrivals, enqueue completed
 execution, start the next review, then admit FIFO tasks into free execution
@@ -123,8 +128,9 @@ Write each attempt exclusively under
 `scenario.json`, `report.json` and `manifest.json`; publish a manifest only after
 both data files are complete. The deterministic report contains inputs, model
 version, policies, traces, metrics, limitations and
-`provenance=synthetic_event_time_model`. Attempt ID and wall-clock creation time
-belong to the manifest, outside the deterministic report hash. Repeating an
+`provenance=synthetic_event_time_model`, a label that identifies its event times
+and results as simulated. Attempt ID and wall-clock creation time belong to the
+manifest, outside the deterministic report hash. Repeating an
 input creates a new attempt with the same report bytes/hash; it never overwrites
 earlier files. Local owner modification remains possible and must be disclosed.
 

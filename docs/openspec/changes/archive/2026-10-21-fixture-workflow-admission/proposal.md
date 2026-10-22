@@ -11,28 +11,34 @@ admitted-WIP place while waiting for review, but it does not schedule actual
 LangGraph workflows. At proposal time, the CLI launched one run at a time and
 had no durable admission owner or queue.
 
-Before comparing concurrent runtime policies, test the smallest operational
-boundary: can one fixture workflow retain its place through a human interrupt
-while a second task remains queued, including after a coordinator restart?
+Before comparing concurrent runtime policies, test one admitted work-in-progress
+(WIP) place per batch. The first fixture task holds that place from launch
+through its human review pause, while the second stays queued. The learning
+question is whether this state survives repeated advance commands and a
+coordinator restart without creating another run for the first task. An operator
+must request the next advance after the gateway records an accepted or rejected
+decision, or after revocation is reconciled and worker cleanup is confirmed.
 
 ## What Changes
 
 - Add a finite local batch of exactly two tasks using copies of the existing
   backlog fixture scenario, with admitted WIP fixed at one for initial acceptance.
-- Give batch items durable identities and FIFO positions. Create and bind each
-  canonical run once through a single trusted admission owner.
+- Give batch items durable identities and queue positions that preserve
+  first-in, first-out order. Create and bind each gateway run once through a
+  single trusted coordinator that owns admission.
 - Reuse the existing specialist graph, worker budgets, checkpoints and gateway
   authorization. An `awaiting_review` run keeps the admission place.
 - Let an operator explicitly advance the batch after inspecting and approving
-  or rejecting the exact artifact digest through the existing decision flow.
+  or rejecting the exact artifact digest (a hash of the scenario, artifacts and
+  policy version) through the existing decision flow.
 - Guard workflow launch as well as Store writes against stale or competing
   owners; a new owner cannot invoke while the previous owner or its workers
   might still be active.
 - Reconcile canonical outcomes and uncertain worker state before releasing
   capacity or resuming after interruption. Never infer completion from a CLI
   exit, an export file or the LangGraph interrupt alone.
-- Export fixture provenance, queue transitions, identities and observed outcomes
-  separately from the Review Capacity numerical reports.
+- Export the fixture source label, queue transitions, identities and observed
+  outcomes separately from the Review Capacity numerical reports.
 
 ## Hypothesis and Controlled Variables
 

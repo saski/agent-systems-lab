@@ -1,10 +1,10 @@
 # Experiments and reading
 
-This directory connects executable systems with questions from *Thinking in
-Systems*. Keep the book's ideas, your interpretation, a model's assumptions,
-and observed numerical results distinguishable. Do not copy substantial book text.
+These experiments use runnable models to explore questions from *Thinking in
+Systems*. Keep the book's ideas separate from your interpretation, the model's
+assumptions and the results it produces. Do not copy substantial book text.
 
-Create a named directory for a new experiment and use this outline:
+For each new experiment, create a named directory and record:
 
 1. **Question:** What do you want to understand or change?
 2. **Boundary:** Which actors, stocks, flows, resources, and decisions are included?
@@ -17,35 +17,39 @@ Create a named directory for a new experiment and use this outline:
 9. **Next experiment:** Identify the smallest change that could disprove your explanation.
 
 Use `reading-notes.md` inside an experiment for personal questions, your own
-summaries, and page references from your edition. Keep confidential or raw
+summaries and page references from your edition. Keep confidential or raw
 operational data in ignored local storage.
 
 Keep reusable coordination contracts, prompts and selected execution evidence
-beside their experiment, as in the
-[Review Capacity coordination recipes](review-capacity/coordination/README.md).
-Expanded machine-specific contracts and complete logs belong in ignored
+beside the experiment they support. The
+[Review Capacity coordination recipes](review-capacity/coordination/README.md)
+page shows one example. Expanded machine-specific contracts and complete logs
+belong in ignored
 `.lab/coordination/<run-id>/`; shared launchers and routing policy belong in Arnesto.
 
-The first [backlog feedback](backlog-feedback/README.md) experiment includes a
-ready scenario. To compare delays, copy its JSON to an ignored local file,
-change `observation_delay` only, and run:
+The [backlog feedback](backlog-feedback/README.md) experiment includes a ready
+scenario. To see how observation delay changes the backlog, copy its JSON to an
+ignored local file, change only `observation_delay`, and run:
 
 ```sh
 uv run systems-lab run --scenario .lab/short-delay.json
 ```
 
-Compare the generated `simulation.json` files, including all parameters and
-time-series observations. A successful agent run is evidence about the workflow;
-it does not establish that the simulated system describes a real organization.
+Compare the generated `simulation.json` files, including their parameters and
+observations at each time step. A successful agent run provides evidence about
+the steps it reached and the workflow controls it exercised. It does not show
+that the model describes a real organization.
 
 The completed [Review Capacity v0.2 experiment](review-capacity/README.md)
-compares parallel execution, one synthetic reviewer and admitted-WIP limits.
-Read its two-queue diagram, fixed-horizon comparison and full-drain curves, then
-replay individual task states in the standalone learning guide or the local
-dashboard's Experiments view. These are saved numerical results, separate from
-actual agent workflow history.
+compares parallel execution with one synthetic reviewer, then tests how an
+admitted-work limit changes where unfinished tasks wait. Its two-queue diagram,
+fixed-horizon comparison and full-drain curves explain the results; the
+standalone learning guide and local dashboard's Experiments view let you replay
+individual task states. These are saved numerical results, separate from the
+history of actual agent workflows.
 
 The [fixture-workflow admission experiment](fixture-workflow-admission/README.md)
-tests that an actual workflow waiting for human review retains its WIP place.
-It runs two fixed tasks with one admitted place, explicit operator decisions and
-fail-closed recovery. Its process evidence is separate from the numerical model.
+tests whether an actual workflow keeps its WIP place while waiting for human
+review. It runs two fixed tasks with one admitted place. An operator decides
+each task, and recovery leaves the place occupied when the outcome is uncertain.
+This evidence comes from workflow processes, not the numerical model.

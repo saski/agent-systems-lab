@@ -1,8 +1,12 @@
 # governed-execution Specification
 
 ## Purpose
-Make each specialist's identity, authority, activity, and intervention path
-explicit in a small, reproducible multi-agent playground.
+Show how a small multi-agent workflow assigns each specialist an identity and
+uses the gateway to control its model and tool access. The fixture exercise lets
+the learner follow each specialist's activity and see how a person can approve
+or revoke a run. Following a task through those checks and a human review pause
+demonstrates the workflow and permission controls, not the quality or safety of
+a live model.
 
 ## Requirements
 

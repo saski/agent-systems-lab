@@ -1,8 +1,11 @@
 # Observable activity and durable history
 
 ## Why
-Operators need to see which agent is working, where each task stands, and whether
-its history is intact. Traces alone do not establish a durable audit history.
+Operators need to see which specialist is working, where each task has reached
+and whether its recorded history still verifies. A trace groups related
+observations for inspection, but it does not by itself preserve a durable audit history. The
+event journal provides that record; a retry outbox tracks which journal events
+still need to reach the telemetry receiver.
 
 ## What Changes
 - Add a transactionally written, append-only, hash-chained event journal with

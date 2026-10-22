@@ -27,8 +27,9 @@ Initialize `used = 0`, `limit >= 1`, `active = true`; keep the limit fixed.
 The proof generalizes beyond the API's finite 1..40 range.
 
 For each request, an input `eligible: bool` summarizes the other authorization
-checks, such as expiry and capability. Their correctness is assumed, not proved.
-Each transition is atomic and represents a committed authorization decision:
+checks, such as expiry and capability. The proof treats that input as given; it
+does not establish that the Python checks compute it correctly. Each transition
+is one atomic, committed authorization decision:
 
 ```text
 Request:
@@ -42,6 +43,11 @@ Deactivate:
 
 `Deactivate` abstracts revocation or another run state that closes worker
 access. The model has no reactivation or new-grant transition.
+
+An invariant is a property that holds in the initial state and remains true
+after every allowed transition. Here, the central invariant is that `used`
+never exceeds `limit`; P5 also ties that counter to the number of allowed
+requests across any finite sequence.
 
 | ID | Property to prove |
 | --- | --- |
@@ -67,14 +73,16 @@ exhausted and inactive witnesses so the contract is visibly satisfiable.
    operator API. These tests are expected to pass the existing implementation;
    do not manufacture a production failure or change its behavior.
 2. **Build the proof.** Add `experiments/call-budget-dafny/Budget.dfy` and
-   pin an official Dafny release and its solver in the experiment guide. Begin
-   with the isolated faulty guard and observe the failed obligation, then
-   implement the correct model and prove P1-P5. The negative variant retains
-   the same contract and arithmetic types as the valid model.
+   pin an official Dafny release and its solver in the experiment guide. First
+   verify the isolated faulty guard and inspect the failed proof obligation. At
+   `used = limit = 1`, `<=` would permit another call and break P1. This faulty
+   variant is a negative control: it checks that verification catches the known
+   defect. Then implement the correct model and prove P1-P5, keeping the
+   contract and arithmetic types unchanged between variants.
 3. **Compare and reproduce.** Add the guide, negative variant and a small
    verification runner in that experiment directory. Add an opt-in
    `make call-budget-verify` target. It verifies all positive obligations and
-   requires the negative variant to fail at the expected budget obligation;
+   requires the faulty variant to fail at the expected budget obligation;
    missing tools, syntax errors, crashes or timeouts are not a successful
    negative control. Keep Dafny outside default `make check` for this slice.
 

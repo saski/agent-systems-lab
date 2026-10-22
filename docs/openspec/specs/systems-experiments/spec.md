@@ -1,8 +1,10 @@
 # systems-experiments Specification
 
 ## Purpose
-Connect systems-thinking hypotheses to reproducible numerical experiments,
-while separating model observations, assumptions, and agent-runtime evidence.
+Turn systems-thinking hypotheses into repeatable numerical experiments. In the
+first backlog model, learners can follow how work accumulates and leaves, then
+connect those observations to the rules they chose. Keep model assumptions,
+calculated results and evidence from the agent runtime distinct.
 
 ## Requirements
 
