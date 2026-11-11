@@ -90,6 +90,14 @@ one to 24. `comparison.tasks` gives priority minus FIFO deltas: a negative
 `turnaround_delta` means earlier acceptance. No entry is a live workflow task.
 G02 reports are local files; the dashboard API still reads only Review Capacity.
 
+The [standalone demo](../../docs/graphics/review-capacity/explainer.html#rework-section)
+now includes G02 alongside the original A/B/C comparison. Its shared clock shows
+both review orders, and the task selector compares complete timelines. The
+**Last correction · 182** button selects task 24 at the moment the priority
+reviewer runs out of ready work. **Inspect all 24 outcomes** includes delayed
+and unchanged tasks as well as earlier ones. This is a saved trace, not a new
+simulation or a live workflow.
+
 Refresh the figures from an exported fixed scenario:
 
 ```sh
@@ -100,6 +108,13 @@ The renderer verifies the report hash, fixed inputs and exact model reproduction
 Matplotlib is a documentation tool outside the application lockfile. The
 [saved evidence](../../docs/graphics/review-rework/evidence.json) records the
 inputs, report hash, paired differences and summaries used by the chart.
+
+To rebuild the combined demo after refreshing G02 evidence, run
+`make review-capacity-figures REPORT=path/to/review-capacity/report.json` with an
+original A/B/C report, then `make review-capacity-preview`. Open
+`http://127.0.0.1:8878/explainer.html#rework-section`. The page embeds both datasets
+and needs no API, credentials or network requests for playback. Reduced motion
+disables Play while preserving the slider and milestone buttons.
 
 ## Observations from 11 November 2026
 

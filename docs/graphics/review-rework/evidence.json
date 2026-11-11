@@ -273,7 +273,1174 @@
             "pending": 0
           }
         }
-      }
+      },
+      "tasks": [
+        {
+          "accepted_tick": 14,
+          "arrival_tick": 0,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 0,
+              "number": 1,
+              "ready_tick": 8,
+              "requested_tick": 0,
+              "review_end_tick": 14,
+              "review_start_tick": 8
+            }
+          ],
+          "first_review_wait": 0,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 0,
+          "time_to_first_review": 8,
+          "turnaround": 14
+        },
+        {
+          "accepted_tick": 20,
+          "arrival_tick": 2,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 2,
+              "number": 1,
+              "ready_tick": 10,
+              "requested_tick": 2,
+              "review_end_tick": 20,
+              "review_start_tick": 14
+            }
+          ],
+          "first_review_wait": 4,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 1,
+          "time_to_first_review": 12,
+          "turnaround": 18
+        },
+        {
+          "accepted_tick": 26,
+          "arrival_tick": 4,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 4,
+              "number": 1,
+              "ready_tick": 12,
+              "requested_tick": 4,
+              "review_end_tick": 26,
+              "review_start_tick": 20
+            }
+          ],
+          "first_review_wait": 8,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 2,
+          "time_to_first_review": 16,
+          "turnaround": 22
+        },
+        {
+          "accepted_tick": 98,
+          "arrival_tick": 6,
+          "attempts": [
+            {
+              "decision": "changes_requested",
+              "execution_start_tick": 6,
+              "number": 1,
+              "ready_tick": 14,
+              "requested_tick": 6,
+              "review_end_tick": 32,
+              "review_start_tick": 26
+            },
+            {
+              "decision": "accepted",
+              "execution_start_tick": 32,
+              "number": 2,
+              "ready_tick": 36,
+              "requested_tick": 32,
+              "review_end_tick": 98,
+              "review_start_tick": 92
+            }
+          ],
+          "first_review_wait": 12,
+          "needs_correction": true,
+          "state": "accepted",
+          "task_id": 3,
+          "time_to_first_review": 20,
+          "turnaround": 92
+        },
+        {
+          "accepted_tick": 38,
+          "arrival_tick": 8,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 8,
+              "number": 1,
+              "ready_tick": 16,
+              "requested_tick": 8,
+              "review_end_tick": 38,
+              "review_start_tick": 32
+            }
+          ],
+          "first_review_wait": 16,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 4,
+          "time_to_first_review": 24,
+          "turnaround": 30
+        },
+        {
+          "accepted_tick": 44,
+          "arrival_tick": 10,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 10,
+              "number": 1,
+              "ready_tick": 18,
+              "requested_tick": 10,
+              "review_end_tick": 44,
+              "review_start_tick": 38
+            }
+          ],
+          "first_review_wait": 20,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 5,
+          "time_to_first_review": 28,
+          "turnaround": 34
+        },
+        {
+          "accepted_tick": 50,
+          "arrival_tick": 12,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 12,
+              "number": 1,
+              "ready_tick": 20,
+              "requested_tick": 12,
+              "review_end_tick": 50,
+              "review_start_tick": 44
+            }
+          ],
+          "first_review_wait": 24,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 6,
+          "time_to_first_review": 32,
+          "turnaround": 38
+        },
+        {
+          "accepted_tick": 164,
+          "arrival_tick": 14,
+          "attempts": [
+            {
+              "decision": "changes_requested",
+              "execution_start_tick": 14,
+              "number": 1,
+              "ready_tick": 22,
+              "requested_tick": 14,
+              "review_end_tick": 56,
+              "review_start_tick": 50
+            },
+            {
+              "decision": "accepted",
+              "execution_start_tick": 56,
+              "number": 2,
+              "ready_tick": 60,
+              "requested_tick": 56,
+              "review_end_tick": 164,
+              "review_start_tick": 158
+            }
+          ],
+          "first_review_wait": 28,
+          "needs_correction": true,
+          "state": "accepted",
+          "task_id": 7,
+          "time_to_first_review": 36,
+          "turnaround": 150
+        },
+        {
+          "accepted_tick": 62,
+          "arrival_tick": 16,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 16,
+              "number": 1,
+              "ready_tick": 24,
+              "requested_tick": 16,
+              "review_end_tick": 62,
+              "review_start_tick": 56
+            }
+          ],
+          "first_review_wait": 32,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 8,
+          "time_to_first_review": 40,
+          "turnaround": 46
+        },
+        {
+          "accepted_tick": 68,
+          "arrival_tick": 18,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 18,
+              "number": 1,
+              "ready_tick": 26,
+              "requested_tick": 18,
+              "review_end_tick": 68,
+              "review_start_tick": 62
+            }
+          ],
+          "first_review_wait": 36,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 9,
+          "time_to_first_review": 44,
+          "turnaround": 50
+        },
+        {
+          "accepted_tick": 74,
+          "arrival_tick": 20,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 20,
+              "number": 1,
+              "ready_tick": 28,
+              "requested_tick": 20,
+              "review_end_tick": 74,
+              "review_start_tick": 68
+            }
+          ],
+          "first_review_wait": 40,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 10,
+          "time_to_first_review": 48,
+          "turnaround": 54
+        },
+        {
+          "accepted_tick": 170,
+          "arrival_tick": 22,
+          "attempts": [
+            {
+              "decision": "changes_requested",
+              "execution_start_tick": 22,
+              "number": 1,
+              "ready_tick": 30,
+              "requested_tick": 22,
+              "review_end_tick": 80,
+              "review_start_tick": 74
+            },
+            {
+              "decision": "accepted",
+              "execution_start_tick": 80,
+              "number": 2,
+              "ready_tick": 84,
+              "requested_tick": 80,
+              "review_end_tick": 170,
+              "review_start_tick": 164
+            }
+          ],
+          "first_review_wait": 44,
+          "needs_correction": true,
+          "state": "accepted",
+          "task_id": 11,
+          "time_to_first_review": 52,
+          "turnaround": 148
+        },
+        {
+          "accepted_tick": 86,
+          "arrival_tick": 24,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 24,
+              "number": 1,
+              "ready_tick": 32,
+              "requested_tick": 24,
+              "review_end_tick": 86,
+              "review_start_tick": 80
+            }
+          ],
+          "first_review_wait": 48,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 12,
+          "time_to_first_review": 56,
+          "turnaround": 62
+        },
+        {
+          "accepted_tick": 92,
+          "arrival_tick": 26,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 26,
+              "number": 1,
+              "ready_tick": 34,
+              "requested_tick": 26,
+              "review_end_tick": 92,
+              "review_start_tick": 86
+            }
+          ],
+          "first_review_wait": 52,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 13,
+          "time_to_first_review": 60,
+          "turnaround": 66
+        },
+        {
+          "accepted_tick": 104,
+          "arrival_tick": 28,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 28,
+              "number": 1,
+              "ready_tick": 36,
+              "requested_tick": 28,
+              "review_end_tick": 104,
+              "review_start_tick": 98
+            }
+          ],
+          "first_review_wait": 62,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 14,
+          "time_to_first_review": 70,
+          "turnaround": 76
+        },
+        {
+          "accepted_tick": 176,
+          "arrival_tick": 30,
+          "attempts": [
+            {
+              "decision": "changes_requested",
+              "execution_start_tick": 30,
+              "number": 1,
+              "ready_tick": 38,
+              "requested_tick": 30,
+              "review_end_tick": 110,
+              "review_start_tick": 104
+            },
+            {
+              "decision": "accepted",
+              "execution_start_tick": 110,
+              "number": 2,
+              "ready_tick": 114,
+              "requested_tick": 110,
+              "review_end_tick": 176,
+              "review_start_tick": 170
+            }
+          ],
+          "first_review_wait": 66,
+          "needs_correction": true,
+          "state": "accepted",
+          "task_id": 15,
+          "time_to_first_review": 74,
+          "turnaround": 146
+        },
+        {
+          "accepted_tick": 116,
+          "arrival_tick": 32,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 34,
+              "number": 1,
+              "ready_tick": 42,
+              "requested_tick": 32,
+              "review_end_tick": 116,
+              "review_start_tick": 110
+            }
+          ],
+          "first_review_wait": 68,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 16,
+          "time_to_first_review": 78,
+          "turnaround": 84
+        },
+        {
+          "accepted_tick": 122,
+          "arrival_tick": 34,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 36,
+              "number": 1,
+              "ready_tick": 44,
+              "requested_tick": 34,
+              "review_end_tick": 122,
+              "review_start_tick": 116
+            }
+          ],
+          "first_review_wait": 72,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 17,
+          "time_to_first_review": 82,
+          "turnaround": 88
+        },
+        {
+          "accepted_tick": 128,
+          "arrival_tick": 36,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 36,
+              "number": 1,
+              "ready_tick": 44,
+              "requested_tick": 36,
+              "review_end_tick": 128,
+              "review_start_tick": 122
+            }
+          ],
+          "first_review_wait": 78,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 18,
+          "time_to_first_review": 86,
+          "turnaround": 92
+        },
+        {
+          "accepted_tick": 182,
+          "arrival_tick": 38,
+          "attempts": [
+            {
+              "decision": "changes_requested",
+              "execution_start_tick": 38,
+              "number": 1,
+              "ready_tick": 46,
+              "requested_tick": 38,
+              "review_end_tick": 134,
+              "review_start_tick": 128
+            },
+            {
+              "decision": "accepted",
+              "execution_start_tick": 134,
+              "number": 2,
+              "ready_tick": 138,
+              "requested_tick": 134,
+              "review_end_tick": 182,
+              "review_start_tick": 176
+            }
+          ],
+          "first_review_wait": 82,
+          "needs_correction": true,
+          "state": "accepted",
+          "task_id": 19,
+          "time_to_first_review": 90,
+          "turnaround": 144
+        },
+        {
+          "accepted_tick": 140,
+          "arrival_tick": 40,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 42,
+              "number": 1,
+              "ready_tick": 50,
+              "requested_tick": 40,
+              "review_end_tick": 140,
+              "review_start_tick": 134
+            }
+          ],
+          "first_review_wait": 84,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 20,
+          "time_to_first_review": 94,
+          "turnaround": 100
+        },
+        {
+          "accepted_tick": 146,
+          "arrival_tick": 42,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 44,
+              "number": 1,
+              "ready_tick": 52,
+              "requested_tick": 42,
+              "review_end_tick": 146,
+              "review_start_tick": 140
+            }
+          ],
+          "first_review_wait": 88,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 21,
+          "time_to_first_review": 98,
+          "turnaround": 104
+        },
+        {
+          "accepted_tick": 152,
+          "arrival_tick": 44,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 44,
+              "number": 1,
+              "ready_tick": 52,
+              "requested_tick": 44,
+              "review_end_tick": 152,
+              "review_start_tick": 146
+            }
+          ],
+          "first_review_wait": 94,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 22,
+          "time_to_first_review": 102,
+          "turnaround": 108
+        },
+        {
+          "accepted_tick": 188,
+          "arrival_tick": 46,
+          "attempts": [
+            {
+              "decision": "changes_requested",
+              "execution_start_tick": 46,
+              "number": 1,
+              "ready_tick": 54,
+              "requested_tick": 46,
+              "review_end_tick": 158,
+              "review_start_tick": 152
+            },
+            {
+              "decision": "accepted",
+              "execution_start_tick": 158,
+              "number": 2,
+              "ready_tick": 162,
+              "requested_tick": 158,
+              "review_end_tick": 188,
+              "review_start_tick": 182
+            }
+          ],
+          "first_review_wait": 98,
+          "needs_correction": true,
+          "state": "accepted",
+          "task_id": 23,
+          "time_to_first_review": 106,
+          "turnaround": 142
+        }
+      ],
+      "samples": [
+        {
+          "accepted": 0,
+          "arrived": 1,
+          "awaiting_review": 0,
+          "executing": 1,
+          "not_arrived": 23,
+          "reviewing": 0,
+          "tick": 0,
+          "unfinished": 1,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 0,
+          "arrived": 2,
+          "awaiting_review": 0,
+          "executing": 2,
+          "not_arrived": 22,
+          "reviewing": 0,
+          "tick": 2,
+          "unfinished": 2,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 0,
+          "arrived": 3,
+          "awaiting_review": 0,
+          "executing": 3,
+          "not_arrived": 21,
+          "reviewing": 0,
+          "tick": 4,
+          "unfinished": 3,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 0,
+          "arrived": 4,
+          "awaiting_review": 0,
+          "executing": 4,
+          "not_arrived": 20,
+          "reviewing": 0,
+          "tick": 6,
+          "unfinished": 4,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 0,
+          "arrived": 5,
+          "awaiting_review": 0,
+          "executing": 4,
+          "not_arrived": 19,
+          "reviewing": 1,
+          "tick": 8,
+          "unfinished": 5,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 0,
+          "arrived": 6,
+          "awaiting_review": 1,
+          "executing": 4,
+          "not_arrived": 18,
+          "reviewing": 1,
+          "tick": 10,
+          "unfinished": 6,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 0,
+          "arrived": 7,
+          "awaiting_review": 2,
+          "executing": 4,
+          "not_arrived": 17,
+          "reviewing": 1,
+          "tick": 12,
+          "unfinished": 7,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 1,
+          "arrived": 8,
+          "awaiting_review": 2,
+          "executing": 4,
+          "not_arrived": 16,
+          "reviewing": 1,
+          "tick": 14,
+          "unfinished": 7,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 1,
+          "arrived": 9,
+          "awaiting_review": 3,
+          "executing": 4,
+          "not_arrived": 15,
+          "reviewing": 1,
+          "tick": 16,
+          "unfinished": 8,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 1,
+          "arrived": 10,
+          "awaiting_review": 4,
+          "executing": 4,
+          "not_arrived": 14,
+          "reviewing": 1,
+          "tick": 18,
+          "unfinished": 9,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 2,
+          "arrived": 11,
+          "awaiting_review": 4,
+          "executing": 4,
+          "not_arrived": 13,
+          "reviewing": 1,
+          "tick": 20,
+          "unfinished": 9,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 2,
+          "arrived": 12,
+          "awaiting_review": 5,
+          "executing": 4,
+          "not_arrived": 12,
+          "reviewing": 1,
+          "tick": 22,
+          "unfinished": 10,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 2,
+          "arrived": 13,
+          "awaiting_review": 6,
+          "executing": 4,
+          "not_arrived": 11,
+          "reviewing": 1,
+          "tick": 24,
+          "unfinished": 11,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 3,
+          "arrived": 14,
+          "awaiting_review": 6,
+          "executing": 4,
+          "not_arrived": 10,
+          "reviewing": 1,
+          "tick": 26,
+          "unfinished": 11,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 3,
+          "arrived": 15,
+          "awaiting_review": 7,
+          "executing": 4,
+          "not_arrived": 9,
+          "reviewing": 1,
+          "tick": 28,
+          "unfinished": 12,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 3,
+          "arrived": 16,
+          "awaiting_review": 8,
+          "executing": 4,
+          "not_arrived": 8,
+          "reviewing": 1,
+          "tick": 30,
+          "unfinished": 13,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 3,
+          "arrived": 17,
+          "awaiting_review": 8,
+          "executing": 4,
+          "not_arrived": 7,
+          "reviewing": 1,
+          "tick": 32,
+          "unfinished": 14,
+          "waiting_execution": 1
+        },
+        {
+          "accepted": 3,
+          "arrived": 18,
+          "awaiting_review": 9,
+          "executing": 4,
+          "not_arrived": 6,
+          "reviewing": 1,
+          "tick": 34,
+          "unfinished": 15,
+          "waiting_execution": 1
+        },
+        {
+          "accepted": 3,
+          "arrived": 19,
+          "awaiting_review": 11,
+          "executing": 4,
+          "not_arrived": 5,
+          "reviewing": 1,
+          "tick": 36,
+          "unfinished": 16,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 4,
+          "arrived": 20,
+          "awaiting_review": 11,
+          "executing": 4,
+          "not_arrived": 4,
+          "reviewing": 1,
+          "tick": 38,
+          "unfinished": 16,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 4,
+          "arrived": 21,
+          "awaiting_review": 11,
+          "executing": 4,
+          "not_arrived": 3,
+          "reviewing": 1,
+          "tick": 40,
+          "unfinished": 17,
+          "waiting_execution": 1
+        },
+        {
+          "accepted": 4,
+          "arrived": 22,
+          "awaiting_review": 12,
+          "executing": 4,
+          "not_arrived": 2,
+          "reviewing": 1,
+          "tick": 42,
+          "unfinished": 18,
+          "waiting_execution": 1
+        },
+        {
+          "accepted": 5,
+          "arrived": 23,
+          "awaiting_review": 13,
+          "executing": 4,
+          "not_arrived": 1,
+          "reviewing": 1,
+          "tick": 44,
+          "unfinished": 18,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 5,
+          "arrived": 24,
+          "awaiting_review": 14,
+          "executing": 4,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 46,
+          "unfinished": 19,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 6,
+          "arrived": 24,
+          "awaiting_review": 14,
+          "executing": 3,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 50,
+          "unfinished": 18,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 6,
+          "arrived": 24,
+          "awaiting_review": 16,
+          "executing": 1,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 52,
+          "unfinished": 18,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 6,
+          "arrived": 24,
+          "awaiting_review": 17,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 54,
+          "unfinished": 18,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 6,
+          "arrived": 24,
+          "awaiting_review": 16,
+          "executing": 1,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 56,
+          "unfinished": 18,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 6,
+          "arrived": 24,
+          "awaiting_review": 17,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 60,
+          "unfinished": 18,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 7,
+          "arrived": 24,
+          "awaiting_review": 16,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 62,
+          "unfinished": 17,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 8,
+          "arrived": 24,
+          "awaiting_review": 15,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 68,
+          "unfinished": 16,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 9,
+          "arrived": 24,
+          "awaiting_review": 14,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 74,
+          "unfinished": 15,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 9,
+          "arrived": 24,
+          "awaiting_review": 13,
+          "executing": 1,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 80,
+          "unfinished": 15,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 9,
+          "arrived": 24,
+          "awaiting_review": 14,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 84,
+          "unfinished": 15,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 10,
+          "arrived": 24,
+          "awaiting_review": 13,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 86,
+          "unfinished": 14,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 11,
+          "arrived": 24,
+          "awaiting_review": 12,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 92,
+          "unfinished": 13,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 12,
+          "arrived": 24,
+          "awaiting_review": 11,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 98,
+          "unfinished": 12,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 13,
+          "arrived": 24,
+          "awaiting_review": 10,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 104,
+          "unfinished": 11,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 13,
+          "arrived": 24,
+          "awaiting_review": 9,
+          "executing": 1,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 110,
+          "unfinished": 11,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 13,
+          "arrived": 24,
+          "awaiting_review": 10,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 114,
+          "unfinished": 11,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 14,
+          "arrived": 24,
+          "awaiting_review": 9,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 116,
+          "unfinished": 10,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 15,
+          "arrived": 24,
+          "awaiting_review": 8,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 122,
+          "unfinished": 9,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 16,
+          "arrived": 24,
+          "awaiting_review": 7,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 128,
+          "unfinished": 8,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 16,
+          "arrived": 24,
+          "awaiting_review": 6,
+          "executing": 1,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 134,
+          "unfinished": 8,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 16,
+          "arrived": 24,
+          "awaiting_review": 7,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 138,
+          "unfinished": 8,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 17,
+          "arrived": 24,
+          "awaiting_review": 6,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 140,
+          "unfinished": 7,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 18,
+          "arrived": 24,
+          "awaiting_review": 5,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 146,
+          "unfinished": 6,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 19,
+          "arrived": 24,
+          "awaiting_review": 4,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 152,
+          "unfinished": 5,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 19,
+          "arrived": 24,
+          "awaiting_review": 3,
+          "executing": 1,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 158,
+          "unfinished": 5,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 19,
+          "arrived": 24,
+          "awaiting_review": 4,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 162,
+          "unfinished": 5,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 20,
+          "arrived": 24,
+          "awaiting_review": 3,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 164,
+          "unfinished": 4,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 21,
+          "arrived": 24,
+          "awaiting_review": 2,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 170,
+          "unfinished": 3,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 22,
+          "arrived": 24,
+          "awaiting_review": 1,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 176,
+          "unfinished": 2,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 23,
+          "arrived": 24,
+          "awaiting_review": 0,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 182,
+          "unfinished": 1,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 24,
+          "arrived": 24,
+          "awaiting_review": 0,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 0,
+          "tick": 188,
+          "unfinished": 0,
+          "waiting_execution": 0
+        }
+      ]
     },
     {
       "name": "corrections_first",
@@ -351,7 +1518,1185 @@
             "pending": 0
           }
         }
-      }
+      },
+      "tasks": [
+        {
+          "accepted_tick": 14,
+          "arrival_tick": 0,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 0,
+              "number": 1,
+              "ready_tick": 8,
+              "requested_tick": 0,
+              "review_end_tick": 14,
+              "review_start_tick": 8
+            }
+          ],
+          "first_review_wait": 0,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 0,
+          "time_to_first_review": 8,
+          "turnaround": 14
+        },
+        {
+          "accepted_tick": 20,
+          "arrival_tick": 2,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 2,
+              "number": 1,
+              "ready_tick": 10,
+              "requested_tick": 2,
+              "review_end_tick": 20,
+              "review_start_tick": 14
+            }
+          ],
+          "first_review_wait": 4,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 1,
+          "time_to_first_review": 12,
+          "turnaround": 18
+        },
+        {
+          "accepted_tick": 26,
+          "arrival_tick": 4,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 4,
+              "number": 1,
+              "ready_tick": 12,
+              "requested_tick": 4,
+              "review_end_tick": 26,
+              "review_start_tick": 20
+            }
+          ],
+          "first_review_wait": 8,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 2,
+          "time_to_first_review": 16,
+          "turnaround": 22
+        },
+        {
+          "accepted_tick": 44,
+          "arrival_tick": 6,
+          "attempts": [
+            {
+              "decision": "changes_requested",
+              "execution_start_tick": 6,
+              "number": 1,
+              "ready_tick": 14,
+              "requested_tick": 6,
+              "review_end_tick": 32,
+              "review_start_tick": 26
+            },
+            {
+              "decision": "accepted",
+              "execution_start_tick": 32,
+              "number": 2,
+              "ready_tick": 36,
+              "requested_tick": 32,
+              "review_end_tick": 44,
+              "review_start_tick": 38
+            }
+          ],
+          "first_review_wait": 12,
+          "needs_correction": true,
+          "state": "accepted",
+          "task_id": 3,
+          "time_to_first_review": 20,
+          "turnaround": 38
+        },
+        {
+          "accepted_tick": 38,
+          "arrival_tick": 8,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 8,
+              "number": 1,
+              "ready_tick": 16,
+              "requested_tick": 8,
+              "review_end_tick": 38,
+              "review_start_tick": 32
+            }
+          ],
+          "first_review_wait": 16,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 4,
+          "time_to_first_review": 24,
+          "turnaround": 30
+        },
+        {
+          "accepted_tick": 50,
+          "arrival_tick": 10,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 10,
+              "number": 1,
+              "ready_tick": 18,
+              "requested_tick": 10,
+              "review_end_tick": 50,
+              "review_start_tick": 44
+            }
+          ],
+          "first_review_wait": 26,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 5,
+          "time_to_first_review": 34,
+          "turnaround": 40
+        },
+        {
+          "accepted_tick": 56,
+          "arrival_tick": 12,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 12,
+              "number": 1,
+              "ready_tick": 20,
+              "requested_tick": 12,
+              "review_end_tick": 56,
+              "review_start_tick": 50
+            }
+          ],
+          "first_review_wait": 30,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 6,
+          "time_to_first_review": 38,
+          "turnaround": 44
+        },
+        {
+          "accepted_tick": 74,
+          "arrival_tick": 14,
+          "attempts": [
+            {
+              "decision": "changes_requested",
+              "execution_start_tick": 14,
+              "number": 1,
+              "ready_tick": 22,
+              "requested_tick": 14,
+              "review_end_tick": 62,
+              "review_start_tick": 56
+            },
+            {
+              "decision": "accepted",
+              "execution_start_tick": 62,
+              "number": 2,
+              "ready_tick": 66,
+              "requested_tick": 62,
+              "review_end_tick": 74,
+              "review_start_tick": 68
+            }
+          ],
+          "first_review_wait": 34,
+          "needs_correction": true,
+          "state": "accepted",
+          "task_id": 7,
+          "time_to_first_review": 42,
+          "turnaround": 60
+        },
+        {
+          "accepted_tick": 68,
+          "arrival_tick": 16,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 16,
+              "number": 1,
+              "ready_tick": 24,
+              "requested_tick": 16,
+              "review_end_tick": 68,
+              "review_start_tick": 62
+            }
+          ],
+          "first_review_wait": 38,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 8,
+          "time_to_first_review": 46,
+          "turnaround": 52
+        },
+        {
+          "accepted_tick": 80,
+          "arrival_tick": 18,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 18,
+              "number": 1,
+              "ready_tick": 26,
+              "requested_tick": 18,
+              "review_end_tick": 80,
+              "review_start_tick": 74
+            }
+          ],
+          "first_review_wait": 48,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 9,
+          "time_to_first_review": 56,
+          "turnaround": 62
+        },
+        {
+          "accepted_tick": 86,
+          "arrival_tick": 20,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 20,
+              "number": 1,
+              "ready_tick": 28,
+              "requested_tick": 20,
+              "review_end_tick": 86,
+              "review_start_tick": 80
+            }
+          ],
+          "first_review_wait": 52,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 10,
+          "time_to_first_review": 60,
+          "turnaround": 66
+        },
+        {
+          "accepted_tick": 104,
+          "arrival_tick": 22,
+          "attempts": [
+            {
+              "decision": "changes_requested",
+              "execution_start_tick": 22,
+              "number": 1,
+              "ready_tick": 30,
+              "requested_tick": 22,
+              "review_end_tick": 92,
+              "review_start_tick": 86
+            },
+            {
+              "decision": "accepted",
+              "execution_start_tick": 92,
+              "number": 2,
+              "ready_tick": 96,
+              "requested_tick": 92,
+              "review_end_tick": 104,
+              "review_start_tick": 98
+            }
+          ],
+          "first_review_wait": 56,
+          "needs_correction": true,
+          "state": "accepted",
+          "task_id": 11,
+          "time_to_first_review": 64,
+          "turnaround": 82
+        },
+        {
+          "accepted_tick": 98,
+          "arrival_tick": 24,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 24,
+              "number": 1,
+              "ready_tick": 32,
+              "requested_tick": 24,
+              "review_end_tick": 98,
+              "review_start_tick": 92
+            }
+          ],
+          "first_review_wait": 60,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 12,
+          "time_to_first_review": 68,
+          "turnaround": 74
+        },
+        {
+          "accepted_tick": 110,
+          "arrival_tick": 26,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 26,
+              "number": 1,
+              "ready_tick": 34,
+              "requested_tick": 26,
+              "review_end_tick": 110,
+              "review_start_tick": 104
+            }
+          ],
+          "first_review_wait": 70,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 13,
+          "time_to_first_review": 78,
+          "turnaround": 84
+        },
+        {
+          "accepted_tick": 116,
+          "arrival_tick": 28,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 28,
+              "number": 1,
+              "ready_tick": 36,
+              "requested_tick": 28,
+              "review_end_tick": 116,
+              "review_start_tick": 110
+            }
+          ],
+          "first_review_wait": 74,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 14,
+          "time_to_first_review": 82,
+          "turnaround": 88
+        },
+        {
+          "accepted_tick": 134,
+          "arrival_tick": 30,
+          "attempts": [
+            {
+              "decision": "changes_requested",
+              "execution_start_tick": 30,
+              "number": 1,
+              "ready_tick": 38,
+              "requested_tick": 30,
+              "review_end_tick": 122,
+              "review_start_tick": 116
+            },
+            {
+              "decision": "accepted",
+              "execution_start_tick": 122,
+              "number": 2,
+              "ready_tick": 126,
+              "requested_tick": 122,
+              "review_end_tick": 134,
+              "review_start_tick": 128
+            }
+          ],
+          "first_review_wait": 78,
+          "needs_correction": true,
+          "state": "accepted",
+          "task_id": 15,
+          "time_to_first_review": 86,
+          "turnaround": 104
+        },
+        {
+          "accepted_tick": 128,
+          "arrival_tick": 32,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 34,
+              "number": 1,
+              "ready_tick": 42,
+              "requested_tick": 32,
+              "review_end_tick": 128,
+              "review_start_tick": 122
+            }
+          ],
+          "first_review_wait": 80,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 16,
+          "time_to_first_review": 90,
+          "turnaround": 96
+        },
+        {
+          "accepted_tick": 140,
+          "arrival_tick": 34,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 36,
+              "number": 1,
+              "ready_tick": 44,
+              "requested_tick": 34,
+              "review_end_tick": 140,
+              "review_start_tick": 134
+            }
+          ],
+          "first_review_wait": 90,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 17,
+          "time_to_first_review": 100,
+          "turnaround": 106
+        },
+        {
+          "accepted_tick": 146,
+          "arrival_tick": 36,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 36,
+              "number": 1,
+              "ready_tick": 44,
+              "requested_tick": 36,
+              "review_end_tick": 146,
+              "review_start_tick": 140
+            }
+          ],
+          "first_review_wait": 96,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 18,
+          "time_to_first_review": 104,
+          "turnaround": 110
+        },
+        {
+          "accepted_tick": 164,
+          "arrival_tick": 38,
+          "attempts": [
+            {
+              "decision": "changes_requested",
+              "execution_start_tick": 38,
+              "number": 1,
+              "ready_tick": 46,
+              "requested_tick": 38,
+              "review_end_tick": 152,
+              "review_start_tick": 146
+            },
+            {
+              "decision": "accepted",
+              "execution_start_tick": 152,
+              "number": 2,
+              "ready_tick": 156,
+              "requested_tick": 152,
+              "review_end_tick": 164,
+              "review_start_tick": 158
+            }
+          ],
+          "first_review_wait": 100,
+          "needs_correction": true,
+          "state": "accepted",
+          "task_id": 19,
+          "time_to_first_review": 108,
+          "turnaround": 126
+        },
+        {
+          "accepted_tick": 158,
+          "arrival_tick": 40,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 42,
+              "number": 1,
+              "ready_tick": 50,
+              "requested_tick": 40,
+              "review_end_tick": 158,
+              "review_start_tick": 152
+            }
+          ],
+          "first_review_wait": 102,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 20,
+          "time_to_first_review": 112,
+          "turnaround": 118
+        },
+        {
+          "accepted_tick": 170,
+          "arrival_tick": 42,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 44,
+              "number": 1,
+              "ready_tick": 52,
+              "requested_tick": 42,
+              "review_end_tick": 170,
+              "review_start_tick": 164
+            }
+          ],
+          "first_review_wait": 112,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 21,
+          "time_to_first_review": 122,
+          "turnaround": 128
+        },
+        {
+          "accepted_tick": 176,
+          "arrival_tick": 44,
+          "attempts": [
+            {
+              "decision": "accepted",
+              "execution_start_tick": 44,
+              "number": 1,
+              "ready_tick": 52,
+              "requested_tick": 44,
+              "review_end_tick": 176,
+              "review_start_tick": 170
+            }
+          ],
+          "first_review_wait": 118,
+          "needs_correction": false,
+          "state": "accepted",
+          "task_id": 22,
+          "time_to_first_review": 126,
+          "turnaround": 132
+        },
+        {
+          "accepted_tick": 192,
+          "arrival_tick": 46,
+          "attempts": [
+            {
+              "decision": "changes_requested",
+              "execution_start_tick": 46,
+              "number": 1,
+              "ready_tick": 54,
+              "requested_tick": 46,
+              "review_end_tick": 182,
+              "review_start_tick": 176
+            },
+            {
+              "decision": "accepted",
+              "execution_start_tick": 182,
+              "number": 2,
+              "ready_tick": 186,
+              "requested_tick": 182,
+              "review_end_tick": 192,
+              "review_start_tick": 186
+            }
+          ],
+          "first_review_wait": 122,
+          "needs_correction": true,
+          "state": "accepted",
+          "task_id": 23,
+          "time_to_first_review": 130,
+          "turnaround": 146
+        }
+      ],
+      "samples": [
+        {
+          "accepted": 0,
+          "arrived": 1,
+          "awaiting_review": 0,
+          "executing": 1,
+          "not_arrived": 23,
+          "reviewing": 0,
+          "tick": 0,
+          "unfinished": 1,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 0,
+          "arrived": 2,
+          "awaiting_review": 0,
+          "executing": 2,
+          "not_arrived": 22,
+          "reviewing": 0,
+          "tick": 2,
+          "unfinished": 2,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 0,
+          "arrived": 3,
+          "awaiting_review": 0,
+          "executing": 3,
+          "not_arrived": 21,
+          "reviewing": 0,
+          "tick": 4,
+          "unfinished": 3,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 0,
+          "arrived": 4,
+          "awaiting_review": 0,
+          "executing": 4,
+          "not_arrived": 20,
+          "reviewing": 0,
+          "tick": 6,
+          "unfinished": 4,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 0,
+          "arrived": 5,
+          "awaiting_review": 0,
+          "executing": 4,
+          "not_arrived": 19,
+          "reviewing": 1,
+          "tick": 8,
+          "unfinished": 5,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 0,
+          "arrived": 6,
+          "awaiting_review": 1,
+          "executing": 4,
+          "not_arrived": 18,
+          "reviewing": 1,
+          "tick": 10,
+          "unfinished": 6,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 0,
+          "arrived": 7,
+          "awaiting_review": 2,
+          "executing": 4,
+          "not_arrived": 17,
+          "reviewing": 1,
+          "tick": 12,
+          "unfinished": 7,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 1,
+          "arrived": 8,
+          "awaiting_review": 2,
+          "executing": 4,
+          "not_arrived": 16,
+          "reviewing": 1,
+          "tick": 14,
+          "unfinished": 7,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 1,
+          "arrived": 9,
+          "awaiting_review": 3,
+          "executing": 4,
+          "not_arrived": 15,
+          "reviewing": 1,
+          "tick": 16,
+          "unfinished": 8,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 1,
+          "arrived": 10,
+          "awaiting_review": 4,
+          "executing": 4,
+          "not_arrived": 14,
+          "reviewing": 1,
+          "tick": 18,
+          "unfinished": 9,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 2,
+          "arrived": 11,
+          "awaiting_review": 4,
+          "executing": 4,
+          "not_arrived": 13,
+          "reviewing": 1,
+          "tick": 20,
+          "unfinished": 9,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 2,
+          "arrived": 12,
+          "awaiting_review": 5,
+          "executing": 4,
+          "not_arrived": 12,
+          "reviewing": 1,
+          "tick": 22,
+          "unfinished": 10,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 2,
+          "arrived": 13,
+          "awaiting_review": 6,
+          "executing": 4,
+          "not_arrived": 11,
+          "reviewing": 1,
+          "tick": 24,
+          "unfinished": 11,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 3,
+          "arrived": 14,
+          "awaiting_review": 6,
+          "executing": 4,
+          "not_arrived": 10,
+          "reviewing": 1,
+          "tick": 26,
+          "unfinished": 11,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 3,
+          "arrived": 15,
+          "awaiting_review": 7,
+          "executing": 4,
+          "not_arrived": 9,
+          "reviewing": 1,
+          "tick": 28,
+          "unfinished": 12,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 3,
+          "arrived": 16,
+          "awaiting_review": 8,
+          "executing": 4,
+          "not_arrived": 8,
+          "reviewing": 1,
+          "tick": 30,
+          "unfinished": 13,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 3,
+          "arrived": 17,
+          "awaiting_review": 8,
+          "executing": 4,
+          "not_arrived": 7,
+          "reviewing": 1,
+          "tick": 32,
+          "unfinished": 14,
+          "waiting_execution": 1
+        },
+        {
+          "accepted": 3,
+          "arrived": 18,
+          "awaiting_review": 9,
+          "executing": 4,
+          "not_arrived": 6,
+          "reviewing": 1,
+          "tick": 34,
+          "unfinished": 15,
+          "waiting_execution": 1
+        },
+        {
+          "accepted": 3,
+          "arrived": 19,
+          "awaiting_review": 11,
+          "executing": 4,
+          "not_arrived": 5,
+          "reviewing": 1,
+          "tick": 36,
+          "unfinished": 16,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 4,
+          "arrived": 20,
+          "awaiting_review": 11,
+          "executing": 4,
+          "not_arrived": 4,
+          "reviewing": 1,
+          "tick": 38,
+          "unfinished": 16,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 4,
+          "arrived": 21,
+          "awaiting_review": 11,
+          "executing": 4,
+          "not_arrived": 3,
+          "reviewing": 1,
+          "tick": 40,
+          "unfinished": 17,
+          "waiting_execution": 1
+        },
+        {
+          "accepted": 4,
+          "arrived": 22,
+          "awaiting_review": 12,
+          "executing": 4,
+          "not_arrived": 2,
+          "reviewing": 1,
+          "tick": 42,
+          "unfinished": 18,
+          "waiting_execution": 1
+        },
+        {
+          "accepted": 5,
+          "arrived": 23,
+          "awaiting_review": 13,
+          "executing": 4,
+          "not_arrived": 1,
+          "reviewing": 1,
+          "tick": 44,
+          "unfinished": 18,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 5,
+          "arrived": 24,
+          "awaiting_review": 14,
+          "executing": 4,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 46,
+          "unfinished": 19,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 6,
+          "arrived": 24,
+          "awaiting_review": 14,
+          "executing": 3,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 50,
+          "unfinished": 18,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 6,
+          "arrived": 24,
+          "awaiting_review": 16,
+          "executing": 1,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 52,
+          "unfinished": 18,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 6,
+          "arrived": 24,
+          "awaiting_review": 17,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 54,
+          "unfinished": 18,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 7,
+          "arrived": 24,
+          "awaiting_review": 16,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 56,
+          "unfinished": 17,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 7,
+          "arrived": 24,
+          "awaiting_review": 16,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 60,
+          "unfinished": 17,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 7,
+          "arrived": 24,
+          "awaiting_review": 15,
+          "executing": 1,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 62,
+          "unfinished": 17,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 7,
+          "arrived": 24,
+          "awaiting_review": 16,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 66,
+          "unfinished": 17,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 8,
+          "arrived": 24,
+          "awaiting_review": 15,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 68,
+          "unfinished": 16,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 9,
+          "arrived": 24,
+          "awaiting_review": 14,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 74,
+          "unfinished": 15,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 10,
+          "arrived": 24,
+          "awaiting_review": 13,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 80,
+          "unfinished": 14,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 11,
+          "arrived": 24,
+          "awaiting_review": 12,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 86,
+          "unfinished": 13,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 11,
+          "arrived": 24,
+          "awaiting_review": 11,
+          "executing": 1,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 92,
+          "unfinished": 13,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 11,
+          "arrived": 24,
+          "awaiting_review": 12,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 96,
+          "unfinished": 13,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 12,
+          "arrived": 24,
+          "awaiting_review": 11,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 98,
+          "unfinished": 12,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 13,
+          "arrived": 24,
+          "awaiting_review": 10,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 104,
+          "unfinished": 11,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 14,
+          "arrived": 24,
+          "awaiting_review": 9,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 110,
+          "unfinished": 10,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 15,
+          "arrived": 24,
+          "awaiting_review": 8,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 116,
+          "unfinished": 9,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 15,
+          "arrived": 24,
+          "awaiting_review": 7,
+          "executing": 1,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 122,
+          "unfinished": 9,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 15,
+          "arrived": 24,
+          "awaiting_review": 8,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 126,
+          "unfinished": 9,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 16,
+          "arrived": 24,
+          "awaiting_review": 7,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 128,
+          "unfinished": 8,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 17,
+          "arrived": 24,
+          "awaiting_review": 6,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 134,
+          "unfinished": 7,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 18,
+          "arrived": 24,
+          "awaiting_review": 5,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 140,
+          "unfinished": 6,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 19,
+          "arrived": 24,
+          "awaiting_review": 4,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 146,
+          "unfinished": 5,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 19,
+          "arrived": 24,
+          "awaiting_review": 3,
+          "executing": 1,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 152,
+          "unfinished": 5,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 19,
+          "arrived": 24,
+          "awaiting_review": 4,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 156,
+          "unfinished": 5,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 20,
+          "arrived": 24,
+          "awaiting_review": 3,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 158,
+          "unfinished": 4,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 21,
+          "arrived": 24,
+          "awaiting_review": 2,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 164,
+          "unfinished": 3,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 22,
+          "arrived": 24,
+          "awaiting_review": 1,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 170,
+          "unfinished": 2,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 23,
+          "arrived": 24,
+          "awaiting_review": 0,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 176,
+          "unfinished": 1,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 23,
+          "arrived": 24,
+          "awaiting_review": 0,
+          "executing": 1,
+          "not_arrived": 0,
+          "reviewing": 0,
+          "tick": 182,
+          "unfinished": 1,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 23,
+          "arrived": 24,
+          "awaiting_review": 0,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 1,
+          "tick": 186,
+          "unfinished": 1,
+          "waiting_execution": 0
+        },
+        {
+          "accepted": 24,
+          "arrived": 24,
+          "awaiting_review": 0,
+          "executing": 0,
+          "not_arrived": 0,
+          "reviewing": 0,
+          "tick": 192,
+          "unfinished": 0,
+          "waiting_execution": 0
+        }
+      ]
     }
   ]
 }

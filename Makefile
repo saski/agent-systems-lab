@@ -13,6 +13,8 @@ help:
 	@echo "review-rework-demo  Compare FIFO review with priority for returning corrections (G02)"
 	@echo "review-rework-test  Run the numerical rework and export tests"
 	@echo "review-rework-figures  Render the G02 comparison from REPORT=path/to/report.json"
+	@echo "review-rework-demo-test  Check G02 replay against the numerical model"
+	@echo "review-capacity-preview  Preview the combined demo on localhost:8878"
 	@echo "fixture-admission-create  Queue two fixture tasks in isolated local state"
 	@echo "fixture-admission-advance/status/reconcile  Inspect or advance BATCH=id"
 	@echo "fixture-admission-run-status  Inspect RUN=id before a decision"
@@ -87,6 +89,14 @@ review-rework-test:
 review-rework-figures:
 	@test -n "$(REPORT)" || (echo "Usage: make review-rework-figures REPORT=path/to/report.json" >&2; exit 2)
 	uv run --no-project --with matplotlib==3.11.2 python docs/graphics/render_review_rework.py "$(REPORT)"
+
+.PHONY: review-rework-demo-test review-capacity-preview
+
+review-rework-demo-test:
+	uv run --locked pytest tests/test_review_rework_demo.py
+
+review-capacity-preview:
+	uv run --locked python -m http.server 8878 --bind 127.0.0.1 --directory docs/graphics/review-capacity
 
 FIXTURE_LAB_ROOT ?= $(CURDIR)/.lab/fixture-admission
 .PHONY: fixture-admission-create fixture-admission-status fixture-admission-advance fixture-admission-reconcile fixture-admission-run-status fixture-admission-decide

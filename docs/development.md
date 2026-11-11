@@ -103,6 +103,12 @@ integration. `make review-rework-demo` runs its fixed comparison;
 [experiment guide](../experiments/review-rework/README.md) defines the policies,
 report metrics, exact inputs and observed results. Generate its static figure
 with `make review-rework-figures REPORT=path/to/report.json`.
+Its evidence projection also feeds the standalone demo, including attempts and
+state samples. Rebuild that combined page with `make review-capacity-figures`
+using the original A/B/C report. The generator rejects stale G02 data instead
+of silently embedding it. `make review-rework-demo-test` compares the browser
+projection with an actual report at every tick; `make review-capacity-preview`
+serves the combined page on localhost port 8878 for browser checks.
 
 ## Refresh the numerical learning graphics
 

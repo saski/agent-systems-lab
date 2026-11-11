@@ -17,6 +17,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 from matplotlib.axes import Axes  # noqa: E402
 from matplotlib.ticker import MaxNLocator  # noqa: E402
+from render_review_rework import build_demo_section  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = Path(__file__).with_name("review-capacity")
@@ -287,6 +288,9 @@ def build_explainer(evidence: dict[str, Any]) -> None:
     }
     (OUTPUT / "evidence.json").write_text(json.dumps(projection, indent=2) + "\n")
     template = (OUTPUT / "explainer.template.html").read_text()
+    rework_section, rework_styles = build_demo_section()
+    template = template.replace("__REWORK_SECTION__", rework_section)
+    template = template.replace("__REWORK_STYLES__", rework_styles)
     template = template.replace("__EVIDENCE_JSON__", json.dumps(projection).replace("<", "\\u003c"))
     for name in ("flow", "comparison", "trajectories"):
         encoded = base64.b64encode((OUTPUT / f"{name}.svg").read_bytes()).decode()

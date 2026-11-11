@@ -1,0 +1,70 @@
+<section id="rework-section" aria-labelledby="rework-heading">
+  <div class="eyebrow">G02 / When a review requests changes</div>
+  <h2 id="rework-heading">A lower average, fifteen tasks finishing later</h2>
+  <p class="lead">Six of these 24 tasks need a correction. We compare the order in which work becomes ready for review with giving returning corrections priority. The workload and capacity stay the same.</p>
+  <p id="rework-outcomes" class="rework-outcomes"></p>
+  <div class="card scroll"><table class="rework-metrics">
+    <caption>Complete-cohort results, in logical ticks. Lower times for five tasks outweigh smaller delays for fifteen others.</caption>
+    <thead><tr><th scope="col">Measure</th><th scope="col">Arrival order (FIFO)</th><th scope="col">Corrections first</th></tr></thead>
+    <tbody id="rework-metrics"></tbody>
+  </table></div>
+  <p class="rework-caption">Both runs consume 216 execution-slot ticks and 180 reviewer ticks. Tasks 4, 8, 12, 16, 20 and 24 each need one correction. Every second review accepts. These are chosen model assumptions.</p>
+
+  <section class="card" aria-labelledby="rework-replay-heading">
+    <h3 id="rework-replay-heading">Compare the two orders at the same moment</h3>
+    <p>Move the clock to see accepted and unfinished tasks. Select a task to follow both of its journeys below. The summary above always covers all 24 completed tasks.</p>
+    <div id="rework-error" class="error" role="alert" hidden></div>
+    <div class="tick-line"><label for="rework-tick">Logical tick</label><input id="rework-tick" type="range" min="0" max="192" step="1" value="60"><output id="rework-tick-value" for="rework-tick">60</output></div>
+    <div class="controls">
+      <button id="rework-play" type="button">Play</button>
+      <button id="rework-start" type="button">Start · 0</button>
+      <button id="rework-horizon" type="button">Horizon · 60</button>
+      <button id="rework-tail" type="button">Last correction · 182</button>
+      <button id="rework-end" type="button">Both finished · 192</button>
+      <label for="rework-speed">Playback</label><select id="rework-speed"><option value="2">2 ticks / s</option><option value="8" selected>8 ticks / s</option><option value="24">24 ticks / s</option></select>
+    </div>
+    <p id="rework-motion" class="small"></p>
+    <div class="rework-policies">
+      <article class="card rework-policy" data-rework-policy="fifo">
+        <h3>Arrival order (FIFO)</h3>
+        <p><strong class="accepted-count" data-count="accepted"></strong> accepted · <strong data-count="unfinished"></strong> unfinished</p>
+        <dl class="rework-stocks">
+          <div><dt>Waiting for execution</dt><dd data-count="waiting_execution"></dd></div><div><dt>Executing</dt><dd data-count="executing"></dd></div>
+          <div><dt>Waiting for review</dt><dd data-count="awaiting_review"></dd></div><div><dt>In review</dt><dd data-count="reviewing"></dd></div>
+        </dl>
+        <p class="small"><span data-count="not_arrived"></span> not yet arrived</p>
+        <p class="rework-task-state" data-task-state></p>
+      </article>
+      <article class="card rework-policy" data-rework-policy="corrections_first">
+        <h3>Corrections first</h3>
+        <p><strong class="accepted-count" data-count="accepted"></strong> accepted · <strong data-count="unfinished"></strong> unfinished</p>
+        <dl class="rework-stocks">
+          <div><dt>Waiting for execution</dt><dd data-count="waiting_execution"></dd></div><div><dt>Executing</dt><dd data-count="executing"></dd></div>
+          <div><dt>Waiting for review</dt><dd data-count="awaiting_review"></dd></div><div><dt>In review</dt><dd data-count="reviewing"></dd></div>
+        </dl>
+        <p class="small"><span data-count="not_arrived"></span> not yet arrived</p>
+        <p class="rework-task-state" data-task-state></p>
+      </article>
+    </div>
+    <div class="controls rework-task-controls"><label for="rework-task">Follow a task</label><select class="rework-select" id="rework-task"></select></div>
+    <p id="rework-task-summary"></p>
+    <div class="rework-timeline" tabindex="0" role="region" aria-label="Selected task timelines; scroll horizontally on a narrow screen"><svg id="rework-timeline" viewBox="0 0 920 165" role="img" aria-label="Selected task in both review orders"></svg></div>
+    <div class="rework-legend"><span style="--swatch:#efd1a8">Waiting</span><span style="--swatch:#3179b7">Initial execution</span><span style="--swatch:#8060a8">Correction</span><span style="--swatch:#21866b">Review</span></div>
+    <div class="scroll"><table><caption>Selected task: complete timings, independent of the current clock position.</caption><thead><tr><th>Policy</th><th>Arrival</th><th>First review starts</th><th>Ready-to-first-review wait</th><th>Accepted</th><th>Arrival to acceptance</th></tr></thead><tbody id="rework-task-details"></tbody></table></div>
+    <p class="rework-caption">At tick 182, the priority reviewer has nothing ready while task 24 is corrected. Review resumes at 186 and finishes at 192. FIFO covers that correction with other reviews and finishes the batch at 188.</p>
+  </section>
+
+  <details><summary>Inspect all 24 outcomes</summary><div class="scroll"><table><caption>Acceptance ticks from the same saved traces. Select any task to inspect its timeline.</caption><thead><tr><th>Task</th><th>Correction need</th><th>FIFO acceptance</th><th>Priority acceptance</th><th>Effect of priority</th></tr></thead><tbody id="rework-all-tasks"></tbody></table></div></details>
+  <details><summary>See the full comparison figure</summary><figure class="card"><div class="image-window"><img src="__REWORK_IMAGE__" loading="lazy" alt="All 24 paired acceptance differences: five tasks earlier, fifteen later and four unchanged; mean timing by correction need and cumulative acceptances."></div><figcaption>Negative differences mean earlier acceptance with priority. The six starred tasks require corrections. On a narrow screen, scroll the figure sideways.</figcaption></figure></details>
+  <details><summary>Model assumptions and reproducible evidence</summary>
+    <p>24 tasks arrive every two ticks. Four execution slots take eight ticks for initial work and four for a correction. One reviewer takes six ticks per visit. There is no admission limit. FIFO orders attempts by when they become ready for review; priority selects returning corrections first. Neither policy interrupts an active review.</p>
+    <p>Corrections are prescribed and always succeed. The model has no measured quality, fatigue, varying task value or continuous arrivals. It cannot establish real-team productivity or a general best review policy.</p>
+    <pre>make review-rework-demo</pre>
+    <p>Scenario SHA-256</p><p id="rework-scenario-hash" class="hash"></p>
+    <p>Report SHA-256</p><p id="rework-report-hash" class="hash"></p>
+    <p class="small">This page replays saved results locally. It makes no API calls and starts no agents. All times are logical ticks.</p>
+  </details>
+  <noscript><p>JavaScript is needed for the paired replay. The comparison figure and model assumptions remain available above.</p></noscript>
+</section>
+<script type="application/json" id="rework-evidence">__REWORK_JSON__</script>
+<script>__REWORK_SCRIPT__</script>

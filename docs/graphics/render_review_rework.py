@@ -1,6 +1,7 @@
 """Render the fixed G02 comparison from verified local numerical evidence."""
 
 import argparse
+import base64
 import hashlib
 import json
 import sys
@@ -167,7 +168,13 @@ def render(report: dict[str, Any], report_hash: str) -> None:
     svg = OUTPUT / "comparison.svg"
     svg.write_text("\n".join(line.rstrip() for line in svg.read_text().splitlines()) + "\n")
     plt.close(figure)
-    evidence = {
+    evidence = projection(report, report_hash)
+    (OUTPUT / "evidence.json").write_text(json.dumps(evidence, indent=2, allow_nan=False) + "\n")
+    print(OUTPUT)
+
+
+def projection(report: dict[str, Any], report_hash: str) -> dict[str, Any]:
+    return {
         "kind": "frozen_documentation_projection",
         "provenance": report["provenance"],
         "model_version": report["model_version"],
@@ -176,12 +183,34 @@ def render(report: dict[str, Any], report_hash: str) -> None:
         "inputs": report["inputs"],
         "comparison": report["comparison"],
         "policies": [
-            {key: policy[key] for key in ("name", "horizon", "drain", "metrics")}
+            {
+                key: policy[key]
+                for key in ("name", "horizon", "drain", "metrics", "tasks", "samples")
+            }
             for policy in report["policies"]
         ],
     }
-    (OUTPUT / "evidence.json").write_text(json.dumps(evidence, indent=2, allow_nan=False) + "\n")
-    print(OUTPUT)
+
+
+def build_demo_section() -> tuple[str, str]:
+    """Embed a frozen projection only when it reproduces the current fixed model."""
+    scenario = json.loads((ROOT / "experiments/review-rework/scenario.json").read_text())
+    report = simulate(scenario)
+    canonical = json.dumps(report, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+    expected = projection(report, hashlib.sha256(canonical).hexdigest())
+    evidence = json.loads((OUTPUT / "evidence.json").read_text())
+    if evidence != expected:
+        raise ValueError("G02 evidence is stale or altered; regenerate it from a verified report")
+    template = (OUTPUT / "replay.template.html").read_text()
+    replacements = {
+        "__REWORK_JSON__": json.dumps(evidence, allow_nan=False).replace("<", "\\u003c"),
+        "__REWORK_SCRIPT__": (OUTPUT / "replay.js").read_text(),
+        "__REWORK_IMAGE__": "data:image/svg+xml;base64,"
+        + base64.b64encode((OUTPUT / "comparison.svg").read_bytes()).decode(),
+    }
+    for marker, content in replacements.items():
+        template = template.replace(marker, content)
+    return template, (OUTPUT / "replay.css").read_text()
 
 
 def main() -> None:
