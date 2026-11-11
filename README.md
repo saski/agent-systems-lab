@@ -11,8 +11,8 @@ factor and look at the result before adding more autonomy or infrastructure.
 The learning goal is to explain why a result follows from the rules we chose,
 and where that explanation stops being useful.
 
-**Current state: 21 October 2026.** The workflow, permission checks, activity
-dashboard, saved Review Capacity comparison, two numerical experiments and
+**Current state: 11 November 2026.** The workflow, permission checks, activity
+dashboard, saved Review Capacity comparison, three numerical experiments and
 fixture admission are implemented. All agent model responses are scripted
 fixtures: predefined replies that let us repeat the same workflow without an
 external model provider or model token costs. The workers and permission checks
@@ -48,6 +48,8 @@ If you are starting here, run the workflow below and follow one task to human
 review. Then use Backlog Feedback to study a single queue, and Review Capacity
 to compare where work waits across several stages. Fixture admission takes the
 WIP rule into the running workflow, where a human decision has to release it.
+G02, [review with corrections](experiments/review-rework/README.md), returns to
+the numerical model to study who waits when corrected tasks get review priority.
 
 ## Progress at a glance
 
@@ -55,7 +57,8 @@ WIP rule into the running workflow, where a human decision has to release it.
 | --- | --- | --- |
 | Governed workflow | Three specialists, checkpoint recovery, role-scoped access, budgets, revocation and approval tied to the exact artifacts; local processes and optional Docker workers | Live-model and alternative-runtime comparisons are future experiments |
 | Backlog feedback | Deterministic model, controlled observation-delay comparison, scenario and documented results | Further sensitivity experiments with different gains, arrivals and capacity bounds |
-| Review Capacity | Completed v0.2: A/B/C numerical comparison, local CLI, hashed exports, viewer-authorized report API, integrated charts and task replay, plus an offline learning guide | Variable workload, review quality and rework remain future experiments |
+| Review Capacity | Completed v0.2: A/B/C numerical comparison, local CLI, hashed exports, viewer-authorized report API, integrated charts and task replay, plus an offline learning guide | Variable workload and review quality remain future experiments; G02 studies fixed corrections separately |
+| Review with corrections (G02) | FIFO versus correction priority for 24 tasks with six fixed corrections; paired traces, hashed local exports and comparison figure | Synthetic, successful corrections only; continuous arrivals and measured quality remain untested |
 | Fixture admission | Two fixed tasks, WIP one per batch, saved run identities, one current coordinator, locks held by workers and decisions tied to the reviewed artifacts | Local POSIX processes and SQLite only; parallel/container admission and a batch dashboard remain outside this slice |
 | Activity and history | Read-only Activity dashboard, task counts and wait ages, role tools, lifecycle events, session charts and saved-checkpoint comparison; separate saved-report Experiments view | Persistent historical charts |
 | Telemetry delivery | Durable event journal, retry outbox, correlated OpenTelemetry spans and an optional local Collector | The Grafana/Tempo/Prometheus reliability learning lab is a documented proposal; implementation has not started |

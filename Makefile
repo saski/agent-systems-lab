@@ -10,6 +10,9 @@ help:
 	@echo "spec-check        Validate OpenSpec requirements"
 	@echo "review-capacity-demo  Run the fixed numerical A/B/C comparison"
 	@echo "review-capacity-figures  Refresh learning graphics from REPORT=path/to/report.json"
+	@echo "review-rework-demo  Compare FIFO review with priority for returning corrections (G02)"
+	@echo "review-rework-test  Run the numerical rework and export tests"
+	@echo "review-rework-figures  Render the G02 comparison from REPORT=path/to/report.json"
 	@echo "fixture-admission-create  Queue two fixture tasks in isolated local state"
 	@echo "fixture-admission-advance/status/reconcile  Inspect or advance BATCH=id"
 	@echo "fixture-admission-run-status  Inspect RUN=id before a decision"
@@ -72,6 +75,18 @@ review-capacity-demo:
 review-capacity-figures:
 	@test -n "$(REPORT)" || (echo "Usage: make review-capacity-figures REPORT=path/to/report.json" >&2; exit 2)
 	uv run --no-project --with matplotlib==3.11.2 python docs/graphics/render_review_capacity.py "$(REPORT)"
+
+.PHONY: review-rework-demo review-rework-test review-rework-figures
+
+review-rework-demo:
+	uv run --locked systems-lab experiment review-rework --scenario experiments/review-rework/scenario.json
+
+review-rework-test:
+	uv run --locked pytest tests/test_review_rework.py
+
+review-rework-figures:
+	@test -n "$(REPORT)" || (echo "Usage: make review-rework-figures REPORT=path/to/report.json" >&2; exit 2)
+	uv run --no-project --with matplotlib==3.11.2 python docs/graphics/render_review_rework.py "$(REPORT)"
 
 FIXTURE_LAB_ROOT ?= $(CURDIR)/.lab/fixture-admission
 .PHONY: fixture-admission-create fixture-admission-status fixture-admission-advance fixture-admission-reconcile fixture-admission-run-status fixture-admission-decide

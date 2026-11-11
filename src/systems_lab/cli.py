@@ -217,8 +217,8 @@ def parser() -> argparse.ArgumentParser:
     )
     verify.add_argument("--checkpoint")
     experiment = commands.add_parser("experiment", help="Run a numerical experiment locally")
-    experiment.add_argument("experiment_type", choices=["review-capacity"])
-    experiment.add_argument("--scenario", default="experiments/review-capacity/scenario.json")
+    experiment.add_argument("experiment_type", choices=["review-capacity", "review-rework"])
+    experiment.add_argument("--scenario", help="Defaults to experiments/TYPE/scenario.json")
     experiment.add_argument("--attempt-id")
     for name in ("run", "demo"):
         command = commands.add_parser(name, help="Run the fixture experiment and pause for review")
@@ -270,7 +270,7 @@ def main() -> None:
     if args.command == "experiment":
         if args.gateway:
             raise SystemExit("Experiment command runs locally only; --gateway is not permitted")
-        scenario_path = Path(args.scenario)
+        scenario_path = Path(args.scenario or f"experiments/{args.experiment_type}/scenario.json")
         if not scenario_path.is_absolute():
             scenario_path = root / scenario_path
         stat_result = scenario_path.stat()
@@ -281,8 +281,10 @@ def main() -> None:
         if len(scenario_bytes) > 16384:
             raise ValueError("Scenario file exceeds 16 KiB limit after reading")
         scenario = json.loads(scenario_bytes)
-        experiment_dir = root / ".lab" / "experiments" / "review-capacity"
-        manifest = export_attempt(experiment_dir, scenario, args.attempt_id)
+        experiment_dir = root / ".lab" / "experiments" / args.experiment_type
+        manifest = export_attempt(
+            experiment_dir, scenario, args.attempt_id, experiment_type=args.experiment_type
+        )
         print(json.dumps(manifest, indent=2))
         return
     token = initialize(root)

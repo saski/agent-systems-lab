@@ -56,6 +56,7 @@ src/systems_lab/
   gateway.py            # Authenticated API, tools, scripted model route
   store.py              # Deterministic policy, grants, audit, artifacts
   simulation.py         # Pure stock-and-flow model
+  review_rework.py       # G02: paired review orders with fixed correction needs
   journal.py            # Append-only history, integrity and delivery outbox
   activity.py           # Read-only activity projection
   telemetry.py          # Stable OpenTelemetry export from durable events
@@ -94,6 +95,14 @@ the configured report root cannot silently point elsewhere. A missing root
 produces an empty list; storage errors remain errors. Reads do not create
 attempts or operational events. Compose does not mount host experiment reports,
 so importing reports into a container is outside this change.
+
+G02 uses the same bounded, exclusive export writer under the separate
+`LAB_ROOT/.lab/experiments/review-rework` root. It has no report API or dashboard
+integration. `make review-rework-demo` runs its fixed comparison;
+`make review-rework-test` runs the focused tests. The
+[experiment guide](../experiments/review-rework/README.md) defines the policies,
+report metrics, exact inputs and observed results. Generate its static figure
+with `make review-rework-figures REPORT=path/to/report.json`.
 
 ## Refresh the numerical learning graphics
 

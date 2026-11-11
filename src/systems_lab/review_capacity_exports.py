@@ -1,5 +1,5 @@
 """
-Public API for persisting and loading review-capacity simulation attempts.
+Persist local numerical attempts and load only review-capacity reports.
 
 Each attempt is stored as a directory containing:
 - scenario.json: input scenario
@@ -23,6 +23,7 @@ from typing import Any
 from uuid import uuid4
 
 from systems_lab.review_capacity import simulate
+from systems_lab.review_rework import simulate as simulate_rework
 
 MAX_SCENARIO_BYTES = 16384
 MAX_REPORT_BYTES = 5242880
@@ -232,9 +233,11 @@ def export_attempt(
     root: Path,
     scenario: dict[str, Any],
     attempt_id: str | None = None,
+    *,
+    experiment_type: str = "review-capacity",
 ) -> dict[str, Any]:
     """
-    Export a review-capacity simulation attempt to immutable storage.
+    Export a supported numerical simulation attempt to exclusive storage.
 
     Validates scenario, runs simulation, and writes scenario.json, report.json,
     and manifest.json (completion marker) to an exclusive directory.
@@ -243,6 +246,7 @@ def export_attempt(
         root: Trusted root directory for attempts
         scenario: Input scenario dict
         attempt_id: Optional ID (default: random hex); must match [A-Za-z0-9][A-Za-z0-9_-]{0,63}
+        experiment_type: review-capacity or review-rework; readers only support review-capacity
 
     Returns:
         Manifest dict with schema_version, experiment_type, model_version, provenance,
@@ -256,7 +260,12 @@ def export_attempt(
 
     _validate_attempt_id(attempt_id)
 
-    report = simulate(scenario)
+    if experiment_type == "review-capacity":
+        report = simulate(scenario)
+    elif experiment_type == "review-rework":
+        report = simulate_rework(scenario)
+    else:
+        raise ValueError(f"Unsupported experiment type: {experiment_type}")
 
     scenario_bytes = _deterministic_json_bytes(scenario)
     report_bytes = _deterministic_json_bytes(report)
@@ -284,8 +293,8 @@ def export_attempt(
 
         manifest: dict[str, Any] = {
             "schema_version": 1,
-            "experiment_type": "review-capacity",
-            "model_version": "review-capacity-v1",
+            "experiment_type": experiment_type,
+            "model_version": report["model_version"],
             "provenance": "synthetic_event_time_model",
             "status": "complete",
             "attempt_id": attempt_id,

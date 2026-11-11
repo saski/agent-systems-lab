@@ -48,6 +48,12 @@ standalone learning guide and local dashboard's Experiments view let you replay
 individual task states. These are saved numerical results, separate from the
 history of actual agent workflows.
 
+[G02: review with corrections](review-rework/README.md) adds six fixed corrections
+to a separate 24-task numerical model. FIFO and correction priority use the same
+work and capacity. Follow each task to see why the overall mean can fall while
+most tasks finish later. Run `make review-rework-demo` and compare final
+acceptance, first-review waits and full-batch completion.
+
 The [fixture-workflow admission experiment](fixture-workflow-admission/README.md)
 tests whether an actual workflow keeps its WIP place while waiting for human
 review. It runs two fixed tasks with one admitted place. An operator decides

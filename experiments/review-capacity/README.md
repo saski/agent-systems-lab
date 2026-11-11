@@ -238,6 +238,11 @@ Every review accepts. Arrivals are finite and scheduled; service is uniform.
 There is no stochasticity, priority, output quality, rework, fatigue, failure,
 real human approval or empirical relationship to a team's throughput.
 
+The separate [G02 review-with-corrections experiment](../review-rework/README.md)
+now compares FIFO with priority for six fixed returning corrections. It measures
+their effects on acceptance and first-review waits without changing this model
+or establishing real review quality.
+
 **Review Capacity v0.2 is complete and closed as of 20 October 2026.** The bounded
 model, exclusive exports, CLI, fixed scenario, `make review-capacity-demo`,
 viewer-authorized API and integrated comparison/replay meet the accepted scope.
