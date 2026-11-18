@@ -9,6 +9,31 @@ The completed work below gives us a starting point for further study. A proposed
 runtime, live model or stronger isolation boundary still needs its own
 experiment before we can claim it improves the system.
 
+## Evidence for a development increment
+
+When a proposal gives agents a new way to develop software, use these questions
+to define its acceptance criteria. Keep the evidence with the experiment so a
+later operator can repeat the run and understand the decision.
+
+| Property | Question the evidence should answer |
+| --- | --- |
+| Safety | Which files, tools and destinations can each role reach? Exercise a permitted action and an action outside the boundary. Record how the boundary was enforced. |
+| Control | Who owns the next step and its retries? Identify the grant, budget and point of human intervention. Show what happens when the operator pauses, rejects or revokes work at the relevant boundary. |
+| Visibility | Can an operator see the current stage and responsible role, where progress has stopped and who can act next? Distinguish work waiting for review from observations waiting for delivery. |
+| Traceability | Can a reader follow one run from its task and policy version through the requested action, authorization and observed outcome to the exact artifact, verification result and human decision? Link those records by run ID and artifact digest. |
+| Incrementality | What single change is under test? Keep the baseline, acceptance criterion, result and limitations together. Record whether the evidence supports keeping, revising or reversing the change. |
+
+For example, a future coding experiment could compare one Builder with the
+same Builder plus an independent Reviewer on a disposable repository. Keep
+the task, starting revision, permission boundaries and total budget fixed.
+Have the Reviewer reproduce a defect on the starting revision and run the
+same test on the candidate. Keep both results with the diff digest and the
+operator's decision. The current fixture workflow demonstrates gateway controls
+and digest-bound review. Running a coding agent with write access belongs to
+the proposed sandboxed coding experiment.
+
+## Experiments
+
 | Experiment | Question | Evidence to collect |
 | --- | --- | --- |
 | Bootstrap | Can three specialists complete a governed, restartable workflow? | Fixture loop, role denials, revocation, exact-artifact approval, container boundaries |

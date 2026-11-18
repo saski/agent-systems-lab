@@ -1,5 +1,11 @@
 # Agent Systems Lab
 
+Our primary goal is to build a system of agents that develops software in
+small, verifiable increments. Each increment should operate within explicit
+safety boundaries, give an operator control over what happens next, make
+progress visible and leave a trace from the original task to the decision on
+the exact work reviewed. See the [evidence we look for in each increment](docs/roadmap.md#evidence-for-a-development-increment).
+
 We use this lab to study how work moves through an agent system, where it waits,
 and who can decide what happens next. The experiments are small enough to rerun
 and inspect. The numerical models draw on Donella Meadows's *Thinking in
