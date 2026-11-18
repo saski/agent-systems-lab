@@ -1,6 +1,8 @@
 # Agent Systems Lab
 
-Build small, runnable experiments with explicit evidence and permission boundaries.
+The lab's primary goal is safe, controlled, visible and traceable software
+development by agents, one verifiable increment at a time. Design small,
+runnable experiments around the [evidence for a development increment](docs/roadmap.md#evidence-for-a-development-increment).
 
 - Python backend, LangGraph workflow, LangChain specialists, deterministic gateway.
 - Use `uv` and the committed lockfile. Run `make check` before commits.
